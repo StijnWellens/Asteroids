@@ -97,7 +97,7 @@ public class Ship implements IShip {
 	
 	private double vx;
 	private double vy;
-	private final double maxV = 300000; // in km/s
+	private double maxV = 300000; // in km/s
 	
 	private static final double LIGHTSPEED = 300000;
 	
@@ -135,7 +135,8 @@ public class Ship implements IShip {
 	 * @param 	maxV
 	 * 			The given maximum velocity.
 	 * @return	True if and only if the given maximum velocity is positive or 0 and not exceeding the speed of light.
-	 * 			| result == (maxV >= 0) && (maxV <= LIGHTSPEED)
+	 * 			| if((maxV >= 0) && (maxV <= LIGHTSPEED))
+	 * 			|	then result == true
 	 */
 	public boolean isValidMaxVelocity(double maxV)
 	{
@@ -144,15 +145,77 @@ public class Ship implements IShip {
 	
 	/**
 	 * 
+	 * @param 	maxV
+	 * 			The given maximum velocity of the ship.
+	 * @post	If the given maximum velocity is negative, the max velocity will be 0;
+	 * 			| if (maxV <0)
+	 * 			| 	then (new this).getMaxVelocity() == 0
+	 * @post	If the given maximum velocity exceeds the speed of light, then the maximum velocity will be the speed of light.
+	 * 			| if (maxV > LIGHTSPEED)
+	 * 			|	then (new this).getMaxVelocity() == LIGHTSPEED			
+	 * @post	If the maximum velocity is not negative and not exceeding the speed of light, then the maximum velocity is the given maximum velocity.
+	 * 			| (new this).getMaxVelocity()== maxV
+	 * 			
+	 */
+	public void setMaxVelocity(double maxV)
+	{
+		if (maxV < 0)
+		{
+			this.maxV = 0;
+		}
+		else if (maxV > LIGHTSPEED)
+		{
+			this.maxV = LIGHTSPEED;
+		}
+		else
+		{
+			this.maxV = maxV;
+		}
+	}
+	
+	/**
+	 * Checks if the given velocity components are valid.
+	 * 
 	 * @param 	vx
 	 * 			The x component of the velocity to be checked.
 	 * @param	vy
 	 * 			The y component of the velocity to be checked.
 	 * @return	True if and only if the velocity is equal or less than the maximum speed of the ship.
+	 * 			| if (vx <0 && vy<0)
+	 * 			|	then result == false
+	 * 			| else if( Math.sqrt(vx*vx+vy*vy) <= LIGHTSPEED )
+	 * 			|	then result == true
+	 * 			| else
+	 * 			|	then result == false
 	 */
 	public boolean isValidVelocity(double vx, double vy)
 	{
-		
+		if(vx >=0 && vy >=0)
+		{
+			return Math.sqrt(vx*vx+vy*vy) <= LIGHTSPEED ;
+		}
+		else {
+			return false;
+		}
 	}
 	
+	/**
+	 * Sets the velocity of the ship.
+	 * 
+	 * @param 	vx
+	 * 			The given x component of the velocity.
+	 * @param 	vy
+	 * 			The given y component of the velocity.
+	 * @post	If the given velocity components are valid, then the velocity components will be the given componentsd.
+	 * 			if(isValidVelocity(vx,vy))
+	 * 				then (new this).getXVelocity() == vx && (new this).getYVelocity() == vy
+	 */
+	public void setVelocity(double vx, double vy)
+	{	
+		if(isValidVelocity(vx,vy))
+		{
+			this.vx = vx;
+			this.vy = vy;
+		}
+	}
 }
