@@ -10,8 +10,10 @@ public class Ship implements IShip {
 	private double yPosition;
 	
 	/**
+	 * Returns the x Position of the ship.
 	 * 
-	 * @return
+	 * @return 	xPosition
+	 * 			the x Position of the ship			
 	 */
 	@Basic 
 	public double getX()
@@ -20,8 +22,10 @@ public class Ship implements IShip {
 	}
 	
 	/**
+	 * Returns the y Position of the ship.
 	 * 
-	 * @return
+	 * @return 	yPosition
+	 * 			the y Position of the ship			
 	 */
 	@Basic
 	public double getY()
@@ -39,7 +43,7 @@ public class Ship implements IShip {
 	 */
 	public boolean isValidX(double x)
 	{
-		return x >= 0;
+		return ! Double.isNaN(x);
 	}
 	
 	/**
@@ -52,7 +56,7 @@ public class Ship implements IShip {
 	 */
 	public boolean isValidY(double y)
 	{
-		return y >= 0;
+		return ! Double.isNaN(y);
 	}
 	
 	/**
@@ -88,4 +92,6 @@ public class Ship implements IShip {
 			throw new IllegalArgumentException();
 		this.yPosition = y;
 	}
+	
+	
 }
