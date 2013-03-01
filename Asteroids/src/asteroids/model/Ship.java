@@ -9,12 +9,20 @@ public class Ship implements IShip {
 	private double xPosition;
 	private double yPosition;
 	
+	/**
+	 * 
+	 * @return
+	 */
 	@Basic 
 	public double getX()
 	{
 		return this.xPosition;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	@Basic
 	public double getY()
 	{
@@ -59,11 +67,25 @@ public class Ship implements IShip {
 	 */
 	private void setX(double x)
 	{
-		//this.xPosition = x;
+		if(! isValidX(x))
+			throw new IllegalArgumentException();
+		this.xPosition = x;
 	}
 	
+	/**
+	 * 
+	 * @param 	y
+	 * 			The new y position of this ship.
+	 * @post	The new y position of this ship is equal to the given y position of this ship.
+	 * 			| (new this).getY() == y
+	 * @throws	IllegalArgumentException
+	 * 			The given y position is not a valid y position.
+	 * 			| ! isValidY(y)	
+	 */
 	private void setY(double y)
 	{
-		//this.yPosition = y;
+		if(! isValidY(y))
+			throw new IllegalArgumentException();
+		this.yPosition = y;
 	}
 }
