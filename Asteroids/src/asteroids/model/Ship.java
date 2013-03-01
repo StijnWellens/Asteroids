@@ -93,5 +93,66 @@ public class Ship implements IShip {
 		this.yPosition = y;
 	}
 	
+	// Velocity
+	
+	private double vx;
+	private double vy;
+	private final double maxV = 300000; // in km/s
+	
+	private static final double LIGHTSPEED = 300000;
+	
+	/**
+	 *  Returns the x component of the velocity of the ship.
+	 */
+	@Basic
+	public double getXVelocity()
+	{
+		return this.vx;
+	}
+	
+	/**
+	 *  Returns the y component of the velocity of the ship.
+	 */
+	@Basic
+	public double getYVelocity()
+	{
+		return this.vy;
+	}
+	
+	/**
+	 * Returns the maximum velocity of the ship.
+	 * 
+	 */
+	@Basic @Immutable
+	public double getMaxVelocity()
+	{
+		return this.maxV;
+	}
+	
+	/**
+	 * Checks whether the given maximum velocity is valid.
+	 * 
+	 * @param 	maxV
+	 * 			The given maximum velocity.
+	 * @return	True if and only if the given maximum velocity is positive or 0 and not exceeding the speed of light.
+	 * 			| result == (maxV >= 0) && (maxV <= LIGHTSPEED)
+	 */
+	public boolean isValidMaxVelocity(double maxV)
+	{
+		return ((maxV >= 0) && (maxV <= LIGHTSPEED));
+	}
+	
+	/**
+	 * 
+	 * @param 	vx
+	 * 			The x component of the velocity to be checked.
+	 * @param	vy
+	 * 			The y component of the velocity to be checked.
+	 * @return	True if and only if the velocity is equal or less than the maximum speed of the ship.
+	 */
+	public boolean isValidVelocity(double vx, double vy)
+	{
+		
+	}
 	
 }
