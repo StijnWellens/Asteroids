@@ -1,11 +1,29 @@
 package asteroids.model;
 
 import asteroids.IShip;
+import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing a ship with a position, velocity, direction/
+ * 
+ * @invar	The x position of the ship must always be a valid x position.
+ * 			| isValidX(getX())
+ * @invar	The y position of the ship must always be a valid y position.
+ * 			| isValidY(getY())
+ * @invar	The maximum velocity of the ship must always be a valid maximum velocity.
+ * 			| isValidMaxVelocity(getMaxVelocity())
+ * @invar	The velocity of the ship must always be a valid velocity.
+ * 			| isValidVelocity(getXVelocity(), getYVelocity())
+ * @invar	The direction of the ship must always be a valid direction.
+ * 			| isValidDirection(getDirection())
+ * @author Stijn
+ *
+ */
 public class Ship implements IShip {
 
-	// Position
+	// Position: defensive programming
+	
 	private double xPosition;
 	private double yPosition;
 	
@@ -93,11 +111,11 @@ public class Ship implements IShip {
 		this.yPosition = y;
 	}
 	
-	// Velocity
+	// Velocity: total programming
 	
 	private double vx;
 	private double vy;
-	private double maxV = 300000; // in km/s
+	private double maxV = LIGHTSPEED; // in km/s
 	
 	private static final double LIGHTSPEED = 300000;
 	
@@ -147,30 +165,25 @@ public class Ship implements IShip {
 	 * 
 	 * @param 	maxV
 	 * 			The given maximum velocity of the ship.
-	 * @post	If the given maximum velocity is negative, the max velocity will be 0;
-	 * 			| if (maxV <0)
-	 * 			| 	then (new this).getMaxVelocity() == 0
-	 * @post	If the given maximum velocity exceeds the speed of light, then the maximum velocity will be the speed of light.
-	 * 			| if (maxV > LIGHTSPEED)
-	 * 			|	then (new this).getMaxVelocity() == LIGHTSPEED			
-	 * @post	If the maximum velocity is not negative and not exceeding the speed of light, then the maximum velocity is the given maximum velocity.
-	 * 			| (new this).getMaxVelocity()== maxV
-	 * 			
+	 * @post	If the absolute value of the given maximum velocity is valid, the maximum velocity will be the absolute value of the given maximum velocity.
+	 * 			| if (isValidMaxVelocity(Math.abs(maxV)))
+	 * 			|	then (new this).getMaxVelocity() == Math.abs(maxV)
+	 * @post	If the absolute value of the given maximum velocity exceeds the speed of light, then the maximum velocity will be the speed of light.
+	 * 			| if (Math.abs(maxV) > LIGHTSPEED)
+	 * 			|	then (new this).getMaxVelocity() == LIGHTSPEED
+	 * 			 			
 	 */
 	public void setMaxVelocity(double maxV)
 	{
-		if (maxV < 0)
+		if (isValidMaxVelocity(Math.abs(maxV)))
 		{
-			this.maxV = 0;
+			this.maxV = Math.abs(maxV);
 		}
-		else if (maxV > LIGHTSPEED)
+		else 
 		{
 			this.maxV = LIGHTSPEED;
 		}
-		else
-		{
-			this.maxV = maxV;
-		}
+		
 	}
 	
 	/**
@@ -180,19 +193,19 @@ public class Ship implements IShip {
 	 * 			The x component of the velocity to be checked.
 	 * @param	vy
 	 * 			The y component of the velocity to be checked.
-	 * @return	True if and only if the velocity is equal or less than the maximum speed of the ship.
+	 * @return	True if and only if the velocity is equal or less than the valid maximum speed of the ship.
 	 * 			| if (vx <0 && vy<0)
 	 * 			|	then result == false
-	 * 			| else if( Math.sqrt(vx*vx+vy*vy) <= LIGHTSPEED )
+	 * 			| else if( isValidMaxVelocity(this.maxV))&&(Math.sqrt(vx*vx+vy*vy) <= this.maxV) )
 	 * 			|	then result == true
 	 * 			| else
 	 * 			|	then result == false
 	 */
 	public boolean isValidVelocity(double vx, double vy)
 	{
-		if(vx >=0 && vy >=0)
+		if(vx >=0 && vy >=0 && isValidMaxVelocity(this.maxV))
 		{
-			return Math.sqrt(vx*vx+vy*vy) <= LIGHTSPEED ;
+			return Math.sqrt(vx*vx+vy*vy) <= this.maxV ;
 		}
 		else {
 			return false;
@@ -210,7 +223,8 @@ public class Ship implements IShip {
 	 * 			if(isValidVelocity(vx,vy))
 	 * 				then (new this).getXVelocity() == vx && (new this).getYVelocity() == vy
 	 */
-	public void setVelocity(double vx, double vy)
+	@Basic
+	private void setVelocity(double vx, double vy)
 	{	
 		if(isValidVelocity(vx,vy))
 		{
@@ -218,4 +232,33 @@ public class Ship implements IShip {
 			this.vy = vy;
 		}
 	}
+	
+	
+	//Direction: nominal programming
+	
+	private double direction;
+	
+	/**
+	 * Returns the angle of the direction of this ship.
+	 * @return	the angle of the direction of the ship
+	 * 			| this.direction
+	 */
+	@Basic
+	public double getDirection()
+	{
+		return this.direction;
+	}
+	
+	/**
+	 * Returns whether the given direction is valid or not.
+	 * @param 	angle
+	 * 			The angle in which the ship moves.
+	 * @return	True if and only if
+	 * 			| result == (Util.fuzzyEquals(angle,Direction.getAngle()) 
+	 */
+	public boolean isValidDirection(double angle)
+	{
+		
+	}
+	
 }
