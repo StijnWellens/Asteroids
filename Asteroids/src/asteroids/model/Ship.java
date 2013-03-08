@@ -152,13 +152,22 @@ public class Ship implements IShip {
 	 * 
 	 * @param 	maxV
 	 * 			The given maximum velocity.
-	 * @return	True if and only if the given maximum velocity is positive or 0 and not exceeding the speed of light.
-	 * 			| if((maxV >= 0) && (maxV <= LIGHTSPEED))
+	 * @return	False if the double maxV is not a number.
+	 * 			| if(Double.isNaN(maxV) == true)
+	 * 			|	then result == false
+	 * @return	True if and only if the given maximum velocity is positive or 0 and not exceeding the speed of light. 
+	 * 			| if((maxV >= 0) && (maxV <= LIGHTSPEED)
 	 * 			|	then result == true
 	 */
 	public boolean isValidMaxVelocity(double maxV)
 	{
-		return ((maxV >= 0) && (maxV <= LIGHTSPEED));
+		if(Double.isNaN(maxV) == true)
+		{
+			return false;
+		}
+		else {
+			return ((maxV >= 0) && (maxV <= LIGHTSPEED));
+		}
 	}
 	
 	/**
@@ -193,6 +202,9 @@ public class Ship implements IShip {
 	 * 			The x component of the velocity to be checked.
 	 * @param	vy
 	 * 			The y component of the velocity to be checked.
+	 * @return	False if the double vx or vy is not a number.
+	 * 			| if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true))
+	 * 			|	then result == false
 	 * @return	True if and only if the velocity is equal or less than the valid maximum speed of the ship.
 	 * 			| if (vx <0 && vy<0)
 	 * 			|	then result == false
@@ -203,6 +215,10 @@ public class Ship implements IShip {
 	 */
 	public boolean isValidVelocity(double vx, double vy)
 	{
+		if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true))
+		{
+			return false;
+		}			
 		if(vx >=0 && vy >=0 && isValidMaxVelocity(this.maxV))
 		{
 			return Math.sqrt(vx*vx+vy*vy) <= this.maxV ;
@@ -237,6 +253,7 @@ public class Ship implements IShip {
 	//Direction: nominal programming
 	
 	private double direction;
+	private static final double PI = 3.14;
 	
 	/**
 	 * Returns the angle of the direction of this ship.
@@ -253,12 +270,29 @@ public class Ship implements IShip {
 	 * Returns whether the given direction is valid or not.
 	 * @param 	angle
 	 * 			The angle in which the ship moves.
-	 * @return	True if and only if
-	 * 			| result == (Util.fuzzyEquals(angle,Direction.getAngle()) 
+	 * @return	True if and only if the given angle is a number.
+	 * 			| result == (!Double.isNaN(angle))
 	 */
 	public boolean isValidDirection(double angle)
 	{
-		
+		return (!Double.isNaN(angle));
 	}
+	
+	/**
+	 * Set the direction of the ship to the given direction.
+	 * @param 	angle
+	 * 			The angle of the given direction.
+	 * @pre		The given direction must be a valid direction.
+	 * 			| isValidDirection(angle) 
+	 * @post	The new direction of the ship is equal to the modulo 2*Pi of the given direction of the ship.
+	 * 			| (new this).getDirection() == angle % (2*PI)			
+	 */		
+	public void setDirection(double angle)
+	{
+		this.direction = angle%(2*PI);
+				
+	}
+	
+	// Radius
 	
 }
