@@ -5,7 +5,7 @@ import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class representing a ship with a position, velocity, direction/
+ * A class representing a ship with a position, velocity, direction and radius
  * 
  * @invar	The x position of the ship must always be a valid x position.
  * 			| isValidX(getX())
@@ -17,7 +17,11 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidVelocity(getXVelocity(), getYVelocity())
  * @invar	The direction of the ship must always be a valid direction.
  * 			| isValidDirection(getDirection())
- * @author Stijn
+ * @invar	The lowerBoundRadius of the ship must always be a valid lowerBoundRadius.
+ * 			| isValidLowerBoundRadius(getLowerBoundRadius())
+ * @invar	The radius of the ship must always be a valid radius.
+ * 			| isValidRadius(getRadius())
+ * @author Julie Wouters & Stijn Wellens
  *
  */
 public class Ship implements IShip {
@@ -87,7 +91,7 @@ public class Ship implements IShip {
 	 * 			The given x position is not a valid x position.
 	 * 			| ! isValidX(x)	
 	 */
-	private void setX(double x)
+	private void setX(double x) throws IllegalArgumentException
 	{
 		if(! isValidX(x))
 			throw new IllegalArgumentException();
@@ -104,7 +108,7 @@ public class Ship implements IShip {
 	 * 			The given y position is not a valid y position.
 	 * 			| ! isValidY(y)	
 	 */
-	private void setY(double y)
+	private void setY(double y) throws IllegalArgumentException
 	{
 		if(! isValidY(y))
 			throw new IllegalArgumentException();
@@ -182,7 +186,7 @@ public class Ship implements IShip {
 	 * 			|	then (new this).getMaxVelocity() == LIGHTSPEED
 	 * 			 			
 	 */
-	public void setMaxVelocity(double maxV)
+	private void setMaxVelocity(double maxV)
 	{
 		if (isValidMaxVelocity(Math.abs(maxV)))
 		{
@@ -239,7 +243,6 @@ public class Ship implements IShip {
 	 * 			if(isValidVelocity(vx,vy))
 	 * 				then (new this).getXVelocity() == vx && (new this).getYVelocity() == vy
 	 */
-	@Basic
 	private void setVelocity(double vx, double vy)
 	{	
 		if(isValidVelocity(vx,vy))
@@ -260,7 +263,7 @@ public class Ship implements IShip {
 	 * @return	the angle of the direction of the ship
 	 * 			| this.direction
 	 */
-	@Basic
+	@Basic @Raw
 	public double getDirection()
 	{
 		return this.direction;
@@ -289,10 +292,103 @@ public class Ship implements IShip {
 	 */		
 	public void setDirection(double angle)
 	{
+		assert isValidDirection(angle);
+		
 		this.direction = angle%(2*PI);
 				
 	}
 	
 	// Radius
+	
+	private double radius;
+	private static double lowerBoundRadius;
+	
+	/**
+	 * Returns the lower bound of the radius of all ships.
+	 * @return	lower bound of the radius
+	 * 			The lower bound of the radius of the ship
+	 */
+	@Basic @Raw
+	public double getLowerBoundRadius()
+	{
+		return lowerBoundRadius;
+	}
+	
+	/**
+	 * Check whether the lower bound of the radius is valid for all ships.
+	 * @param 	lowerBoundRadius
+	 * 			the lower bound to check
+	 * @return	True if and only if the lower bound of the radius is not zero or below zero 
+	 * 			and if is a number.
+	 * 			| result == 
+	 * 			| 	( (lowerBoundRadius >= 0)
+	 * 			|	 &&	(!Double.isNaN(lowerBoundRadius)) )
+	 */
+	public static boolean isValidLowerBoundRadius(double lowerBoundRadius)
+	{
+		return ((!Double.isNaN(lowerBoundRadius)) && (lowerBoundRadius >= 0) );
+	}
+	
+	/**
+	 * Set the lowerBoundRadius of all the ships to the given lowerBoundRadius.
+	 * @param 	lowerBoundRadius
+	 * 			The new lowerBoundRadius for all the ships.
+	 * @post	The new lowerBoundRadius of all the ships is equal to the given lowerBoundRadius.
+	 * 			| new.getLowerBoundRadius() == lowerBoundRadius
+	 * @throws	IllegalArgumentException
+	 * 			The given lowerBoundRadius is not a valid lowerBoundRadius for any ship.
+	 * 			| ! isValidLowerBoundRadius(lowerBoundRadius)
+	 */
+	private static void setLowerBoundRadius(double lowerBoundRadius) 
+			throws IllegalArgumentException
+	{
+		if(! isValidLowerBoundRadius(lowerBoundRadius))
+			throw new IllegalArgumentException();
+		Ship.lowerBoundRadius = lowerBoundRadius;
+			
+	}
+	
+	/**
+	 * Returns the radius of this ship.
+	 * @return	radius
+	 * 			The radius of the ship
+	 */
+	@Basic @Raw
+	public double getRadius()
+	{
+		return this.radius;
+	}
+	
+	/**
+	 * Check whether the given radius is a valid radius for this ship.
+	 * @param 	radius
+	 * 			The radius to check.
+	 * @return	True if and only if the given radius is higher than the lowerBoundRadius of the ships
+	 * 			and it is a number.
+	 * 			| result ==
+	 * 			|	( (!Double.isNaN(radius))
+	 * 			|	&& (radius > lowerBoundRadius) )
+	 */
+	public boolean isValidRadius(double radius)
+	{
+		return ( (!Double.isNaN(radius))	&& (radius > lowerBoundRadius) );
+	}
+	
+	/**
+	 * Set the radius of the ship to the given radius.
+	 * @param 	radius
+	 * 			The new radius for the ship.
+	 * @post	The new radius of the ship is equal to the given  radius.
+	 * 			| (new this).getRadius() == radius
+	 * @throws	IllegalArgumentException
+	 * 			The given radius is not a valid radius for this ship.
+	 * 			| ! isValidRadius(radius) 
+	 */
+	public void setRadius(double radius) throws IllegalArgumentException
+	{
+		if(!isValidRadius(radius))
+			throw new IllegalArgumentException();
+		this.radius = radius;
+	}
 	
 }
