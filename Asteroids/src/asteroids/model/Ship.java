@@ -252,6 +252,18 @@ public class Ship implements IShip {
 		}
 	}
 	
+	/**
+	 * Changes the ship's velocity based on the current velocity, its direction
+	 * and on a given amount.
+	 * 
+	 * @param 	amount
+	 * 			The amount that needs to be added to the current velocity.
+	 * @effect	If the amount
+	 */
+	public void thrust(double amount){
+		
+	}
+	
 	
 	//Direction: nominal programming
 	
@@ -296,6 +308,19 @@ public class Ship implements IShip {
 		
 		this.direction = angle%(2*PI);
 				
+	}
+	
+	/**
+	 * Turns the ship with a given angle.
+	 * 
+	 * @param 	angle 
+	 * 			The angle that needs to be added to the current direction.
+	 * @effect	The direction of the ship is set to the sum of 
+	 * 			the current direction and the given angle.
+	 * 			| (new this).setDirection(this.getDirection() + angle)
+	 */
+	public void turn(double angle){
+		setDirection(this.direction+angle);
 	}
 	
 	// Radius
@@ -390,5 +415,43 @@ public class Ship implements IShip {
 			throw new IllegalArgumentException();
 		this.radius = radius;
 	}
+
+	/**
+	 * Check whether the given duration is a valid duration.
+	 * @param 	duration
+	 * 			The duration to check.
+	 * @return	True if and only if the given duration is not below zero.
+	 * 			| result ==
+	 * 			| duration > 0
+	 */
+	public boolean isValidDuration(double duration){
+		return duration > 0;
+	}
+	
+	/**
+	 * Changes the position of the ship based on the current position, 
+	 * 	velocity and a given time duration.
+	 * 
+	 * @param 	duration
+	 * 			How long the ship needs to move.
+	 * @post 	The new x-coordinate of this ship is equal to the old 
+	 * 			x-coordinate of this ship incremented with the product 
+	 * 			of the x-velocity of the ship with the given time duration.
+	 * 			|(new this).getX() == this.getX() + this.getXVelocity()*duration
+	 * @post	The new y-coordinate of this ship is equal to the old 
+	 * 			y-coordinate of this ship incremented with the product 
+	 * 			of the y-velocity of the ship with the given time duration.
+	 * 			|(new this).getY() == this.getY() + this.getYVelocity()*duration
+	 * @throws 	IllegalArgumentException
+	 * 			The given duration is not a valid duration. 
+	 * 			| !isValidDuration(duration)
+	 */
+	public void move(double duration){
+		if(!isValidDuration(duration))
+			throw new IllegalArgumentException();
+		xPosition = xPosition + vx*duration; 
+		yPosition = yPosition + vy*duration;
+	}
+	
 	
 }
