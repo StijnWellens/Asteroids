@@ -200,6 +200,34 @@ public class Ship implements IShip {
 	}
 	
 	/**
+	 * Check if the x velocity component is valid.
+	 * 
+	 * @param 	vx
+	 * 			The x velocity component to be checked.
+	 * @post	True if and only x velocity component is a number.
+	 * 			| result == 
+	 * 			|	( (!Double.isNaN(vx)) 
+	 */
+	public boolean isValidXVelocity(double vx)
+	{
+		return (!Double.isNaN(vx));
+	}
+	
+	/**
+	 * Check if the y velocity component is valid.
+	 * 
+	 * @param 	vy
+	 * 			The y velocity component to be checked.
+	 * @post	True if and only if the y velocity component is a number.
+	 * 			| result == 
+	 * 			|	( (!Double.isNaN(vy)) 
+	 */
+	public boolean isValidYVelocity(double vy)
+	{
+		return (!Double.isNaN(vy));
+	}
+	
+	/**
 	 * Checks if the given velocity components are valid.
 	 * 
 	 * @param 	vx
@@ -219,13 +247,13 @@ public class Ship implements IShip {
 	 */
 	public boolean isValidVelocity(double vx, double vy)
 	{
-		if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true))
+		if((!isValidXVelocity(vx))|| (!isValidYVelocity(vy)))
 		{
 			return false;
 		}			
 		if(vx >=0 && vy >=0 && isValidMaxVelocity(this.maxV))
 		{
-			return Math.sqrt(vx*vx+vy*vy) <= this.maxV ;
+			return Util.fuzzyLessThanOrEqualTo(Math.sqrt(vx*vx+vy*vy),this.maxV);
 		}
 		else {
 			return false;
@@ -233,23 +261,74 @@ public class Ship implements IShip {
 	}
 	
 	/**
-	 * Sets the velocity of the ship.
+	 * Set the x velocity of the ship.
+	 * 
+	 * @param 	vx
+	 * 			The given x component of the velocity.
+	 * @post	If the given x velocity component is valid, then the new x velocity component will be the given component.
+	 * 			if(isValidXVelocity(vx))
+	 * 				then (new this).getXVelocity() == vx 
+	 */
+	@Raw
+	private void setXVelocity(double vx)
+	{	
+		if(isValidXVelocity(vx))
+		{
+			this.vx = vx;
+		}
+	}
+	
+	/**
+	 * Set the y velocity of the ship.
+	 * 
+	 * @param 	vy
+	 * 			The given y component of the velocity.
+	 * @post	If the given y velocity component is valid, then the new y velocity component will be the given component.
+	 * 			if(isValidXVelocity(vy))
+	 * 				then (new this).getYVelocity() == vy 
+	 */
+	@Raw
+	private void setYVelocity(double vy)
+	{	
+		if(isValidXVelocity(vy))
+		{
+			this.vy = vy;
+		}
+	}
+	
+	/**
+	 * Set the velocity of the ship.
 	 * 
 	 * @param 	vx
 	 * 			The given x component of the velocity.
 	 * @param 	vy
 	 * 			The given y component of the velocity.
-	 * @post	If the given velocity components are valid, then the velocity components will be the given componentsd.
+	 * @post	If the given velocity components are valid, then the new velocity components will be the given components.
 	 * 			if(isValidVelocity(vx,vy))
-	 * 				then (new this).getXVelocity() == vx && (new this).getYVelocity() == vy
+	 * 				then ((new this).getXVelocity() == vx) && ((new this).getYVelocity() == vy) 
 	 */
 	private void setVelocity(double vx, double vy)
-	{	
+	{
 		if(isValidVelocity(vx,vy))
 		{
-			this.vx = vx;
-			this.vy = vy;
+			setXVelocity(vx);
+			setYVelocity(vy);
 		}
+	}
+	
+	/**
+	 * Check if the amount that has to be added to a velocity is valid.
+	 * 
+	 * @param 	amount
+	 * 			The amount to be checked.
+	 * @post	True if and only if the amount is a number and is higher than or equal to zero.
+	 * 			| result == 
+	 * 			|	( (!Double.isNaN(amount)) 
+	 * 			|	&&	(amount >= 0) )
+	 */
+	private boolean isValidAmount(double amount)
+	{
+		return ((!Double.isNaN(amount)) && (amount >= 0));
 	}
 	
 	/**
@@ -258,10 +337,19 @@ public class Ship implements IShip {
 	 * 
 	 * @param 	amount
 	 * 			The amount that needs to be added to the current velocity.
-	 * @effect	If the amount
+	 * @effect	If the given amount is valid, the new x velocity will be set to the sum of the old x velocity 
+	 * 			and the amount that has been multiplied with the cosine of the direction.
+	 * 			| if(!isValidAmount(amount))
+	 * 			|	then (new this).getXVelocity() == this.getXVelocity() + amount*Math.sin(this.direction);
 	 */
 	public void thrust(double amount){
 		
+		if(!isValidAmount(amount))
+		{
+			amount = 0;
+		}
+		
+		setVelocity(vx + amount*Math.cos(direction), vy + amount*Math.sin(direction));
 	}
 	
 	
@@ -422,26 +510,28 @@ public class Ship implements IShip {
 	 * 			The duration to check.
 	 * @return	True if and only if the given duration is not below zero.
 	 * 			| result ==
-	 * 			| duration > 0
+	 * 			| duration >= 0
 	 */
 	public boolean isValidDuration(double duration){
-		return duration > 0;
+		return duration >= 0;
 	}
 	
 	/**
-	 * Changes the position of the ship based on the current position, 
+	 * Changes the position of the ship based on the current position, current orientation, 
 	 * 	velocity and a given time duration.
 	 * 
 	 * @param 	duration
 	 * 			How long the ship needs to move.
 	 * @post 	The new x-coordinate of this ship is equal to the old 
 	 * 			x-coordinate of this ship incremented with the product 
-	 * 			of the x-velocity of the ship with the given time duration.
-	 * 			|(new this).getX() == this.getX() + this.getXVelocity()*duration
+	 * 			of the x-velocity of the ship with the cosine of the direction of the ship 
+	 * 			with the given time duration.	 * 
+	 * 			|(new this).getX() == this.getX() + this.getXVelocity()*Math.cos(this.getDirection())*duration
 	 * @post	The new y-coordinate of this ship is equal to the old 
 	 * 			y-coordinate of this ship incremented with the product 
-	 * 			of the y-velocity of the ship with the given time duration.
-	 * 			|(new this).getY() == this.getY() + this.getYVelocity()*duration
+	 * 			of the y-velocity of the ship with the sine of the direction of the ship
+	 * 			with the given time duration.
+	 * 			|(new this).getY() == this.getY() + this.getYVelocity()*Math.sin(this.getDirection())*duration
 	 * @throws 	IllegalArgumentException
 	 * 			The given duration is not a valid duration. 
 	 * 			| !isValidDuration(duration)
@@ -449,9 +539,10 @@ public class Ship implements IShip {
 	public void move(double duration){
 		if(!isValidDuration(duration))
 			throw new IllegalArgumentException();
-		xPosition = xPosition + vx*duration; 
-		yPosition = yPosition + vy*duration;
+		setX(xPosition + vx*Math.cos(direction)*duration); 
+		setY(yPosition + vy*Math.sin(direction)*duration);
 	}
+	
 	
 	
 }
