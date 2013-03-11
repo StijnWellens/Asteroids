@@ -359,12 +359,10 @@ public class Ship implements IShip {
 		}
 		else
 		{
-			while(!Util.fuzzyEquals(Math.sqrt(tempVy*tempVy+tempVx*tempVx),this.maxV)) // TODO convergentie nakijken!
-			{
-				double tempAmount = (this.maxV) / Math.sqrt(tempVx*tempVx+tempVy*tempVy);
-				tempVx = tempVx*tempAmount;
-				tempVy = tempVy*tempAmount;
-			}
+			double tempAmount = (this.maxV) / Math.sqrt(tempVx*tempVx+tempVy*tempVy);
+			tempVx = tempVx*tempAmount;
+			tempVy = tempVy*tempAmount;
+			
 			setVelocity(tempVx,tempVy);
 		}
 	}
@@ -406,12 +404,20 @@ public class Ship implements IShip {
 	 * 			| isValidDirection(angle) 
 	 * @post	The new direction of the ship is equal to the modulo 2*Pi of the given direction of the ship.
 	 * 			| (new this).getDirection() == angle % (2*PI)			
-	 */		
+	 */		// TODO aanpassen documentatie
 	public void setDirection(double angle)
 	{
 		assert isValidDirection(angle);
 		
-		this.direction = angle%(2*PI);
+		double tempAngle = angle%(2*PI);
+		if(tempAngle < 0)
+		{
+			this.direction = tempAngle + (2*PI);
+		}
+		else
+		{
+			this.direction = tempAngle;
+		}
 				
 	}
 	
