@@ -341,7 +341,8 @@ public class Ship implements IShip {
 	 * 			and the amount that has been multiplied with the cosine of the direction.
 	 * 			| if(!isValidAmount(amount))
 	 * 			|	then (new this).getXVelocity() == this.getXVelocity() + amount*Math.sin(this.direction);
-	 */
+	 *
+	 */ // TODO Afwerken documentatie!
 	public void thrust(double amount){
 		
 		if(!isValidAmount(amount))
@@ -349,7 +350,23 @@ public class Ship implements IShip {
 			amount = 0;
 		}
 		
-		setVelocity(vx + amount*Math.cos(direction), vy + amount*Math.sin(direction));
+		double tempVx = vx + amount*Math.cos(direction);
+		double tempVy = vy + amount*Math.sin(direction);
+		
+		if(isValidVelocity(tempVx,tempVy))
+		{
+			setVelocity(tempVx,tempVy);
+		}
+		else
+		{
+			while(!Util.fuzzyEquals(Math.sqrt(tempVy*tempVy+tempVx*tempVx),this.maxV)) // TODO convergentie nakijken!
+			{
+				double tempAmount = (this.maxV) / Math.sqrt(tempVx*tempVx+tempVy*tempVy);
+				tempVx = tempVx*tempAmount;
+				tempVy = tempVy*tempAmount;
+			}
+			setVelocity(tempVx,tempVy);
+		}
 	}
 	
 	
