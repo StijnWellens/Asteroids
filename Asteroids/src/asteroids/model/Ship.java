@@ -368,7 +368,7 @@ public class Ship implements IShip {
 	// Direction: nominal programming
 
 	private double direction;
-	private static final double PI = 3.14;
+	private static final double PI = Math.PI;
 
 	/**
 	 * Returns the angle of the direction of this ship.

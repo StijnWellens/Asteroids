@@ -2,79 +2,92 @@ package asteroids.model;
 
 import asteroids.IFacade;
 import asteroids.IShip;
+import asteroids.ModelException;
 
 public class Facade implements IFacade {
 
-	private static final double PI = 3.14;
+	private static final double PI = Math.PI;
 	
 	public Facade() {
 		
 	}
 
 	@Override
-	public IShip createShip() {
-		// TODO Auto-generated method stub
-		return null;
+	public IShip createShip() throws ModelException {
+		try{
+			IShip newShip = new Ship();
+			return newShip;
+		}
+		catch(IllegalArgumentException iae){
+			throw new ModelException(iae);
+		}
 	}
 
 	@Override
 	public IShip createShip(double x, double y, double xVelocity,
-			double yVelocity, double radius, double angle) {
-		// TODO Auto-generated method stub
-		return null;
+			double yVelocity, double radius, double angle) throws ModelException{
+		try{ 
+			IShip newShip = new Ship(x,y, xVelocity, yVelocity, radius, angle);
+			return newShip;
+		}
+		catch(IllegalArgumentException iae)
+		{
+			throw new ModelException(iae);
+		}
+		
 	}
 
 	@Override
 	public double getX(IShip ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ((Ship)ship).getX();
 	}
 
 	@Override
 	public double getY(IShip ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ((Ship)ship).getY();
 	}
 
 	@Override
 	public double getXVelocity(IShip ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ((Ship)ship).getXVelocity();
 	}
 
 	@Override
 	public double getYVelocity(IShip ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ((Ship)ship).getYVelocity();
 	}
 
 	@Override
 	public double getRadius(IShip ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ((Ship)ship).getRadius();
 	}
 
 	@Override
 	public double getDirection(IShip ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ((Ship)ship).getDirection();
 	}
 
 	@Override
-	public void move(IShip ship, double dt) {
-		// TODO Auto-generated method stub
+	public void move(IShip ship, double dt) throws ModelException {
+		try{
+			((Ship)ship).move(dt);
+		}
+		catch(IllegalArgumentException iae) {
+			throw new ModelException(iae);
+		}
 		
 	}
 
 	@Override
 	public void thrust(IShip ship, double amount) {
-		// TODO Auto-generated method stub
+		((Ship)ship).thrust(amount);
 		
 	}
 
 	@Override
 	public void turn(IShip ship, double angle) {
-		// TODO Auto-generated method stub
+		angle = makeAngleValid(angle);
+		((Ship)ship).turn(angle);
 		
 	}
 
@@ -104,6 +117,11 @@ public class Facade implements IFacade {
 	
 	public double makeAngleValid(double angle)
 	{
+		if(Double.isNaN(angle))
+		{
+			angle = 0;
+		}
+		
 		double tempAngle = angle%(2*PI);
 		if(tempAngle < 0)
 		{
