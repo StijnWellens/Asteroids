@@ -5,6 +5,8 @@ import asteroids.IShip;
 
 public class Facade implements IFacade {
 
+	private static final double PI = 3.14;
+	
 	public Facade() {
 		
 	}
@@ -98,6 +100,19 @@ public class Facade implements IFacade {
 	public double[] getCollisionPosition(IShip ship1, IShip ship2) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public double makeAngleValid(double angle)
+	{
+		double tempAngle = angle%(2*PI);
+		if(tempAngle < 0)
+		{
+			return tempAngle + (2*PI);
+		}
+		else
+		{
+			return tempAngle;
+		}
 	}
 
 }

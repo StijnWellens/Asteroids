@@ -26,6 +26,44 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class Ship implements IShip {
 
+	// TODO default Constructor documentatie
+	/**
+	 * 
+	 */
+	public Ship() throws IllegalArgumentException
+	{
+		setMaxVelocity(300000);
+		setLowerBoundRadius(0);
+		
+		setX(0);
+		setY(0);
+		setXVelocity(0);
+		setYVelocity(0);
+		setDirection(PI/2);
+		setRadius(1);
+				
+	}
+	
+	// TODO Constructor documentatie
+		/**
+		 * 
+		 */
+		public Ship(double x, double y, double xVelocity,
+				double yVelocity, double radius, double angle) throws IllegalArgumentException
+		{
+			setMaxVelocity(300000);
+			setLowerBoundRadius(0);
+			
+			setX(x);
+			setY(y);
+			setXVelocity(xVelocity);
+			setYVelocity(yVelocity);
+			setDirection(angle);
+			setRadius(radius);
+					
+		}
+	
+	
 	// Position: defensive programming
 	
 	private double xPosition;
@@ -388,12 +426,12 @@ public class Ship implements IShip {
 	 * Returns whether the given direction is valid or not.
 	 * @param 	angle
 	 * 			The angle in which the ship moves.
-	 * @return	True if and only if the given angle is a number.
-	 * 			| result == (!Double.isNaN(angle))
+	 * @return	True if and only if the given angle is a number and is between zero and 2*Pi.
+	 * 			| result == ((!Double.isNaN(angle)) && (angle >= 0) && (angle < 2*PI))
 	 */
 	public boolean isValidDirection(double angle)
 	{
-		return (!Double.isNaN(angle));
+		return ((!Double.isNaN(angle)) && (angle >= 0) && (angle < 2*PI));
 	}
 	
 	/**
@@ -403,22 +441,14 @@ public class Ship implements IShip {
 	 * @pre		The given direction must be a valid direction.
 	 * 			| isValidDirection(angle) 
 	 * @post	The new direction of the ship is equal to the modulo 2*Pi of the given direction of the ship.
-	 * 			| (new this).getDirection() == angle % (2*PI)			
-	 */		// TODO aanpassen documentatie
+	 * 			| (new this).getDirection() == angle 			
+	 */		
 	public void setDirection(double angle)
 	{
 		assert isValidDirection(angle);
 		
-		double tempAngle = angle%(2*PI);
-		if(tempAngle < 0)
-		{
-			this.direction = tempAngle + (2*PI);
-		}
-		else
-		{
-			this.direction = tempAngle;
-		}
-				
+		this.direction = angle;
+						
 	}
 	
 	/**
@@ -426,11 +456,15 @@ public class Ship implements IShip {
 	 * 
 	 * @param 	angle 
 	 * 			The angle that needs to be added to the current direction.
+	 * @pre		The sum of the old direction and the given angle must be a valid direction.
+	 * 			| isValidDirection(this.getDirection()+angle)
 	 * @effect	The direction of the ship is set to the sum of 
 	 * 			the current direction and the given angle.
 	 * 			| (new this).setDirection(this.getDirection() + angle)
 	 */
 	public void turn(double angle){
+		assert isValidDirection(this.direction + angle);
+		
 		setDirection(this.direction+angle);
 	}
 	
