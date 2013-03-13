@@ -5,6 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import asteroids.IShip;
+import asteroids.ModelException;
+import asteroids.Util;
+import asteroids.model.Ship;
+
 public class ShipTest {
 
 	@AfterClass
@@ -12,8 +17,82 @@ public class ShipTest {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	  public void testConstructorShip() {
+	    IShip ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    assertNotNull(ship);
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	  public void testConstructorShip_IllegalCase() {
+	    Ship ship = new Ship(Double.NaN, 200, 10, -10, 20, -Math.PI);
+	 }
+	
+	@Test
+	  public void testGetCoordinate() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    assertEquals(100,ship.getX(), Util.EPSILON);
+	    assertEquals(200,ship.getY(), Util.EPSILON);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	  public void testGetCoordinate_IllegalCase() {
+	    Ship ship = new Ship(Double.NaN, Double.NaN, 10, -10, 20, -Math.PI);
+	 }
+	
+	@Test
+	  public void testSetCoordinate() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    ship.setX(150);
+	    ship.setY(150);
+	    assertEquals(150,ship.getX(), Util.EPSILON);
+	    assertEquals(150,ship.getY(), Util.EPSILON);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	  public void testSetCoordinate_IllegalCase() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    ship.setX(Double.NaN);
+	    ship.setY(Double.NaN);
+	 }
+	
+	@Test
+	  public void testGetVelocity() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    assertEquals(10,ship.getXVelocity(), Util.EPSILON);
+	    assertEquals(-10,ship.getYVelocity(), Util.EPSILON);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	  public void testGetVelocity_IllegalCase() {
+	    Ship ship = new Ship(100, 200, Double.NaN, Double.NaN, 20, -Math.PI);
+	    
+	 }
+	
+	@Test
+	  public void testGetMaxVelocity() {
+	    Ship ship = new Ship();
+	    assertEquals(300000,ship.getMaxVelocity(), Util.EPSILON);
+	 }
+	
+	@Test
+	  public void testSetMaxVelocity() {
+	    Ship ship = new Ship();
+	    ship.setMaxVelocity(20000);
+	    assertEquals(20000,ship.getMaxVelocity(), Util.EPSILON);
+	 }
+	
+	@Test(expected=IllegalArgumentException.class)
+	  public void testSetMaxVelocity_IllegalCase() {
+	    Ship ship = new Ship();
+	    ship.setMaxVelocity(350000);	    
+	 }
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

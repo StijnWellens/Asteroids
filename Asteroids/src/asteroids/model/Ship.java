@@ -88,7 +88,7 @@ public class Ship implements IShip {
 	 * @param x
 	 *            The x position to check.
 	 * @return True if and only if the given x position is a positive number. |
-	 *         result == (x>=0)
+	 *         result == !Double.isNaN(x)
 	 */
 	public boolean isValidX(double x) {
 		return !Double.isNaN(x);
@@ -100,7 +100,7 @@ public class Ship implements IShip {
 	 * @param y
 	 *            The y position to check.
 	 * @return True if and only if the given y position is a positive number. |
-	 *         result == (y>=0)
+	 *         result == !Double.isNaN(y)
 	 */
 	public boolean isValidY(double y) {
 		return !Double.isNaN(y);
@@ -116,7 +116,7 @@ public class Ship implements IShip {
 	 *             The given x position is not a valid x position. | !
 	 *             isValidX(x)
 	 */
-	private void setX(double x) throws IllegalArgumentException {
+	public void setX(double x) throws IllegalArgumentException {
 		if (!isValidX(x))
 			throw new IllegalArgumentException();
 		this.xPosition = x;
@@ -132,7 +132,7 @@ public class Ship implements IShip {
 	 *             The given y position is not a valid y position. | !
 	 *             isValidY(y)
 	 */
-	private void setY(double y) throws IllegalArgumentException {
+	public void setY(double y) throws IllegalArgumentException {
 		if (!isValidY(y))
 			throw new IllegalArgumentException();
 		this.yPosition = y;
@@ -142,7 +142,7 @@ public class Ship implements IShip {
 
 	private double vx;
 	private double vy;
-	private double maxV = LIGHTSPEED; // in km/s
+	private double maxV; // in km/s
 
 	private static final double LIGHTSPEED = 300000;
 
@@ -205,7 +205,7 @@ public class Ship implements IShip {
 	 *       this).getMaxVelocity() == LIGHTSPEED
 	 * 
 	 */
-	private void setMaxVelocity(double maxV) {
+	public void setMaxVelocity(double maxV) {
 		if (isValidMaxVelocity(Math.abs(maxV))) {
 			this.maxV = Math.abs(maxV);
 		} else {
@@ -258,7 +258,7 @@ public class Ship implements IShip {
 		if ((!isValidXVelocity(vx)) || (!isValidYVelocity(vy))) {
 			return false;
 		}
-		if (vx >= 0 && vy >= 0 && isValidMaxVelocity(this.maxV)) {
+		if (isValidMaxVelocity(this.maxV)) {
 			return Util.fuzzyLessThanOrEqualTo(Math.sqrt(vx * vx + vy * vy),
 					this.maxV);
 		} else {
@@ -350,13 +350,13 @@ public class Ship implements IShip {
 			amount = 0;
 		}
 
-		double tempVx = vx + amount * Math.cos(direction);
-		double tempVy = vy + amount * Math.sin(direction);
+		double tempVx = getXVelocity() + amount * Math.cos(getDirection());
+		double tempVy = getYVelocity() + amount * Math.sin(getDirection());
 
 		if (isValidVelocity(tempVx, tempVy)) {
 			setVelocity(tempVx, tempVy);
 		} else {
-			double tempAmount = (this.maxV)
+			double tempAmount = (getMaxVelocity())
 					/ Math.sqrt(tempVx * tempVx + tempVy * tempVy);
 			tempVx = tempVx * tempAmount;
 			tempVy = tempVy * tempAmount;
@@ -423,9 +423,9 @@ public class Ship implements IShip {
 	 *         this).setDirection(this.getDirection() + angle)
 	 */
 	public void turn(double angle) {
-		assert isValidDirection(this.direction + angle);
+		assert isValidDirection(getDirection() + angle);
 
-		setDirection(this.direction + angle);
+		setDirection(getDirection() + angle);
 	}
 
 	// Radius
@@ -498,7 +498,7 @@ public class Ship implements IShip {
 	 *         (!Double.isNaN(radius)) | && (radius > lowerBoundRadius) )
 	 */
 	public boolean isValidRadius(double radius) {
-		return ((!Double.isNaN(radius)) && (radius > lowerBoundRadius));
+		return ((!Double.isNaN(radius)) && (radius > getLowerBoundRadius()));
 	}
 
 	/**
@@ -553,8 +553,9 @@ public class Ship implements IShip {
 	public void move(double duration) {
 		if (!isValidDuration(duration))
 			throw new IllegalArgumentException();
-		setX(xPosition + vx * Math.cos(direction) * duration);
-		setY(yPosition + vy * Math.sin(direction) * duration);
+		double direction = getDirection();
+		setX(getX() + getXVelocity() * Math.cos(direction) * duration);
+		setY(getY() + getYVelocity() * Math.sin(direction) * duration);
 	}
 
 }
