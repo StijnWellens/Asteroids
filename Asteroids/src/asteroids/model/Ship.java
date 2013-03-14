@@ -36,17 +36,15 @@ public class Ship implements IShip {
 	 *         velocity, 0 as its x velocity component, 0 as its y velocity
 	 *         component, PI/2 as its direction, 1 as its radius. 
 	 *         | setMaxVelocity(300000); 
-	 *         | setX(0); 
-	 *         | setY(0); 
+	 *         | setPosition(0,0); 
 	 *         | setVelocity(0,0); 
 	 *         | setDirection(PI / 2); 
 	 *         | setRadius(1);
 	 */
 	public Ship() {
 		setMaxVelocity(300000);
-
-		setX(0);
-		setY(0);
+		
+		setPosition(0,0);
 		setVelocity(0, 0);
 		setDirection(PI / 2);
 		setRadius(1);
@@ -76,8 +74,7 @@ public class Ship implements IShip {
 	 *         given angle as its initial direction, the given radius as its
 	 *         radius. 
 	 *         | setMaxVelocity(300000); 
-	 *         | setX(x); 
-	 *         | setY(y); 
+	 *         | setPosition(x,y); 
 	 *         | setVelocity(xVelocity, yVelocity); 
 	 *         | setDirection(angle); 
 	 *         | setRadius(radius);
@@ -86,8 +83,7 @@ public class Ship implements IShip {
 			double radius, double angle) throws IllegalArgumentException {
 		setMaxVelocity(300000);
 
-		setX(x);
-		setY(y);
+		setPosition(x,y);
 		setVelocity(xVelocity, yVelocity);
 		setDirection(angle);
 		setRadius(radius);
@@ -96,8 +92,8 @@ public class Ship implements IShip {
 
 	// Position: defensive programming
 
-	private double	xPosition;
-	private double	yPosition;
+	private Vector position = new Vector();
+	
 
 	/**
 	 * Returns the x Position of the ship.
@@ -107,7 +103,7 @@ public class Ship implements IShip {
 	 */
 	@Basic
 	public double getX() {
-		return this.xPosition;
+		return this.position.getXComp();
 	}
 
 	/**
@@ -117,70 +113,55 @@ public class Ship implements IShip {
 	 */
 	@Basic
 	public double getY() {
-		return this.yPosition;
+		return this.position.getYComp();
+	}
+	
+	/**
+	 * Returns the position of the ship.
+	 */
+	@Basic
+	public Vector getPosition() {
+		return this.position;
 	}
 
 	/**
-	 * Checks whether the given x position is a valid x position for a ship.
+	 * Checks whether the given position component is a valid position component for a ship.
 	 * 
-	 * @param x
-	 *            The x position to check.
-	 * @return True if and only if the given x position is a positive number. |
-	 *         result == !Double.isNaN(x)
+	 * @param 	comp
+	 *        	The position component to check.
+	 * @return  True if and only if the given position component is a number. 
+	 * 			| result == !Double.isNaN(comp)
 	 */
-	public boolean isValidX(double x) {
-		return !Double.isNaN(x);
-	}
-
-	/**
-	 * Checks whether the given y position is a valid y position for a ship.
-	 * 
-	 * @param y
-	 *            The y position to check.
-	 * @return True if and only if the given y position is a positive number. |
-	 *         result == !Double.isNaN(y)
-	 */
-	public boolean isValidY(double y) {
-		return !Double.isNaN(y);
+	public boolean isValidPositionComp(double comp) {
+		return !Double.isNaN(comp);
 	}
 
 	/**
 	 * 
 	 * @param 	x
 	 *         	The new x position of this ship.
-	 * @post 	The new x position of this ship is equal to the given x position of
-	 *       this ship. | (new this).getX() == x
+	 * @param 	y
+	 *         	The new y position of this ship.
+	 * @post 	The new x and y position of this ship are equal to the given x and y position of this ship. 
+	 * 			| (new this).getX() == x
+	 * 			| (new this).getY() == y
 	 * @throws IllegalArgumentException
-	 *             The given x position is not a valid x position. |
-	 *             !isValidX(x)
-	 */
-	public void setX(double x) throws IllegalArgumentException {
-		if (!isValidX(x))
-			throw new IllegalArgumentException();
-		this.xPosition = x;
-	}
-
-	/**
-	 * 
-	 * @param y
-	 *            The new y position of this ship.
-	 * @post The new y position of this ship is equal to the given y position of
-	 *       this ship. | (new this).getY() == y
+	 *         The given x position is not a valid x position. 
+	 *         | !isValidPositionComp(x)
 	 * @throws IllegalArgumentException
-	 *             The given y position is not a valid y position. |
-	 *             !isValidY(y)
+	 *         The given y position is not a valid y position. 
+	 *         | !isValidPositionComp(y)
 	 */
-	public void setY(double y) throws IllegalArgumentException {
-		if (!isValidY(y))
+	public void setPosition(double x, double y) throws IllegalArgumentException {
+		if (!isValidPositionComp(x) || !isValidPositionComp(y))
 			throw new IllegalArgumentException();
-		this.yPosition = y;
+		this.position.setComp(x,y);
 	}
 
 	// Velocity: total programming
 
-	private double				vx;
-	private double				vy;
-	private double				maxV;					// in km/s
+	private Vector velocity = new Vector();
+	private double maxV;					// in km/s
 
 	public static final double	LIGHTSPEED	= 300000;
 
@@ -189,7 +170,7 @@ public class Ship implements IShip {
 	 */
 	@Basic
 	public double getXVelocity() {
-		return this.vx;
+		return this.velocity.getXComp();
 	}
 
 	/**
@@ -197,7 +178,15 @@ public class Ship implements IShip {
 	 */
 	@Basic
 	public double getYVelocity() {
-		return this.vy;
+		return this.velocity.getYComp();
+	}
+	
+	/**
+	 * Returns the velocity of the ship.
+	 */
+	@Basic
+	public Vector getVelocity() {
+		return this.velocity;
 	}
 
 	/**
@@ -254,27 +243,15 @@ public class Ship implements IShip {
 	}
 
 	/**
-	 * Check if the x velocity component is valid.
+	 * Check if the velocity component is valid.
 	 * 
-	 * @param vx
-	 *            The x velocity component to be checked.
-	 * @post True if and only x velocity component is a number. | result == | (
-	 *       (!Double.isNaN(vx))
+	 * @param 	comp
+	 *        	The velocity component to be checked.
+	 * @post 	True if and only if the velocity component is a number. 
+	 * 			| result == (!Double.isNaN(comp))
 	 */
-	public boolean isValidXVelocity(double vx) {
-		return (!Double.isNaN(vx));
-	}
-
-	/**
-	 * Check if the y velocity component is valid.
-	 * 
-	 * @param vy
-	 *            The y velocity component to be checked.
-	 * @post True if and only if the y velocity component is a number. | result
-	 *       == | ( (!Double.isNaN(vy))
-	 */
-	public boolean isValidYVelocity(double vy) {
-		return (!Double.isNaN(vy));
+	public boolean isValidVelocityComp(double comp) {
+		return (!Double.isNaN(comp));
 	}
 
 	/**
@@ -284,7 +261,8 @@ public class Ship implements IShip {
 	 *            The x component of the velocity to be checked.
 	 * @param vy
 	 *            The y component of the velocity to be checked.
-	 * @return False if the double vx or vy is not a number. |
+	 * @return False if the double vx or vy is not a number. 
+	 * 			|
 	 *         if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true)) |
 	 *         then result == false
 	 * @return True if and only if the velocity is equal or less than the valid
@@ -294,7 +272,7 @@ public class Ship implements IShip {
 	 *         this.maxV) ) | then result == true | else | then result == false
 	 */
 	public boolean isValidVelocity(double vx, double vy) {
-		if ((!isValidXVelocity(vx)) || (!isValidYVelocity(vy))) {
+		if ((!isValidVelocityComp(vx)) || (!isValidVelocityComp(vy))) {
 			return false;
 		}
 		if (isValidMaxVelocity(this.maxV)) {
@@ -306,53 +284,20 @@ public class Ship implements IShip {
 	}
 
 	/**
-	 * Set the x velocity of the ship.
-	 * 
-	 * @param vx
-	 *            The given x component of the velocity.
-	 * @post If the given x velocity component is valid, then the new x velocity
-	 *       component will be the given component. if(isValidXVelocity(vx))
-	 *       then (new this).getXVelocity() == vx
-	 */
-	@Raw
-	private void setXVelocity(double vx) {
-		if (isValidXVelocity(vx)) {
-			this.vx = vx;
-		}
-	}
-
-	/**
-	 * Set the y velocity of the ship.
-	 * 
-	 * @param vy
-	 *            The given y component of the velocity.
-	 * @post If the given y velocity component is valid, then the new y velocity
-	 *       component will be the given component. if(isValidXVelocity(vy))
-	 *       then (new this).getYVelocity() == vy
-	 */
-	@Raw
-	private void setYVelocity(double vy) {
-		if (isValidYVelocity(vy)) {
-			this.vy = vy;
-		}
-	}
-
-	/**
 	 * Set the velocity of the ship.
 	 * 
 	 * @param vx
-	 *            The given x component of the velocity.
+	 *        The given x component of the velocity.
 	 * @param vy
-	 *            The given y component of the velocity.
+	 *        The given y component of the velocity.
 	 * @post If the given velocity components are valid, then the new velocity
-	 *       components will be the given components. if(isValidVelocity(vx,vy))
-	 *       then ((new this).getXVelocity() == vx) && ((new
-	 *       this).getYVelocity() == vy)
+	 *       components will be the given components. 
+	 *       | if(isValidVelocity(vx,vy))
+	 *       |		then ((new this).getXVelocity() == vx) && ((new this).getYVelocity() == vy)
 	 */
 	private void setVelocity(double vx, double vy) {
 		if (isValidVelocity(vx, vy)) {
-			setXVelocity(vx);
-			setYVelocity(vy);
+			this.velocity.setComp(vx, vy);
 		}
 	}
 
@@ -593,8 +538,95 @@ public class Ship implements IShip {
 	public void move(double duration) {
 		if (!isValidDuration(duration))
 			throw new IllegalArgumentException();
-		setX(getX() + getXVelocity() * duration);
-		setY(getY() + getYVelocity() * duration);
+		setPosition(getX() + getXVelocity() * duration, getY() + getYVelocity() * duration);
+		
+	}
+	
+	/**
+	 * Calculate the distance between two ships.
+	 * 
+	 * @param 	ship1
+	 * 			The first ship to compare with the other ship.
+	 * @param 	ship2
+	 * 			The second ship to compare with the other ship.
+	 * @return	The distance between the two ships.
+	 * 			| distance = Vector.getModulus(( ship1.getX() - ship2.getX() ), ( ship1.getY() - ship2.getY() ))
+	 * 			|		-	( ship1.getRadius() + ship2.getRadius() )
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when one of the given ships is null.
+	 * 			| (ship1 == null) || (ship2 == null)
+	 * @throws	IllegalArgumentException
+	 * 			The distance between the two ships is not a number.
+	 * 			| Double.isNaN(distance) 
+	 */
+	public static double getDistanceBetween(Ship ship1, Ship ship2) throws IllegalArgumentException
+	{
+		if((ship1 == null) || (ship2 == null))
+			throw new IllegalArgumentException();
+				
+		double distance = Vector.getModulus(( ship1.getX()- ship2.getX() ), ( ship1.getY() - ship2.getY() )) -	( ship1.getRadius() + ship2.getRadius() ) ;
+		
+		if(Double.isNaN(distance))
+			throw new IllegalArgumentException();
+		return distance;	
+			
+	}
+	
+	/**
+	 * Return a boolean reflecting whether the given ship overlaps with the current ship.	
+	 * 
+	 * @param 	ship1
+	 * 			The first ship to compare with the other ship.
+	 * @param 	ship2
+	 * 			The second ship to compare with the other ship.
+	 * @return	True if and only if the given ship overlaps with the current ship.
+	 * 			| result == (this.getDistanceBetween(ship1,ship2) <= 0)
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when one of the given ships is null.
+	 * 			| (ship1 == null) || (ship2 == null)
+	 */
+	public boolean overlap(Ship ship1, Ship ship2) throws IllegalArgumentException
+	{
+		if((ship1 == null) || (ship2 == null))
+			throw new IllegalArgumentException();
+		return (getDistanceBetween(ship1,ship2) <= 0);
+	}
+	
+	/**
+	 * Return when two ships will collide.
+	 * 
+	 * @param 	ship1
+	 * 			The first ship to compare with the other.
+	 * @param 	ship2
+	 * 			The second ship to compare with the other.
+	 * @return	Return when two ships will collide. Positive infinity if they never collide. For the specific calculation see the code.
+	 * 			| dt
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when one of the given ships is null.
+	 * 			| (ship1 == null) || (ship2 == null)
+	 */
+	public double getTimeToCollision(Ship ship1, Ship ship2) throws IllegalArgumentException
+	{
+		if((ship1 == null) || (ship2 == null))
+			throw new IllegalArgumentException();
+		
+		Vector dv = Vector.subtraction(ship1.getVelocity(), ship2.getVelocity());
+		Vector dr = Vector.subtraction(ship1.getPosition(), ship2.getPosition());
+		double dvdr = Vector.dotProduct(dv, dr);
+		double dvdv = Vector.dotProduct(dv, dv);
+		double d = (dvdr)*(dvdr) - dvdv * (Vector.dotProduct(dr, dr)- (dr.getModulus())*(dr.getModulus()));
+		double dt;
+		
+		if(dvdr >= 0 || d <= 0)
+		{
+			dt = Double.POSITIVE_INFINITY;
+		}		
+		else{
+			dt = -(dvdr+Math.sqrt(d))/(dvdv);
+		}
+		
+		return dt;
+			
 	}
 
 }

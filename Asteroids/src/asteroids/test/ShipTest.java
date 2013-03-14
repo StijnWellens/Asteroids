@@ -42,8 +42,7 @@ public class ShipTest {
 	@Test
 	  public void testSetCoordinate() {
 	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
-	    ship.setX(150);
-	    ship.setY(150);
+	    ship.setPosition(150,150);
 	    assertEquals(150,ship.getX(), Util.EPSILON);
 	    assertEquals(150,ship.getY(), Util.EPSILON);
 	}
@@ -51,9 +50,8 @@ public class ShipTest {
 	@Test(expected=IllegalArgumentException.class)
 	  public void testSetCoordinate_IllegalCase() {
 	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
-	    ship.setX(Double.NaN);
-	    ship.setY(Double.NaN);
-	 }
+	    ship.setPosition(Double.NaN, Double.NaN);
+	}
 	
 	@Test
 	  public void testGetVelocity() {
