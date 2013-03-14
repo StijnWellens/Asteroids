@@ -62,33 +62,32 @@ public class ShipTest {
 	    assertEquals(-10,ship.getYVelocity(), Util.EPSILON);
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	  public void testGetVelocity_IllegalCase() {
 	    Ship ship = new Ship(100, 200, Double.NaN, Double.NaN, 20, -Math.PI);
-	    
+	    assertEquals(0,ship.getXVelocity(), Util.EPSILON);
+	    assertEquals(0,ship.getYVelocity(), Util.EPSILON);
 	 }
 	
 	@Test
 	  public void testGetMaxVelocity() {
 	    Ship ship = new Ship();
-	    assertEquals(300000,ship.getMaxVelocity(), Util.EPSILON);
+	    assertEquals(Ship.LIGHTSPEED,ship.getMaxVelocity(), Util.EPSILON);
 	 }
 	
 	@Test
 	  public void testSetMaxVelocity() {
 	    Ship ship = new Ship();
-	    ship.setMaxVelocity(20000);
-	    assertEquals(20000,ship.getMaxVelocity(), Util.EPSILON);
+	    ship.setMaxVelocity(Ship.LIGHTSPEED-5000);
+	    assertEquals(Ship.LIGHTSPEED-5000,ship.getMaxVelocity(), Util.EPSILON);
 	 }
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	  public void testSetMaxVelocity_IllegalCase() {
 	    Ship ship = new Ship();
-	    ship.setMaxVelocity(350000);	    
-	 }
-	
-	
-	
+	    ship.setMaxVelocity(Ship.LIGHTSPEED+20000);	
+	    assertEquals(Ship.LIGHTSPEED, ship.getMaxVelocity(), Util.EPSILON);
+	 }	
 	
 	
 	

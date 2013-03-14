@@ -7,32 +7,44 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class representing a ship with a position, velocity, direction and radius
  * 
- * @invar The x position of the ship must always be a valid x position. |
- *        isValidX(getX())
- * @invar The y position of the ship must always be a valid y position. |
- *        isValidY(getY())
- * @invar The maximum velocity of the ship must always be a valid maximum
- *        velocity. | isValidMaxVelocity(getMaxVelocity())
- * @invar The velocity of the ship must always be a valid velocity. |
- *        isValidVelocity(getXVelocity(), getYVelocity())
- * @invar The direction of the ship must always be a valid direction. |
- *        isValidDirection(getDirection())
- * @invar The lowerBoundRadius of the ship must always be a valid
- *        lowerBoundRadius. | isValidLowerBoundRadius(getLowerBoundRadius())
- * @invar The radius of the ship must always be a valid radius. |
- *        isValidRadius(getRadius())
- * @author Julie Wouters & Stijn Wellens
+ * @invar 	The x position of the ship must always be a valid x position. 
+ * 			| isValidX(getX())
+ * @invar 	The y position of the ship must always be a valid y position. 
+ * 			| isValidY(getY())
+ * @invar 	The maximum velocity of the ship must always be a valid maximum
+ *        	velocity. 
+ *        	| isValidMaxVelocity(getMaxVelocity())
+ * @invar 	The velocity of the ship must always be a valid velocity. 
+ * 			| isValidVelocity(getXVelocity(), getYVelocity())
+ * @invar 	The direction of the ship must always be a valid direction. 
+ * 			| isValidDirection(getDirection())
+ * @invar 	The lowerBoundRadius of the ship must always be a valid
+ *        	lowerBoundRadius. 
+ *        	| isValidLowerBoundRadius(getLowerBoundRadius())
+ * @invar 	The radius of the ship must always be a valid radius. 
+ * 			| isValidRadius(getRadius())
+ * @author 	Julie Wouters & Stijn Wellens
  * 
  */
 public class Ship implements IShip {
 
-	// TODO default Constructor documentatie
 	/**
+	 * Create a new default ship with default settings.
 	 * 
+	 * @effect This new ship is initialized with the default x coordinate 0 as
+	 *         its x coordinate, 0 as its y coordinate, 300000 as its maximum
+	 *         velocity, 0 as its x velocity component, 0 as its y velocity
+	 *         component, PI/2 as its direction, 1 as its radius. 
+	 *         | setMaxVelocity(300000); 
+	 *         | setX(0); 
+	 *         | setY(0); 
+	 *         | setVelocity(0,0); 
+	 *         | setDirection(PI / 2); 
+	 *         | setRadius(1);
 	 */
-	public Ship() throws IllegalArgumentException {
+	public Ship() {
 		setMaxVelocity(300000);
-		
+
 		setX(0);
 		setY(0);
 		setVelocity(0, 0);
@@ -41,14 +53,39 @@ public class Ship implements IShip {
 
 	}
 
-	// TODO Constructor documentatie
 	/**
+	 * Create a new ship with given x and y position, x and y velocity
+	 * components, direction and radius.
 	 * 
+	 * @param x
+	 *        The initial x position for this new ship.
+	 * @param y
+	 *        The initial y position for this new ship.
+	 * @param xVelocity
+	 *        The initial x velocity component for this new ship.
+	 * @param yVelocity
+	 *        The initial y velocity component for this new ship.
+	 * @param radius
+	 *        The radius of this new ship.
+	 * @param angle
+	 *        The initial direction angle for this new ship.
+	 * @effect This new ship is initialized with the given x as its initial x
+	 *         coordinate, the given y as its initial y coordinate, 300000 as
+	 *         its maximum velocity, the given xVelocity as its x velocity
+	 *         component, the given YVelocity as its y velocity component, the
+	 *         given angle as its initial direction, the given radius as its
+	 *         radius. 
+	 *         | setMaxVelocity(300000); 
+	 *         | setX(x); 
+	 *         | setY(y); 
+	 *         | setVelocity(xVelocity, yVelocity); 
+	 *         | setDirection(angle); 
+	 *         | setRadius(radius);
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity,
 			double radius, double angle) throws IllegalArgumentException {
 		setMaxVelocity(300000);
-		
+
 		setX(x);
 		setY(y);
 		setVelocity(xVelocity, yVelocity);
@@ -59,13 +96,14 @@ public class Ship implements IShip {
 
 	// Position: defensive programming
 
-	private double xPosition;
-	private double yPosition;
+	private double	xPosition;
+	private double	yPosition;
 
 	/**
 	 * Returns the x Position of the ship.
 	 * 
-	 * @return xPosition the x Position of the ship
+	 * @return 	xPosition 
+	 * 			the x Position of the ship
 	 */
 	@Basic
 	public double getX() {
@@ -108,13 +146,13 @@ public class Ship implements IShip {
 
 	/**
 	 * 
-	 * @param x
-	 *            The new x position of this ship.
-	 * @post The new x position of this ship is equal to the given x position of
+	 * @param 	x
+	 *         	The new x position of this ship.
+	 * @post 	The new x position of this ship is equal to the given x position of
 	 *       this ship. | (new this).getX() == x
 	 * @throws IllegalArgumentException
-	 *             The given x position is not a valid x position. | !
-	 *             isValidX(x)
+	 *             The given x position is not a valid x position. |
+	 *             !isValidX(x)
 	 */
 	public void setX(double x) throws IllegalArgumentException {
 		if (!isValidX(x))
@@ -129,8 +167,8 @@ public class Ship implements IShip {
 	 * @post The new y position of this ship is equal to the given y position of
 	 *       this ship. | (new this).getY() == y
 	 * @throws IllegalArgumentException
-	 *             The given y position is not a valid y position. | !
-	 *             isValidY(y)
+	 *             The given y position is not a valid y position. |
+	 *             !isValidY(y)
 	 */
 	public void setY(double y) throws IllegalArgumentException {
 		if (!isValidY(y))
@@ -140,11 +178,11 @@ public class Ship implements IShip {
 
 	// Velocity: total programming
 
-	private double vx;
-	private double vy;
-	private double maxV; // in km/s
+	private double				vx;
+	private double				vy;
+	private double				maxV;					// in km/s
 
-	private static final double LIGHTSPEED = 300000;
+	public static final double	LIGHTSPEED	= 300000;
 
 	/**
 	 * Returns the x component of the velocity of the ship.
@@ -177,7 +215,8 @@ public class Ship implements IShip {
 	 * 
 	 * @param maxV
 	 *            The given maximum velocity.
-	 * @return False if the double maxV is not a number. | if(Double.isNaN(maxV)
+	 * @return False if the double maxV is not a number. 
+	 * 	| if(Double.isNaN(maxV) 
 	 *         == true) | then result == false
 	 * @return True if and only if the given maximum velocity is positive or 0
 	 *         and not exceeding the speed of light. | if((maxV >= 0) && (maxV
@@ -367,8 +406,8 @@ public class Ship implements IShip {
 
 	// Direction: nominal programming
 
-	private double direction;
-	private static final double PI = Math.PI;
+	private double				direction;
+	private static final double	PI	= Math.PI;
 
 	/**
 	 * Returns the angle of the direction of this ship.
@@ -430,8 +469,8 @@ public class Ship implements IShip {
 
 	// Radius
 
-	private double radius;
-	private static double lowerBoundRadius;
+	private double			radius;
+	private static double	lowerBoundRadius;
 
 	/**
 	 * Returns the lower bound of the radius of all ships.
@@ -550,12 +589,12 @@ public class Ship implements IShip {
 	 *             The given duration is not a valid duration. |
 	 *             !isValidDuration(duration)
 	 */
+	// TODO
 	public void move(double duration) {
 		if (!isValidDuration(duration))
 			throw new IllegalArgumentException();
-		double direction = getDirection();
-		setX(getX() + getXVelocity() * Math.cos(direction) * duration);
-		setY(getY() + getYVelocity() * Math.sin(direction) * duration);
+		setX(getX() + getXVelocity() * duration);
+		setY(getY() + getYVelocity() * duration);
 	}
 
 }
