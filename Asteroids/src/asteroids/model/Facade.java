@@ -123,8 +123,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getCollisionPosition(IShip ship1, IShip ship2) {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			return getCollisionPosition((Ship)ship1,(Ship)ship2);
+		}
+		catch(IllegalArgumentException iae) {
+			throw new ModelException(iae);			
+		}
 	}
 	
 	public double makeAngleValid(double angle)

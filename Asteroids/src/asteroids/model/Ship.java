@@ -628,5 +628,34 @@ public class Ship implements IShip {
 		return dt;
 			
 	}
+	
+	/**
+	 * Return where two ships will collide.
+	 * 
+	 * @param 	ship1
+	 * 			The first ship to compare with the other.
+	 * @param 	ship2
+	 * 			The second ship to compare with the other.
+	 * @return	An array with the position of the future collision.
+	 * 			| 
+	 * @return	Null if the two ships never collide.
+	 * 			| 
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when one of the given ships is null.
+	 * 			| (ship1 == null) || (ship2 == null)
+	 */
+	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws IllegalArgumentException
+	{
+		if((ship1 == null) || (ship2 == null))
+			throw new IllegalArgumentException();
+		
+		double time = getTimeToCollision(ship1,ship2);
+		Vector collisionPosition = Vector.sum(ship1.getPosition(), Vector.multiplyScalar(ship1.getVelocity(),time));
+		double[] collision = new double[2];
+		collision[0] = collisionPosition.getXComp();
+		collision[1] = collisionPosition.getYComp();
+		
+		return collision;
+	}
 
 }

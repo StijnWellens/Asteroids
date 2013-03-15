@@ -49,5 +49,14 @@ public class Vector {
 		return new Vector(vector1.getXComp()-vector2.getXComp(), vector1.getYComp()-vector2.getYComp());
 	}
 	
+	public static Vector sum(Vector vector1, Vector vector2)
+	{
+		return new Vector(vector1.getXComp()+vector2.getXComp(), vector1.getYComp()+vector2.getYComp());
+	}
+	
+	public static Vector multiplyScalar(Vector vector, double scalar)
+	{
+		return new Vector(vector.getXComp()*scalar, vector.getYComp()*scalar);
+	}
 	
 }
