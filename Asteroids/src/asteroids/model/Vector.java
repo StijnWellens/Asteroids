@@ -29,34 +29,82 @@ public class Vector {
 		this.yComp = y;
 	}
 	
-	public double getModulus()
+	public double getModulus() throws ArithmeticException
 	{
-		return Math.hypot(getXComp(), getYComp()) ;
+		double modulus = Math.hypot(getXComp(), getYComp()) ;
+		if(modulus == Double.POSITIVE_INFINITY )
+			throw new ArithmeticException();
+		
+		return modulus;
 	}
 	
-	public static double getModulus(double x, double y)
+	public static double getModulus(double x, double y) throws ArithmeticException
 	{
-		return Math.hypot(x, y);
+		double modulus = Math.hypot(x, y);
+		if(modulus == Double.POSITIVE_INFINITY)
+			throw new ArithmeticException();
+		
+		return modulus;
 	}
 	
-	public static double dotProduct(Vector vector1, Vector vector2)
+	public static double sumOfComponents(double comp1, double comp2) throws ArithmeticException
 	{
-		return (vector1.getXComp()*vector2.getXComp()) + (vector1.getYComp()*vector2.getYComp());
+		
+		/*if(Math.signum(comp1) == Math.signum(comp2) && Math.abs(comp1) > Double.MAX_VALUE - Math.abs(comp2))
+		{
+			return Double.MAX_VALUE;
+		}
+		else if(Math.signum(comp1) == Math.signum(comp2) && Math.abs(comp1) > Double.MIN_VALUE + Math.abs(comp2))
+		{
+			return Double.MIN_VALUE;
+		}
+		else
+		{
+			return comp1 + comp2;
+		}*/
+		
+		if(comp1 > Double.MAX_VALUE - comp2 || comp2 > Double.MAX_VALUE - comp1 || comp1 < Double.MIN_VALUE - comp2 || comp2 < Double.MIN_VALUE - comp1)
+			throw new ArithmeticException();
+		
+		return comp1 + comp2;
 	}
 	
-	public static Vector subtraction(Vector vector1, Vector vector2)
+	public static double multiplyComponents(double comp1, double comp2) throws ArithmeticException
 	{
-		return new Vector(vector1.getXComp()-vector2.getXComp(), vector1.getYComp()-vector2.getYComp());
+		
+		if(Math.abs(comp1) > Double.MAX_VALUE / Math.abs(comp2) || Math.abs(comp2) > Double.MAX_VALUE / Math.abs(comp1) || Math.abs(comp1) < Double.MIN_VALUE / Math.abs(comp2) || Math.abs(comp2) < Double.MIN_VALUE / Math.abs(comp1))
+			throw new ArithmeticException();
+		
+		return comp1 * comp2;
+	}
+		
+	public static double dotProduct(Vector vector1, Vector vector2) throws ArithmeticException
+	{
+		double newX = multiplyComponents(vector1.getXComp(),vector2.getXComp());
+		double newY = multiplyComponents(vector1.getYComp(),vector2.getYComp());
+		
+				
+		return (sumOfComponents(newX,newY));
 	}
 	
-	public static Vector sum(Vector vector1, Vector vector2)
+	public static Vector multiplyScalar(Vector vector1, double scalar) throws ArithmeticException
 	{
-		return new Vector(vector1.getXComp()+vector2.getXComp(), vector1.getYComp()+vector2.getYComp());
+		double newX = multiplyComponents(vector1.getXComp(),scalar);
+		double newY = multiplyComponents(vector1.getYComp(),scalar);
+		
+				
+		return new Vector(newX,newY);
 	}
 	
-	public static Vector multiplyScalar(Vector vector, double scalar)
+	public static Vector subtraction(Vector vector1, Vector vector2) throws ArithmeticException
 	{
-		return new Vector(vector.getXComp()*scalar, vector.getYComp()*scalar);
+		return new Vector(sumOfComponents(vector1.getXComp(),-vector2.getXComp()),sumOfComponents(vector1.getYComp(),-vector2.getYComp()));
 	}
+	
+	public static Vector sum(Vector vector1, Vector vector2) throws ArithmeticException
+	{
+		return new Vector(sumOfComponents(vector1.getXComp(),vector2.getXComp()),sumOfComponents(vector1.getYComp(),vector2.getYComp()));
+	}
+	
 	
 }
