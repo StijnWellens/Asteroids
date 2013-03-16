@@ -80,14 +80,25 @@ public class Facade implements IFacade {
 
 	@Override
 	public void thrust(IShip ship, double amount) {
-		((Ship)ship).thrust(amount);
+		try{
+			((Ship)ship).thrust(amount);
+		}
+		catch(IllegalArgumentException iae) {
+			throw new ModelException(iae);			
+		}
+		
 		
 	}
 
 	@Override
 	public void turn(IShip ship, double angle) {
-		angle = makeAngleValid(angle);
-		((Ship)ship).turn(angle);
+		try{
+			angle = makeAngleValid(angle);
+			((Ship)ship).turn(angle);
+		}
+		catch(IllegalArgumentException iae) {
+			throw new ModelException(iae);			
+		}
 		
 	}
 

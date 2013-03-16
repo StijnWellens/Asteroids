@@ -1,12 +1,26 @@
 package asteroids.model;
 
+import be.kuleuven.cs.som.annotate.Basic;
+
 public class Vector {
 
+	/**
+	 * The default constructor to create a vector.
+	 * @effect	The x and y component are set to zero.
+	 * 			| setComp(0,0)
+	 */
 	public Vector()
 	{
 		setComp(0, 0);
 	}
 	
+	/**
+	 * The constructor to create a vector with a given x and y component.
+	 * @param 	xComp
+	 * 			The given x component for this vector.
+	 * @param 	yComp
+	 * 			The given y component for this vector.
+	 */
 	public Vector(double xComp, double yComp)
 	{
 		setComp(xComp, yComp);
@@ -15,20 +29,50 @@ public class Vector {
 	private double xComp;
 	private double yComp;
 	
+	/**
+	 * Return the x component of this vector.
+	 * 
+	 */
+	@Basic
 	public double getXComp() {
 		return this.xComp;
 	}
 	
+	/**
+	 * Return the y component of this vector.
+	 * 
+	 */
+	@Basic
 	public double getYComp() {
 		return this.yComp;
 	}
 	
-	public void setComp(double x, double y)
+	/**
+	 * Set the x and y component of this vector to a given x and y component. 
+	 * @param 	x
+	 * 			The given x component.
+	 * @param 	y
+	 * 			The given y component.
+	 * @post	The new x and y component of this vector are equal to the given x and y component.
+	 * 			| (new this).getXComp() == x
+	 * 			| (new this).getYComp() == y
+	 * @throws	IllegalArgumentException
+	 * 			The given x or y component is not a number.
+	 * 			| Double.isNaN(x) || Double.isNaN(y)
+	 */
+	public void setComp(double x, double y) throws IllegalArgumentException
 	{
+		if(Double.isNaN(x)|| Double.isNaN(y))
+			throw new IllegalArgumentException();
 		this.xComp = x;
 		this.yComp = y;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws ArithmeticException
+	 */
 	public double getModulus() throws ArithmeticException
 	{
 		double modulus = Math.hypot(getXComp(), getYComp()) ;
@@ -65,13 +109,12 @@ public class Vector {
 			return comp1 + comp2;
 		}*/
 		
-		if(comp1 > Double.MAX_VALUE - comp2 || comp2 > Double.MAX_VALUE - comp1 || comp1 < Double.MIN_VALUE - comp2 || comp2 < Double.MIN_VALUE - comp1)
+		if( (Math.signum(comp1)==Math.signum(comp2)) && ( (Math.abs(comp1) > Double.MAX_VALUE - Math.abs(comp2)) || (Math.abs(comp2) > Double.MAX_VALUE - Math.abs(comp1))) )
 			throw new ArithmeticException();
-		
-		/*if(((Double)comp1).isInfinite() || ((Double)comp2).isInfinite())
-			return Double.POSITIVE_INFINITY;
-		float comp1float = ((Double)comp1).floatValue();
-		float comp2float = ((Double)comp2).floatValue();*/
+		/*if( (comp1>0 && comp2<0) && ( comp1 < Double.MIN_VALUE - comp2) )
+				throw new ArithmeticException();
+		if( (comp2>0 && comp1<0) && ( comp2 < Double.MIN_VALUE - comp1) )
+			throw new ArithmeticException();*/
 		
 		return comp1 + comp2;
 		
