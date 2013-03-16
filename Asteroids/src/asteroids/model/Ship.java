@@ -18,7 +18,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidVelocity(getXVelocity(), getYVelocity())
  * @invar 	The direction of the ship must always be a valid direction. 
  * 			| isValidDirection(getDirection())
- * @invar 	The lowerBoundRadius of the ship must always be a valid
+ * @invar 	The lowerBoundRadius of the ship must always be a valid.
  *        	lowerBoundRadius. 
  *        	| isValidLowerBoundRadius(getLowerBoundRadius())
  * @invar 	The radius of the ship must always be a valid radius. 
@@ -307,8 +307,10 @@ public class Ship implements IShip {
 	 * @param amount
 	 *            The amount to be checked.
 	 * @post True if and only if the amount is a number and is higher than or
-	 *       equal to zero. | result == | ( (!Double.isNaN(amount)) | && (amount
-	 *       >= 0) )
+	 *       equal to zero. 
+	 *       | result == 
+	 *       | ( (!Double.isNaN(amount)) 
+	 *       | && (amount >= 0) )
 	 */
 	private boolean isValidAmount(double amount) {
 		return ((!Double.isNaN(amount)) && (amount >= 0));
@@ -322,9 +324,9 @@ public class Ship implements IShip {
 	 *            The amount that needs to be added to the current velocity.
 	 * @effect If the given amount is valid, the new x velocity will be set to
 	 *         the sum of the old x velocity and the amount that has been
-	 *         multiplied with the cosine of the direction. |
-	 *         if(!isValidAmount(amount)) | then (new this).getXVelocity() ==
-	 *         this.getXVelocity() + amount*Math.sin(this.direction);
+	 *         multiplied with the cosine of the direction. 
+	 *         | if(!isValidAmount(amount)) 
+	 *         | then (new this).getXVelocity() == this.getXVelocity() + amount*Math.sin(this.direction);
 	 * 
 	 */
 	// TODO Afwerken documentatie!
@@ -371,8 +373,8 @@ public class Ship implements IShip {
 	 * @param angle
 	 *            The angle in which the ship moves.
 	 * @return True if and only if the given angle is a number and is between
-	 *         zero and 2*Pi. | result == ((!Double.isNaN(angle)) && (angle >=
-	 *         0) && (angle < 2*PI))
+	 *         zero and 2*Pi. 
+	 *         | result == ((!Double.isNaN(angle)) && (angle >=0) && (angle < 2*PI))
 	 */
 	public boolean isValidDirection(double angle) {
 		return ((!Double.isNaN(angle)) && (angle >= 0) && (angle < 2 * PI));
@@ -383,10 +385,10 @@ public class Ship implements IShip {
 	 * 
 	 * @param angle
 	 *            The angle of the given direction.
-	 * @pre The given direction must be a valid direction. |
-	 *      isValidDirection(angle)
-	 * @post The new direction of the ship is equal to the modulo 2*Pi of the
-	 *       given direction of the ship. | (new this).getDirection() == angle
+	 * @pre The given direction must be a valid direction. 
+	 * 		| isValidDirection(angle)
+	 * @post The new direction of the ship is equal to the modulo 2*Pi of the given direction of the ship. 
+	 * 		| (new this).getDirection() == angle
 	 */
 	public void setDirection(double angle) {
 		assert isValidDirection(angle);
@@ -400,11 +402,10 @@ public class Ship implements IShip {
 	 * 
 	 * @param angle
 	 *            The angle that needs to be added to the current direction.
-	 * @pre The sum of the old direction and the given angle must be a valid
-	 *      direction. | isValidDirection(this.getDirection()+angle)
-	 * @effect The direction of the ship is set to the sum of the current
-	 *         direction and the given angle. | (new
-	 *         this).setDirection(this.getDirection() + angle)
+	 * @pre The sum of the old direction and the given angle must be a valid direction. 
+	 * 		| isValidDirection(this.getDirection()+angle)
+	 * @effect The direction of the ship is set to the sum of the current direction and the given angle. 
+	 * 		| (new this).setDirection(this.getDirection() + angle)
 	 */
 	public void turn(double angle) {
 		assert isValidDirection(getDirection() + angle);
@@ -432,11 +433,12 @@ public class Ship implements IShip {
 	/**
 	 * Check whether the lower bound of the radius is valid for all ships.
 	 * 
-	 * @param lowerBoundRadius
-	 *            the lower bound to check
-	 * @return True if and only if the lower bound of the radius is not zero or
-	 *         below zero and if is a number. | result == | ( (lowerBoundRadius
-	 *         >= 0) | && (!Double.isNaN(lowerBoundRadius)) )
+	 * @param 	lowerBoundRadius
+	 *          the lower bound to check
+	 * @return True if and only if the lower bound of the radius is not zero or below zero and if is a number. 
+	 * 			| result == 
+	 * 			| ( (lowerBoundRadius >= 0) 
+	 * 			| && (!Double.isNaN(lowerBoundRadius)) )
 	 */
 	public static boolean isValidLowerBoundRadius(double lowerBoundRadius) {
 		return ((!Double.isNaN(lowerBoundRadius)) && (lowerBoundRadius >= 0));
@@ -445,13 +447,13 @@ public class Ship implements IShip {
 	/**
 	 * Set the lowerBoundRadius of all the ships to the given lowerBoundRadius.
 	 * 
-	 * @param lowerBoundRadius
-	 *            The new lowerBoundRadius for all the ships.
-	 * @post The new lowerBoundRadius of all the ships is equal to the given
-	 *       lowerBoundRadius. | new.getLowerBoundRadius() == lowerBoundRadius
-	 * @throws IllegalArgumentException
-	 *             The given lowerBoundRadius is not a valid lowerBoundRadius
-	 *             for any ship. | ! isValidLowerBoundRadius(lowerBoundRadius)
+	 * @param 	lowerBoundRadius
+	 *          The new lowerBoundRadius for all the ships.
+	 * @post 	The new lowerBoundRadius of all the ships is equal to the given
+	 *       	lowerBoundRadius. | new.getLowerBoundRadius() == lowerBoundRadius
+	 * @throws 	IllegalArgumentException
+	 *          The given lowerBoundRadius is not a valid lowerBoundRadius for any ship. 
+	 *          | ! isValidLowerBoundRadius(lowerBoundRadius)
 	 */
 	private static void setLowerBoundRadius(double lowerBoundRadius)
 			throws IllegalArgumentException {
@@ -476,10 +478,11 @@ public class Ship implements IShip {
 	 * Check whether the given radius is a valid radius for this ship.
 	 * 
 	 * @param radius
-	 *            The radius to check.
-	 * @return True if and only if the given radius is higher than the
-	 *         lowerBoundRadius of the ships and it is a number. | result == | (
-	 *         (!Double.isNaN(radius)) | && (radius > lowerBoundRadius) )
+	 *        The radius to check.
+	 * @return True if and only if the given radius is higher than the lowerBoundRadius of the ships and it is a number. 
+	 * 			| result == 
+	 * 			| ((!Double.isNaN(radius)) 
+	 * 			| && (radius > lowerBoundRadius) )
 	 */
 	public boolean isValidRadius(double radius) {
 		return ((!Double.isNaN(radius)) && (radius > getLowerBoundRadius()));
@@ -488,13 +491,13 @@ public class Ship implements IShip {
 	/**
 	 * Set the radius of the ship to the given radius.
 	 * 
-	 * @param radius
-	 *            The new radius for the ship.
-	 * @post The new radius of the ship is equal to the given radius. | (new
-	 *       this).getRadius() == radius
-	 * @throws IllegalArgumentException
-	 *             The given radius is not a valid radius for this ship. | !
-	 *             isValidRadius(radius)
+	 * @param 	radius
+	 *         	The new radius for the ship.
+	 * @post 	The new radius of the ship is equal to the given radius. 
+	 * 			| (new this).getRadius() == radius
+	 * @throws 	IllegalArgumentException
+	 *          The given radius is not a valid radius for this ship. 
+	 *          | !isValidRadius(radius)
 	 */
 	public void setRadius(double radius) throws IllegalArgumentException {
 		if (!isValidRadius(radius))
@@ -505,10 +508,10 @@ public class Ship implements IShip {
 	/**
 	 * Check whether the given duration is a valid duration.
 	 * 
-	 * @param duration
-	 *            The duration to check.
-	 * @return True if and only if the given duration is not below zero. |
-	 *         result == | duration >= 0
+	 * @param 	duration
+	 *       	The duration to check.
+	 * @return 	True if and only if the given duration is not below zero. 
+	 * 			|result == | duration >= 0
 	 */
 	public boolean isValidDuration(double duration) {
 		return duration >= 0;
@@ -518,21 +521,19 @@ public class Ship implements IShip {
 	 * Changes the position of the ship based on the current position, current
 	 * orientation, velocity and a given time duration.
 	 * 
-	 * @param duration
-	 *            How long the ship needs to move.
-	 * @post The new x-coordinate of this ship is equal to the old x-coordinate
-	 *       of this ship incremented with the product of the x-velocity of the
-	 *       ship with the cosine of the direction of the ship with the given
-	 *       time duration. * |(new this).getX() == this.getX() +
-	 *       this.getXVelocity()*Math.cos(this.getDirection())*duration
-	 * @post The new y-coordinate of this ship is equal to the old y-coordinate
-	 *       of this ship incremented with the product of the y-velocity of the
-	 *       ship with the sine of the direction of the ship with the given time
-	 *       duration. |(new this).getY() == this.getY() +
-	 *       this.getYVelocity()*Math.sin(this.getDirection())*duration
-	 * @throws IllegalArgumentException
-	 *             The given duration is not a valid duration. |
-	 *             !isValidDuration(duration)
+	 * @param	duration
+	 *         	How long the ship needs to move.
+	 * @post 	The new x-coordinate of this ship is equal to the old x-coordinate
+	 *       	of this ship incremented with the product of the x-velocity of the
+	 *       	ship with the cosine of the direction of the ship with the given time duration.  
+	 *       	|(new this).getX() == this.getX() + this.getXVelocity()*Math.cos(this.getDirection())*duration
+	 * @post 	The new y-coordinate of this ship is equal to the old y-coordinate
+	 *       	of this ship incremented with the product of the y-velocity of the
+	 *       	ship with the sine of the direction of the ship with the given time duration. 
+	 *       	|(new this).getY() == this.getY() + this.getYVelocity()*Math.sin(this.getDirection())*duration
+	 * @throws 	IllegalArgumentException
+	 *          The given duration is not a valid duration. 
+	 *          |!isValidDuration(duration)
 	 */
 	// TODO
 	public void move(double duration) {

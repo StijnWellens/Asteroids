@@ -68,6 +68,36 @@ public class ShipTest {
 	 }
 	
 	@Test
+	public void testIsValidVelocityComp(){
+		Ship ship = new Ship();
+		assertTrue(ship.isValidVelocityComp(50000));
+	}
+	
+	@Test
+	public void testIsValidVelocityComp_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidVelocityComp(Double.NaN));
+	}
+	
+	@Test
+	public void testIsValidVelocity(){
+		Ship ship = new Ship();
+		assertTrue(ship.isValidVelocity(150000, 150000));
+	}
+	
+	@Test
+	public void testIsValidVelocity_ExceedsMaxVelocity(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidVelocity(300000,300000));
+	}
+	
+	@Test
+	public void testIsValidVelocity_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidVelocity(Double.NaN, Double.NaN));
+	}
+	
+	@Test
 	  public void testGetMaxVelocity() {
 	    Ship ship = new Ship();
 	    assertEquals(Ship.LIGHTSPEED,ship.getMaxVelocity(), Util.EPSILON);
@@ -85,7 +115,68 @@ public class ShipTest {
 	    Ship ship = new Ship();
 	    ship.setMaxVelocity(Ship.LIGHTSPEED+20000);	
 	    assertEquals(Ship.LIGHTSPEED, ship.getMaxVelocity(), Util.EPSILON);
-	 }	
+	 }
+	
+	@Test
+	public void testIsValidMaxVelocity() {
+		Ship ship = new Ship();
+		assertTrue(ship.isValidMaxVelocity(120000));
+	}
+	
+	@Test
+	public void testIsValidMaxVelocity_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidMaxVelocity(Double.NaN));
+	}
+	
+	@Test
+	public void testIsValidMaxVelocity_NegativeAmount(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidMaxVelocity(-25));
+	}
+	
+	@Test
+	public void testIsValidMaxVelocity_ExceedsLightspeed(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidMaxVelocity(Ship.LIGHTSPEED + 20000));
+	}
+	
+	@Test
+	public void testThrust(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/4);
+		ship.thrust(100000);
+		assertEquals(100000*Math.cos(3.14/4),ship.getXVelocity(),Util.EPSILON);
+		assertEquals(100000*Math.sin(3.14/4),ship.getYVelocity(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testThrust_IllegalCase(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/4);
+		ship.thrust(Double.NaN);
+		assertEquals(0,ship.getXVelocity(),Util.EPSILON);
+		assertEquals(0,ship.getYVelocity(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testThrust_NegativeAmount(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/4);
+		ship.thrust(-200000);
+		assertEquals(0,ship.getXVelocity(),Util.EPSILON);
+		assertEquals(0,ship.getYVelocity(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testThrust_ExceedsLightspeed(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/4);
+		ship.thrust(Ship.LIGHTSPEED);
+		double tempVx =Ship.LIGHTSPEED * Math.cos(3.14/4);
+		double tempVy =Ship.LIGHTSPEED * Math.sin(3.14/4);
+		
+	}
 	
 	@Test
 	  public void testGetTimeToCollision() {
