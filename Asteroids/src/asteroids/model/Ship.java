@@ -643,7 +643,7 @@ public class Ship implements IShip {
 		{
 			dt = Double.POSITIVE_INFINITY;
 		}
-				
+						
 		return dt;
 			
 	}
@@ -681,6 +681,7 @@ public class Ship implements IShip {
 		{
 			collision = null;
 		}
+		
 		
 		return collision;
 	}

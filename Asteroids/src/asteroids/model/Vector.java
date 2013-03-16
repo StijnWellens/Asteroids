@@ -60,10 +60,8 @@ public class Vector {
 	 * 			The given x or y component is not a number.
 	 * 			| Double.isNaN(x) || Double.isNaN(y)
 	 */
-	public void setComp(double x, double y) throws IllegalArgumentException
+	public void setComp(double x, double y) 
 	{
-		if(Double.isNaN(x)|| Double.isNaN(y))
-			throw new IllegalArgumentException();
 		this.xComp = x;
 		this.yComp = y;
 	}
@@ -76,8 +74,8 @@ public class Vector {
 	public double getModulus() throws ArithmeticException
 	{
 		double modulus = Math.hypot(getXComp(), getYComp()) ;
-		if(modulus == Double.POSITIVE_INFINITY )
-			throw new ArithmeticException();
+		//if(modulus == Double.POSITIVE_INFINITY )
+			//throw new ArithmeticException();
 		
 		return modulus;
 	}
@@ -87,8 +85,8 @@ public class Vector {
 		if(((Double)x).isInfinite() || ((Double)y).isInfinite())
 			return Double.POSITIVE_INFINITY;
 		double modulus = Math.hypot(x, y);
-		if(modulus == Double.POSITIVE_INFINITY)
-			throw new ArithmeticException();
+		//if(modulus == Double.POSITIVE_INFINITY)
+			//throw new ArithmeticException();
 		
 		return modulus;
 	}
@@ -110,7 +108,9 @@ public class Vector {
 		}*/
 		
 		if( (Math.signum(comp1)==Math.signum(comp2)) && ( (Math.abs(comp1) > Double.MAX_VALUE - Math.abs(comp2)) || (Math.abs(comp2) > Double.MAX_VALUE - Math.abs(comp1))) )
-			throw new ArithmeticException();
+			return Double.MAX_VALUE;
+			//throw new ArithmeticException();
+		
 		/*if( (comp1>0 && comp2<0) && ( comp1 < Double.MIN_VALUE - comp2) )
 				throw new ArithmeticException();
 		if( (comp2>0 && comp1<0) && ( comp2 < Double.MIN_VALUE - comp1) )
@@ -124,9 +124,11 @@ public class Vector {
 	public static double multiplyComponents(double comp1, double comp2) throws ArithmeticException
 	{
 		if((Math.abs(comp1) < 1 && Math.abs(comp2) < 1) && (Math.abs(comp1) < Double.MIN_VALUE / Math.abs(comp2) || Math.abs(comp2) < Double.MIN_VALUE / Math.abs(comp1) ) )
-			throw new ArithmeticException();
+			return Double.MIN_VALUE;
+			//throw new ArithmeticException();
 		if((Math.abs(comp1) > 1 && Math.abs(comp2) > 1) && (Math.abs(comp1) > Double.MAX_VALUE / Math.abs(comp2) || Math.abs(comp2) > Double.MAX_VALUE / Math.abs(comp1) ))
-			throw new ArithmeticException();
+			return Double.MAX_VALUE;
+			//throw new ArithmeticException();
 		
 		return comp1 * comp2;
 		/*if(((Double)comp1).isInfinite() || ((Double)comp2).isInfinite())
@@ -146,23 +148,29 @@ public class Vector {
 		return (sumOfComponents(newX,newY));
 	}
 	
-	public static Vector multiplyScalar(Vector vector1, double scalar) throws ArithmeticException
+	public static Vector multiplyScalar(Vector vector1, double scalar) throws ArithmeticException, IllegalArgumentException
 	{
 		double newX = multiplyComponents(vector1.getXComp(),scalar);
 		double newY = multiplyComponents(vector1.getYComp(),scalar);
 		
-				
 		return new Vector(newX,newY);
 	}
 	
-	public static Vector subtraction(Vector vector1, Vector vector2) throws ArithmeticException
+	public static Vector subtraction(Vector vector1, Vector vector2) throws ArithmeticException, IllegalArgumentException
 	{
-		return new Vector(sumOfComponents(vector1.getXComp(),-vector2.getXComp()),sumOfComponents(vector1.getYComp(),-vector2.getYComp()));
+		double newX = sumOfComponents(vector1.getXComp(),-vector2.getXComp());
+		double newY = sumOfComponents(vector1.getYComp(),-vector2.getYComp());
+		
+		return new Vector(newX,newY);
 	}
 	
 	public static Vector sum(Vector vector1, Vector vector2) throws ArithmeticException
 	{
-		return new Vector(sumOfComponents(vector1.getXComp(),vector2.getXComp()),sumOfComponents(vector1.getYComp(),vector2.getYComp()));
+		double newX = sumOfComponents(vector1.getXComp(),vector2.getXComp());
+		double newY = sumOfComponents(vector1.getYComp(),vector2.getYComp());
+		
+		return new Vector(newX,newY);
+		
 	}
 	
 	
