@@ -40,6 +40,8 @@ public class Vector {
 	
 	public static double getModulus(double x, double y) throws ArithmeticException
 	{
+		if(((Double)x).isInfinite() || ((Double)y).isInfinite())
+			return Double.POSITIVE_INFINITY;
 		double modulus = Math.hypot(x, y);
 		if(modulus == Double.POSITIVE_INFINITY)
 			throw new ArithmeticException();
@@ -66,16 +68,30 @@ public class Vector {
 		if(comp1 > Double.MAX_VALUE - comp2 || comp2 > Double.MAX_VALUE - comp1 || comp1 < Double.MIN_VALUE - comp2 || comp2 < Double.MIN_VALUE - comp1)
 			throw new ArithmeticException();
 		
+		/*if(((Double)comp1).isInfinite() || ((Double)comp2).isInfinite())
+			return Double.POSITIVE_INFINITY;
+		float comp1float = ((Double)comp1).floatValue();
+		float comp2float = ((Double)comp2).floatValue();*/
+		
 		return comp1 + comp2;
+		
+	
 	}
 	
 	public static double multiplyComponents(double comp1, double comp2) throws ArithmeticException
 	{
-		
-		if(Math.abs(comp1) > Double.MAX_VALUE / Math.abs(comp2) || Math.abs(comp2) > Double.MAX_VALUE / Math.abs(comp1) || Math.abs(comp1) < Double.MIN_VALUE / Math.abs(comp2) || Math.abs(comp2) < Double.MIN_VALUE / Math.abs(comp1))
+		if((Math.abs(comp1) < 1 && Math.abs(comp2) < 1) && (Math.abs(comp1) < Double.MIN_VALUE / Math.abs(comp2) || Math.abs(comp2) < Double.MIN_VALUE / Math.abs(comp1) ) )
+			throw new ArithmeticException();
+		if((Math.abs(comp1) > 1 && Math.abs(comp2) > 1) && (Math.abs(comp1) > Double.MAX_VALUE / Math.abs(comp2) || Math.abs(comp2) > Double.MAX_VALUE / Math.abs(comp1) ))
 			throw new ArithmeticException();
 		
 		return comp1 * comp2;
+		/*if(((Double)comp1).isInfinite() || ((Double)comp2).isInfinite())
+			return Double.POSITIVE_INFINITY;
+		float comp1float = ((Double)comp1).floatValue();
+		float comp2float = ((Double)comp2).floatValue();
+		
+		return comp1float * comp2float;*/
 	}
 		
 	public static double dotProduct(Vector vector1, Vector vector2) throws ArithmeticException

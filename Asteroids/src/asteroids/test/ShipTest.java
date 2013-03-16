@@ -87,7 +87,13 @@ public class ShipTest {
 	    assertEquals(Ship.LIGHTSPEED, ship.getMaxVelocity(), Util.EPSILON);
 	 }	
 	
-	
+	@Test
+	  public void testGetTimeToCollision() {
+	    Ship ship1 = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    Ship ship2 = new Ship(20, 30, 20, -15, 10, Math.PI/7);
+	    
+	    assertEquals(5000,Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
+	 }
 	
 	
 	

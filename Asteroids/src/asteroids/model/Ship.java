@@ -595,7 +595,7 @@ public class Ship implements IShip {
 	 * 			Throws exception when one of the given ships is null.
 	 * 			| (ship1 == null) || (ship2 == null)
 	 */
-	public boolean overlap(Ship ship1, Ship ship2) throws IllegalArgumentException
+	public static boolean overlap(Ship ship1, Ship ship2) throws IllegalArgumentException
 	{
 		if((ship1 == null) || (ship2 == null))
 			throw new IllegalArgumentException();
@@ -615,7 +615,7 @@ public class Ship implements IShip {
 	 * 			Throws exception when one of the given ships is null.
 	 * 			| (ship1 == null) || (ship2 == null)
 	 */
-	public double getTimeToCollision(Ship ship1, Ship ship2) throws IllegalArgumentException
+	public static double getTimeToCollision(Ship ship1, Ship ship2) throws IllegalArgumentException
 	{
 		if((ship1 == null) || (ship2 == null))
 			throw new IllegalArgumentException();
@@ -663,7 +663,7 @@ public class Ship implements IShip {
 	 * 			Throws exception when one of the given ships is null.
 	 * 			| (ship1 == null) || (ship2 == null)
 	 */
-	public double[] getCollisionPosition(Ship ship1, Ship ship2) throws IllegalArgumentException
+	public static double[] getCollisionPosition(Ship ship1, Ship ship2) throws IllegalArgumentException
 	{
 		if((ship1 == null) || (ship2 == null))
 			throw new IllegalArgumentException();

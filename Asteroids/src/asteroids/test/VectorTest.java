@@ -17,7 +17,7 @@ public class VectorTest {
 	
 	@Test(expected=ArithmeticException.class)
 	  public void testSumOfComponents_IllegalCase() {
-		assertEquals( Double.MAX_VALUE,Vector.sumOfComponents(645,Double.MAX_VALUE), Util.EPSILON);
+		assertEquals( Double.MAX_VALUE,Vector.sumOfComponents(Double.MAX_VALUE,5), Util.EPSILON);
 	 }
 	
 	@Test
