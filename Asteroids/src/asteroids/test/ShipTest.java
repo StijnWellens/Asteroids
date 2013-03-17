@@ -312,9 +312,83 @@ public class ShipTest {
 	}
 	
 	@Test
+	public void testIsValidDuration_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidDuration(Double.NaN));
+	}
+	
+	@Test
 	public void testIsValidDuration_NegativeAmount(){
 		Ship ship = new Ship();
 		assertFalse(ship.isValidDuration(-20));
+	}
+	
+	@Test
+	public void testMove(){
+		Ship ship = new Ship(0,0,10000,10000,10,3.14/2);
+		ship.move(20);
+		assertEquals(10000 * 20, ship.getX(),Util.EPSILON);
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testMove_IllegalCase(){
+		Ship ship = new Ship();
+		ship.move(Double.NaN);
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testMove_NegativeAmount(){
+		Ship ship = new Ship();
+		ship.move(-20);
+	}
+	
+	@Test
+	public void testGetDistanceBetween(){
+		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
+		Ship ship2 = new Ship(40,40,0,0,10,3.14/2);
+		assertEquals(Math.sqrt(800)-10-10,Ship.getDistanceBetween(ship1, ship2),Util.EPSILON);
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testGetDistanceBetween_ShipIsNull(){
+		Ship ship = new Ship();
+		Ship ship2 = null;
+		Ship.getDistanceBetween(ship,ship2);
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testGetDistanceBetween_IllegalCase(){
+		Ship ship1 = new Ship(Double.NaN,Double.NaN,0,0,10,3.14/2);
+		Ship ship2 = new Ship(40,40,0,0,10,3.14/2);
+		Ship.getDistanceBetween(ship1,ship2);
+	}
+	
+	//Nog testen?
+	
+	@Test
+	public void testOverlap(){
+		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
+		Ship ship2 = new Ship(30,30,0,0,10,3.14/2);
+		assertTrue(Ship.overlap(ship1, ship2));
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testOverlap_ShipIsNull(){
+		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
+		Ship ship2 = null;
+		Ship.overlap(ship1, ship2);
+	}
+	
+	@Test
+	public void testOverlap_False(){
+		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
+		Ship ship2 = new Ship(40,40,0,0,10,3.14/2);
+		assertFalse(Ship.overlap(ship1, ship2));
+	}
+	
+	@Test
+	public void testGetTimeToCollision(){
+		
 	}
 	
 	@Test (expected=AssertionError.class)
