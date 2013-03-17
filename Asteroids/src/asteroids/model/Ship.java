@@ -515,7 +515,7 @@ public class Ship implements IShip {
 	 * 			| (duration >= 0 && Double.isNaN(duration))
 	 */
 	public boolean isValidDuration(double duration) {
-		return (duration >= 0 && Double.isNaN(duration));
+		return (duration >= 0 && !Double.isNaN(duration));
 	}
 
 	/**
