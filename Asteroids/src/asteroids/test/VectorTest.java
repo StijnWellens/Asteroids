@@ -21,7 +21,7 @@ public class VectorTest {
 	   
 	}
 	
-	@Test(expected=ArithmeticException.class)
+	@Test
 	  public void testSumOfComponents_IllegalCase() {
 		assertEquals( Double.MAX_VALUE,Vector.sumOfComponents(Double.MAX_VALUE,5), Util.EPSILON);
 	 }
@@ -38,9 +38,9 @@ public class VectorTest {
 	   
 	}
 	
-	@Test(expected=ArithmeticException.class)
+	@Test
 	  public void testMultiplyComponents_IllegalCase() {
-		Vector.multiplyComponents(5,Double.MAX_VALUE);
+		assertEquals(Double.MAX_VALUE, Vector.multiplyComponents(5,Double.MAX_VALUE), Util.EPSILON);
 	 }
 	
 	@Test
@@ -49,9 +49,9 @@ public class VectorTest {
 	   
 	}
 	
-	@Test(expected=ArithmeticException.class)
+	@Test
 	  public void testGetModulus_IllegalCase() {
-		Vector.getModulus(Double.MAX_VALUE, Double.MAX_VALUE);
+		assertEquals(Double.POSITIVE_INFINITY, Vector.getModulus(Double.MAX_VALUE, Double.MAX_VALUE), Util.EPSILON);
 	 }
 	
 	@Test
@@ -62,10 +62,10 @@ public class VectorTest {
 	   
 	}
 	
-	@Test(expected=ArithmeticException.class)
+	@Test
 	  public void testDotProduct_IllegalCase() {
 		Vector vector1 = new Vector(Double.MAX_VALUE,-2);
 		Vector vector2 = new Vector(3,12);
-	    Vector.dotProduct(vector1,vector2);
+	    assertEquals(Double.MAX_VALUE, Vector.dotProduct(vector1,vector2), Util.EPSILON);
 	 }
 }

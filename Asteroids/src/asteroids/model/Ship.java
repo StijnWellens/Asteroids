@@ -568,14 +568,10 @@ public class Ship implements IShip {
 		
 		double distance;
 		
-		try{
-			double sumOfRadius = Vector.sumOfComponents( ship1.getRadius(),ship2.getRadius() );
-			double distanceWithoutRadius = Vector.getModulus(Vector.sumOfComponents(ship1.getX(),-ship2.getX()), Vector.sumOfComponents(ship1.getY(),-ship2.getY()));
-			distance = Vector.sumOfComponents(distanceWithoutRadius, -sumOfRadius);
-		}
-		catch(ArithmeticException ae) {
-			distance = 0;
-		}
+		double sumOfRadius = Vector.sumOfComponents( ship1.getRadius(),ship2.getRadius() );
+		double distanceWithoutRadius = Vector.getModulus(Vector.sumOfComponents(ship1.getX(),-ship2.getX()), Vector.sumOfComponents(ship1.getY(),-ship2.getY()));
+		distance = Vector.sumOfComponents(distanceWithoutRadius, -sumOfRadius);
+		
 		
 		if(Double.isNaN(distance))
 			throw new IllegalArgumentException();
@@ -616,35 +612,35 @@ public class Ship implements IShip {
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given ships is null.
 	 * 			| (ship1 == null) || (ship2 == null)
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when the position or velocity vector of one of the given ships is null. Or when one of his components is no number.
+	 * 
 	 */
 	public static double getTimeToCollision(Ship ship1, Ship ship2) throws IllegalArgumentException
 	{
 		if((ship1 == null) || (ship2 == null))
 			throw new IllegalArgumentException();
-		
+				
 		double dt;
-		try{
-			Vector dv = Vector.subtraction(ship1.getVelocity(), ship2.getVelocity());
-			Vector dr = Vector.subtraction(ship1.getPosition(), ship2.getPosition());
-			double dvdr = Vector.dotProduct(dv, dr);
-			double dvdv = Vector.dotProduct(dv, dv);
-			double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
-			double dModulus = Vector.multiplyComponents((dr.getModulus()),(dr.getModulus()));
-			double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -dModulus) );
-			double d = Vector.sumOfComponents(d1, -d2);
+		
+		Vector dv = Vector.subtraction(ship1.getVelocity(), ship2.getVelocity());
+		Vector dr = Vector.subtraction(ship1.getPosition(), ship2.getPosition());
+		double dvdr = Vector.dotProduct(dv, dr);
+		double dvdv = Vector.dotProduct(dv, dv);
+		double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
+		double dModulus = Vector.multiplyComponents((dr.getModulus()),(dr.getModulus()));
+		double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -dModulus) );
+		double d = Vector.sumOfComponents(d1, -d2);
 					
-			if(dvdr >= 0 || d <= 0)
-			{
-				dt = Double.POSITIVE_INFINITY;
-			}		
-			else{
-				dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),1/(dvdv)));
-			}
-		}
-		catch(ArithmeticException ae)
+		if(dvdr >= 0 || d <= 0)
 		{
 			dt = Double.POSITIVE_INFINITY;
+		}		
+		else{
+			dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),1/(dvdv)));
 		}
+		
+		
 						
 		return dt;
 			
@@ -672,20 +668,24 @@ public class Ship implements IShip {
 		
 		double[] collision = new double[2];
 		
-		try{
-			double time = getTimeToCollision(ship1,ship2);
+		double time = getTimeToCollision(ship1,ship2);
+		if(time == Double.POSITIVE_INFINITY)
+		{
+			collision = null;
+		}
+		else{
 			Vector collisionPosition = Vector.sum(ship1.getPosition(), Vector.multiplyScalar(ship1.getVelocity(),time));
 			
 			collision[0] = collisionPosition.getXComp();
 			collision[1] = collisionPosition.getYComp();
 		}
-		catch(ArithmeticException ae)
-		{
-			collision = null;
-		}
+		
+		
 		
 		
 		return collision;
 	}
-
+	
+	
+	
 }
