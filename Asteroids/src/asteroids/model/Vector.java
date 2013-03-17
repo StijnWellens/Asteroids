@@ -21,7 +21,7 @@ public class Vector {
 	 * @param 	yComp
 	 * 			The given y component for this vector.
 	 */
-	public Vector(double xComp, double yComp)
+	public Vector(double xComp, double yComp) 
 	{
 		setComp(xComp, yComp);
 	}
@@ -60,16 +60,19 @@ public class Vector {
 	 * 			The given x or y component is not a number.
 	 * 			| Double.isNaN(x) || Double.isNaN(y)
 	 */
-	public void setComp(double x, double y) 
+	public void setComp(double x, double y) throws IllegalArgumentException
 	{
+		if(Double.isNaN(x) || Double.isNaN(y))
+			throw new IllegalArgumentException();
 		this.xComp = x;
 		this.yComp = y;
 	}
 	
 	/**
+	 * Calculate the modulus of this vector.
 	 * 
-	 * @return
-	 * @throws ArithmeticException
+	 * @return	The modulus of the vector.
+	 * 			| result == Math.hypot(getXComp(),getYComp())
 	 */
 	public double getModulus() 
 	{
@@ -78,8 +81,27 @@ public class Vector {
 		return modulus;
 	}
 	
-	public static double getModulus(double x, double y) 
+	/**
+	 * Calculate the modulus of the given vector components.
+	 * 
+	 * @param 	x
+	 * 			The x component of a vector.
+	 * @param 	y
+	 * 			The y component of a vector.
+	 * @return	The modulus of the vector. 
+	 * 			| result == Math.hypot(x,y)
+	 * @return	Positive infinity if one of the components is infinity.
+	 * 			| if(((Double)x).isInfinite() || ((Double)y).isInfinite())
+				|	then result == Double.POSITIVE_INFINITY;
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when one of the given doubles is not a number.
+	 * 			| Double.isNaN(x) || Double.isNaN(y)
+	 */
+	public static double getModulus(double x, double y) throws IllegalArgumentException
 	{
+		if(Double.isNaN(x) || Double.isNaN(y))
+			throw new IllegalArgumentException();
+		
 		if(((Double)x).isInfinite() || ((Double)y).isInfinite())
 			return Double.POSITIVE_INFINITY;
 		double modulus = Math.hypot(x, y);
@@ -87,8 +109,23 @@ public class Vector {
 		return modulus;
 	}
 	
-	public static double sumOfComponents(double comp1, double comp2)
+	/**
+	 * Calculate the sum of two given components of a vector.
+	 * 
+	 * @param 	comp1
+	 * 			The first given vector component.
+	 * @param 	comp2
+	 * 			The second given vector component.
+	 * @return	The sum of the two given vector components.
+	 * 			| result == comp1 + comp2
+	 * @return	The maximum value of a double, when the sum exceeds the maximum value.
+	 * 			| if(comp1+comp2 > Double.MAX_VALUE)
+	 * 			|	then result == Double.MAX_VALUE
+	 */
+	public static double sumOfComponents(double comp1, double comp2) throws IllegalArgumentException
 	{
+		if(Double.isNaN(comp1) || Double.isNaN(comp2))
+			throw new IllegalArgumentException();
 		
 		if( (Math.signum(comp1)==Math.signum(comp2)) && ( (Math.abs(comp1) > Double.MAX_VALUE - Math.abs(comp2)) || (Math.abs(comp2) > Double.MAX_VALUE - Math.abs(comp1))) )
 			return Double.MAX_VALUE;
@@ -98,6 +135,15 @@ public class Vector {
 	
 	}
 	
+	/**
+	 * Calculate the multiplication of two given components of a vector.
+	 * 
+	 * @param 	comp1
+	 * 			The first given vector component.
+	 * @param 	comp2
+	 * 			The second given vector component.
+	 * @return
+	 */
 	public static double multiplyComponents(double comp1, double comp2)
 	{
 		try{
