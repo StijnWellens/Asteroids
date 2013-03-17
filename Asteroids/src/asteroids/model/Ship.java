@@ -510,11 +510,12 @@ public class Ship implements IShip {
 	 * 
 	 * @param 	duration
 	 *       	The duration to check.
-	 * @return 	True if and only if the given duration is not below zero. 
-	 * 			|result == | duration >= 0
+	 * @return 	True if and only if the given duration is not below zero and if it is a number. 
+	 * 			|result == 
+	 * 			| (duration >= 0 && Double.isNaN(duration))
 	 */
 	public boolean isValidDuration(double duration) {
-		return duration >= 0;
+		return (duration >= 0 && Double.isNaN(duration));
 	}
 
 	/**
