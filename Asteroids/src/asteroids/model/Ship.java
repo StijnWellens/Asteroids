@@ -24,6 +24,10 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar 	The radius of the ship must always be a valid radius. 
  * 			| isValidRadius(getRadius())
  * @author 	Julie Wouters & Stijn Wellens
+ * 			Students Bachelor of Science in Engineering 
+ * 			(Computer Science and electrical engineering)
+ * 			link to our code repository:
+ * 			https://github.com/StijnWellens/Asteroids.git
  * 
  */
 public class Ship implements IShip {
@@ -109,7 +113,8 @@ public class Ship implements IShip {
 	/**
 	 * Returns the y Position of the ship.
 	 * 
-	 * @return yPosition the y Position of the ship
+	 * @return yPosition 
+	 * 			the y Position of the ship
 	 */
 	@Basic
 	public double getY() {
@@ -205,11 +210,12 @@ public class Ship implements IShip {
 	 * @param maxV
 	 *            The given maximum velocity.
 	 * @return False if the double maxV is not a number. 
-	 * 	| if(Double.isNaN(maxV) 
-	 *         == true) | then result == false
+	 * 			| if(Double.isNaN(maxV) == true) 
+	 * 			| then result == false
 	 * @return True if and only if the given maximum velocity is positive or 0
-	 *         and not exceeding the speed of light. | if((maxV >= 0) && (maxV
-	 *         <= LIGHTSPEED) | then result == true
+	 *         and not exceeding the speed of light. 
+	 *         | if((maxV >= 0) && (maxV <= LIGHTSPEED) 
+	 *         | then result == true
 	 */
 	public boolean isValidMaxVelocity(double maxV) {
 		if (Double.isNaN(maxV) == true) {
@@ -225,12 +231,14 @@ public class Ship implements IShip {
 	 *            The given maximum velocity of the ship.
 	 * @post If the absolute value of the given maximum velocity is valid, the
 	 *       maximum velocity will be the absolute value of the given maximum
-	 *       velocity. | if (isValidMaxVelocity(Math.abs(maxV))) | then (new
-	 *       this).getMaxVelocity() == Math.abs(maxV)
+	 *       velocity. 
+	 *       | if (isValidMaxVelocity(Math.abs(maxV))) 
+	 *       | then (new this).getMaxVelocity() == Math.abs(maxV)
 	 * @post If the absolute value of the given maximum velocity exceeds the
 	 *       speed of light, then the maximum velocity will be the speed of
-	 *       light. | if (Math.abs(maxV) > LIGHTSPEED) | then (new
-	 *       this).getMaxVelocity() == LIGHTSPEED
+	 *       light. 
+	 *       | if (Math.abs(maxV) > LIGHTSPEED) 
+	 *       | then (new this).getMaxVelocity() == LIGHTSPEED
 	 * 
 	 */
 	public void setMaxVelocity(double maxV) {
@@ -262,14 +270,16 @@ public class Ship implements IShip {
 	 * @param vy
 	 *            The y component of the velocity to be checked.
 	 * @return False if the double vx or vy is not a number. 
-	 * 			|
-	 *         if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true)) |
-	 *         then result == false
+	 * 			|if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true)) 
+	 * 			| then result == false
 	 * @return True if and only if the velocity is equal or less than the valid
-	 *         maximum speed of the ship. | if (vx <0 && vy<0) | then result ==
-	 *         false | else if(
-	 *         isValidMaxVelocity(this.maxV))&&(Math.sqrt(vx*vx+vy*vy) <=
-	 *         this.maxV) ) | then result == true | else | then result == false
+	 *         maximum speed of the ship. 
+	 *         | if (vx <0 && vy<0) 
+	 *         | then result == false 
+	 *         | else if(isValidMaxVelocity(this.maxV))&&(Math.sqrt(vx*vx+vy*vy) <= this.maxV) ) 
+	 *         | then result == true 
+	 *         | else 
+	 *         | then result == false
 	 */
 	public boolean isValidVelocity(double vx, double vy) {
 		if ((!isValidVelocityComp(vx)) || (!isValidVelocityComp(vy))) {

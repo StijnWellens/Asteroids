@@ -363,8 +363,6 @@ public class ShipTest {
 		Ship.getDistanceBetween(ship1,ship2);
 	}
 	
-	//Nog testen?
-	
 	@Test
 	public void testOverlap(){
 		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
@@ -386,19 +384,44 @@ public class ShipTest {
 		assertFalse(Ship.overlap(ship1, ship2));
 	}
 	
-	@Test
-	public void testGetTimeToCollision(){
-		
+	@Test (expected = IllegalArgumentException.class)
+	public void testGetTimeToCollision_ShipIsNull(){
+		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
+		Ship ship2 = null;
+		Ship.getTimeToCollision(ship1, ship2);
 	}
 	
-	@Test (expected=AssertionError.class)
+	@Test (expected = AssertionError.class)
 	  public void testGetTimeToCollision() {
-	    Ship ship1 = new Ship(100, 200, 10, -10, 20, -Math.PI);
-	    Ship ship2 = new Ship(20, 30, 20, -15, 10, Math.PI/7);
+	    Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
+	    Ship ship2 = new Ship(20, 20, -20,-20 , 10, (5* Math.PI)/4);
 	    
-	    assertEquals(5000,Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
+	    assertEquals(((Math.sqrt(800)-20)/(Math.sqrt(200))),Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
 	 }
 	
+	@Test
+	public void testGetTimeToCollision_NoCollision(){
+		Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
+	    Ship ship2 = new Ship(200, 200, 200, 200 , 100, Math.PI/4);
+	    assertEquals(Double.POSITIVE_INFINITY,Ship.getTimeToCollision(ship1, ship2),Util.EPSILON);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testGetCollisionPosition_ShipIsNull(){
+		Ship ship1 = new Ship();
+	    Ship ship2 = null;
+	    Ship.getCollisionPosition(ship1, ship2);
+	}
+	
+	@Test
+	public void testGetCollisionPosition(){
+		Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
+	    Ship ship2 = new Ship(200, 200, -200, -200 , 10, Math.PI/4);
+	    double[] collision = new double[2];
+	    collision[0] = 10*Math.cos(Math.PI /4);
+	    collision[1] = 10*Math.sin(Math.PI /4);
+	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
+	}
 	
 	
 
