@@ -2,6 +2,11 @@ package asteroids.model;
 
 import be.kuleuven.cs.som.annotate.Basic;
 
+/**
+ * A class representing a vector with a x and y component.
+ * @author Julie Wouters & Stijn Wellens
+ *
+ */
 public class Vector {
 
 	/**
@@ -121,6 +126,9 @@ public class Vector {
 	 * @return	The maximum value of a double, when the sum exceeds the maximum value.
 	 * 			| if(comp1+comp2 > Double.MAX_VALUE)
 	 * 			|	then result == Double.MAX_VALUE
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when one of the given doubles is not a number.
+	 * 			| Double.isNaN(comp1) || Double.isNaN(comp2)
 	 */
 	public static double sumOfComponents(double comp1, double comp2) throws IllegalArgumentException
 	{
@@ -142,10 +150,21 @@ public class Vector {
 	 * 			The first given vector component.
 	 * @param 	comp2
 	 * 			The second given vector component.
-	 * @return
+	 * @return	The multiplication of the two given components.
+	 * 			| result == comp1 * comp2
+	 * @return	The minimum value of a double when the multiplication is lower than the minimum value of a double.
+	 * 			| result == Double.MIN_VALUE
+	 * @return	The maximum value of a double when the multiplication exceeds the maximum value of a double.
+	 * 			| result == Double.MAX_VALUE
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when one of the given doubles is not a number.
+	 * 			| Double.isNaN(comp1) || Double.isNaN(comp2) 			
 	 */
-	public static double multiplyComponents(double comp1, double comp2)
+	public static double multiplyComponents(double comp1, double comp2) throws IllegalArgumentException
 	{
+		if(Double.isNaN(comp1) || Double.isNaN(comp2))
+			throw new IllegalArgumentException();
+		
 		try{
 			if((Math.abs(comp1) < 1 && Math.abs(comp2) < 1) && (Math.abs(comp1) < Double.MIN_VALUE / Math.abs(comp2) || Math.abs(comp2) < Double.MIN_VALUE / Math.abs(comp1) ) )
 				return Double.MIN_VALUE;
@@ -161,9 +180,25 @@ public class Vector {
 		return comp1 * comp2;
 		
 	}
-		
-	public static double dotProduct(Vector vector1, Vector vector2) 
+	
+	/**
+	 * Calculate the dot product of two vectors.
+	 * 
+	 * @param 	vector1
+	 * 			The first of the two vectors.
+	 * @param 	vector2
+	 * 			The second of the two vectors.
+	 * @return	The dot product of two vectors.
+	 * 			| result == vector1.getXComp()*vector2.getXComp() + vector1.getYComp()*vector2.getYComp()
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when one of the given vectors is null.
+	 * 			| vector1 == null || vector2 == null		
+	 */
+	public static double dotProduct(Vector vector1, Vector vector2) throws IllegalArgumentException
 	{
+		if(vector1 == null || vector2 == null)
+			throw new IllegalArgumentException();
+		
 		double newX = multiplyComponents(vector1.getXComp(),vector2.getXComp());
 		double newY = multiplyComponents(vector1.getYComp(),vector2.getYComp());
 		
@@ -171,24 +206,72 @@ public class Vector {
 		return (sumOfComponents(newX,newY));
 	}
 	
-	public static Vector multiplyScalar(Vector vector1, double scalar)
+	/**
+	 * Calculate a multiplication of a scalar with a vector.
+	 * 
+	 * @param 	vector1
+	 * 			The given vector.
+	 * @param 	scalar
+	 * 			The given scalar.
+	 * @return	The multiplication of a scalar with a vector.
+	 * 			| result == vector1 * scalar
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when the given vector is null or the scalar is not a number.
+	 * 			| vector1 == null || Double.isNaN(scalar)	
+	 */
+	public static Vector multiplyScalar(Vector vector1, double scalar) throws IllegalArgumentException
 	{
+		if(vector1 == null || Double.isNaN(scalar))
+			throw new IllegalArgumentException();
+		
 		double newX = multiplyComponents(vector1.getXComp(),scalar);
 		double newY = multiplyComponents(vector1.getYComp(),scalar);
 		
 		return new Vector(newX,newY);
 	}
 	
-	public static Vector subtraction(Vector vector1, Vector vector2) 
+	/**
+	 * Calculate the subtraction of two vectors.
+	 * 
+	 * @param 	vector1
+	 * 			The first vector given.
+	 * @param 	vector2
+	 * 			The second vector given.
+	 * @return	The subtraction of the two given vectors.
+	 * 			| result == vector1 - vector2
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when one of the given vectors is null.
+	 * 			| vector1 == null || vector2 == null	
+	 */
+	public static Vector subtraction(Vector vector1, Vector vector2) throws IllegalArgumentException
 	{
+		if(vector1 == null || vector2 == null)
+			throw new IllegalArgumentException();
+		
 		double newX = sumOfComponents(vector1.getXComp(),-vector2.getXComp());
 		double newY = sumOfComponents(vector1.getYComp(),-vector2.getYComp());
 		
 		return new Vector(newX,newY);
 	}
 	
-	public static Vector sum(Vector vector1, Vector vector2) 
+	/**
+	 * Calculate the sum of two vectors.
+	 * 
+	 * @param 	vector1
+	 * 			The first vector given.
+	 * @param 	vector2
+	 * 			The second vector given.
+	 * @return	The sum of the two given vectors.
+	 * 			| result == vector1 + vector2
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when one of the given vectors is null.
+	 * 			| vector1 == null || vector2 == null	
+	 */
+	public static Vector sum(Vector vector1, Vector vector2) throws IllegalArgumentException 
 	{
+		if(vector1 == null || vector2 == null)
+			throw new IllegalArgumentException();
+		
 		double newX = sumOfComponents(vector1.getXComp(),vector2.getXComp());
 		double newY = sumOfComponents(vector1.getYComp(),vector2.getYComp());
 		
