@@ -175,7 +175,54 @@ public class ShipTest {
 		ship.thrust(Ship.LIGHTSPEED);
 		double tempVx =Ship.LIGHTSPEED * Math.cos(3.14/4);
 		double tempVy =Ship.LIGHTSPEED * Math.sin(3.14/4);
-		
+		double tempAmount = (ship.getMaxVelocity())
+				/ Math.sqrt(tempVx * tempVx + tempVy * tempVy);
+		assertEquals(tempVx*tempAmount,ship.getXVelocity(),Util.EPSILON);		
+		assertEquals(tempVy*tempAmount,ship.getYVelocity(),Util.EPSILON);	
+	}
+	
+	@Test
+	public void testGetDirection(){
+		Ship ship = new Ship(0,0,0,0,1,3.14/4);
+		assertEquals(3.14/4,ship.getDirection(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testIsValidDirection(){
+		Ship ship = new Ship();
+		assertTrue(ship.isValidDirection(3.14/4));	
+	}
+	
+	@Test
+	public void testIsValidDirection_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidDirection(Double.NaN));
+	}
+	
+	@Test
+	public void testIsValidDirection_NegativeAmount(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidDirection(-3.14/4));
+	}
+	
+	@Test
+	public void testIsValidDirection_ExceedsMaximumValue(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidDirection(3*3.14));
+	}
+	
+	@Test
+	public void testSetDirection(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/4);
+		assertEquals(3.14/4, ship.getDirection(),Util.EPSILON);
+	}
+	
+	@Test (expected=AssertionException.class)
+	public void testSetDirection_IllegalCase(){
+		Ship ship = new Ship();
+		ship.setDirection(Double.NaN);
+		assertEquals(3.14/2,ship.getDirection(),Util.EPSILON);
 	}
 	
 	@Test
