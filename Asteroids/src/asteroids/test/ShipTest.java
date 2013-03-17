@@ -391,7 +391,7 @@ public class ShipTest {
 		Ship.getTimeToCollision(ship1, ship2);
 	}
 	
-	@Test (expected = AssertionError.class)
+	@Test 
 	  public void testGetTimeToCollision() {
 	    Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
 	    Ship ship2 = new Ship(20, 20, -20,-20 , 10, (5* Math.PI)/4);

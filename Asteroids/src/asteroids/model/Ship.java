@@ -330,16 +330,23 @@ public class Ship implements IShip {
 	 * Changes the ship's velocity based on the current velocity, its direction
 	 * and on a given amount.
 	 * 
-	 * @param amount
-	 *            The amount that needs to be added to the current velocity.
-	 * @effect If the given amount is valid, the new x velocity will be set to
-	 *         the sum of the old x velocity and the amount that has been
-	 *         multiplied with the cosine of the direction. 
-	 *         | if(!isValidAmount(amount)) 
-	 *         | then (new this).getXVelocity() == this.getXVelocity() + amount*Math.sin(this.direction);
-	 * 
+	 * @param 	amount
+	 *        	The amount that needs to be added to the current velocity.
+	 * @post 	If the given amount is valid, the new x velocity will be set to
+	 *         	the sum of the old x velocity and the amount that has been
+	 *         	multiplied with the cosine of the direction. 
+	 *         	| if(!isValidAmount(amount)) 
+	 *         	| then (new this).getXVelocity() == this.getXVelocity() + amount*Math.sin(this.direction);
+	 * @post 	If the given amount is valid, the new y velocity will be set to
+	 *         	the sum of the old y velocity and the amount that has been
+	 *         	multiplied with the sine of the direction. 
+	 *         	| if(!isValidAmount(amount)) 
+	 *         	| then (new this).getYVelocity() == this.getYVelocity() + amount*Math.cos(this.direction);
+	 * @post	If the new x and y velocity, calculated as above, aren't valid which means they exceed the maximum velocity.
+	 * 			Then they will be reduced such that the speed becomes the maximum velocity.
+	 * 			| if((new this).getVelocity().getModulus() > this.getMaxVelocity())
+	 * 			| 		then (new(new this)).getVelocity().getModulus() == this.getMaxVelocity()
 	 */
-	// TODO Afwerken documentatie!
 	public void thrust(double amount) {
 
 		if (!isValidAmount(amount)) {
@@ -546,8 +553,7 @@ public class Ship implements IShip {
 	 *          The given duration is not a valid duration. 
 	 *          |!isValidDuration(duration)
 	 */
-	// TODO
-	public void move(double duration) {
+	public void move(double duration) throws IllegalArgumentException {
 		if (!isValidDuration(duration))
 			throw new IllegalArgumentException();
 		setPosition(getX() + getXVelocity() * duration, getY() + getYVelocity() * duration);
@@ -622,8 +628,6 @@ public class Ship implements IShip {
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given ships is null.
 	 * 			| (ship1 == null) || (ship2 == null)
-	 * @throws	IllegalArgumentException
-	 * 			Throws exception when the position or velocity vector of one of the given ships is null. Or when one of his components is no number.
 	 * 
 	 */
 	public static double getTimeToCollision(Ship ship1, Ship ship2) throws IllegalArgumentException
@@ -647,11 +651,9 @@ public class Ship implements IShip {
 			dt = Double.POSITIVE_INFINITY;
 		}		
 		else{
-			dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),1/(dvdv)));
+			dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),(1d/(dvdv))));
 		}
-		
-		
-						
+								
 		return dt;
 			
 	}
@@ -664,9 +666,13 @@ public class Ship implements IShip {
 	 * @param 	ship2
 	 * 			The second ship to compare with the other.
 	 * @return	An array with the position of the future collision.
-	 * 			| 
+	 * 			| Vector collisionPosition = Vector.sum(ship1.getPosition(), Vector.multiplyScalar(ship1.getVelocity(),time));
+	 *			| collision[0] = collisionPosition.getXComp()
+				| collision[1] = collisionPosition.getYComp()
+				| result == collision
 	 * @return	Null if the two ships never collide.
-	 * 			| 
+	 * 			| if(getTimeToCollision(ship1,ship2) == Double.POSITIVE_INFINITY)
+	 * 			|	then collision == null
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given ships is null.
 	 * 			| (ship1 == null) || (ship2 == null)
@@ -684,15 +690,14 @@ public class Ship implements IShip {
 			collision = null;
 		}
 		else{
-			Vector collisionPosition = Vector.sum(ship1.getPosition(), Vector.multiplyScalar(ship1.getVelocity(),time));
+						
+			double collisionPositionX = ship1.getPosition().getXComp() + ship1.getXVelocity() * time;
+			double collisionPositionY = ship1.getPosition().getYComp() + ship1.getYVelocity() * time;
 			
-			collision[0] = collisionPosition.getXComp();
-			collision[1] = collisionPosition.getYComp();
+			collision[0] = collisionPositionX; 
+			collision[1] = collisionPositionY; 
 		}
-		
-		
-		
-		
+				
 		return collision;
 	}
 	
