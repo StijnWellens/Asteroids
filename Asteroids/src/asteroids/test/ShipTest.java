@@ -218,7 +218,7 @@ public class ShipTest {
 		assertEquals(3.14/4, ship.getDirection(),Util.EPSILON);
 	}
 	
-	@Test (expected=AssertionException.class)
+	@Test (expected=AssertionError.class)
 	public void testSetDirection_IllegalCase(){
 		Ship ship = new Ship();
 		ship.setDirection(Double.NaN);
@@ -226,6 +226,98 @@ public class ShipTest {
 	}
 	
 	@Test
+	public void testTurn(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/2);
+		ship.turn(3.14/4);
+		assertEquals((3*3.14)/4,ship.getDirection(),Util.EPSILON);	
+	}
+	
+	@Test (expected=AssertionError.class)
+	public void testTurn_IllegalCase(){
+		Ship ship = new Ship();
+		ship.setDirection(3.14/2);
+		ship.turn(2*3.14);
+		assertEquals(3.14/2,ship.getDirection(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testGetLowerBoundRadius(){
+		Ship ship = new Ship();
+		assertEquals(0,ship.getLowerBoundRadius(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testIsValidLowerBoundRadius(){
+		assertTrue(Ship.isValidLowerBoundRadius(5));
+	}
+	
+	@Test
+	public void testIsValidLowerBoundRadius_IllegalCase(){
+		assertFalse(Ship.isValidLowerBoundRadius(Double.NaN));
+	}
+	
+	@Test
+	public void testIsValidLowerBoundRadius_NegativeAmount(){
+		assertFalse(Ship.isValidLowerBoundRadius(-25));
+	}
+	
+	@Test
+	public void testGetRadius(){
+		Ship ship = new Ship(0,0,0,0,10,3.14/2);
+		assertEquals(10, ship.getRadius(),Util.EPSILON);
+	}
+	
+	@Test
+	public void testIsValidRadius(){
+		Ship ship = new Ship();
+		assertTrue(ship.isValidRadius(5));
+	}
+	
+	@Test
+	public void testIsValidRadius_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidRadius(Double.NaN));
+	}
+	
+	@Test
+	public void testIsValidRadius_BelowLowerBound(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidRadius(-20));
+	}
+	
+	@Test
+	public void testSetRadius(){
+		Ship ship = new Ship();
+		ship.setRadius(10);
+		assertEquals(10,ship.getRadius(),Util.EPSILON);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetRadius_IllegalCase(){
+		Ship ship = new Ship();
+		ship.setRadius(Double.NaN);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetRadius_BelowLowerBound(){
+		Ship ship = new Ship();
+		ship.setRadius(-10);
+	}
+	
+	@Test
+	public void testIsValidDuration(){
+		Ship ship = new Ship();
+		assertTrue(ship.isValidDuration(20));
+	}
+	
+	@Test
+	public void testIsValidDuration_NegativeAmount(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidDuration(-20));
+	}
+	
+	@Test (expected=AssertionError.class)
 	  public void testGetTimeToCollision() {
 	    Ship ship1 = new Ship(100, 200, 10, -10, 20, -Math.PI);
 	    Ship ship2 = new Ship(20, 30, 20, -15, 10, Math.PI/7);
