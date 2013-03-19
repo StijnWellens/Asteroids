@@ -16,7 +16,7 @@ public class Vector {
 	 */
 	public Vector()
 	{
-		setComp(0, 0);
+		this.setComp(0, 0);
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class Vector {
 	 */
 	public Vector(double xComp, double yComp) 
 	{
-		setComp(xComp, yComp);
+		this.setComp(xComp, yComp);
 	}
 	
 	private double xComp;
@@ -138,7 +138,7 @@ public class Vector {
 		if( (Math.signum(comp1)==Math.signum(comp2)) && ( (Math.abs(comp1) > Double.MAX_VALUE - Math.abs(comp2)) || (Math.abs(comp2) > Double.MAX_VALUE - Math.abs(comp1))) )
 			return Double.MAX_VALUE;
 		
-		return comp1 + comp2;
+		return (comp1 + comp2);
 		
 	
 	}
@@ -248,8 +248,8 @@ public class Vector {
 		if(vector1 == null || vector2 == null)
 			throw new IllegalArgumentException();
 		
-		double newX = sumOfComponents(vector1.getXComp(),-vector2.getXComp());
-		double newY = sumOfComponents(vector1.getYComp(),-vector2.getYComp());
+		double newX = sumOfComponents(vector1.getXComp(),-(vector2.getXComp()));
+		double newY = sumOfComponents(vector1.getYComp(),-(vector2.getYComp()));
 		
 		return new Vector(newX,newY);
 	}

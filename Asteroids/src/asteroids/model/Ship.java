@@ -642,8 +642,9 @@ public class Ship implements IShip {
 		double dvdr = Vector.dotProduct(dv, dr);
 		double dvdv = Vector.dotProduct(dv, dv);
 		double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
-		double dModulus = Vector.multiplyComponents((dr.getModulus()),(dr.getModulus()));
-		double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -dModulus) );
+		double sigma = Vector.sumOfComponents(ship1.getRadius(),ship2.getRadius());
+		double sigmaSquare = Vector.multiplyComponents(sigma, sigma);
+		double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -sigmaSquare) );
 		double d = Vector.sumOfComponents(d1, -d2);
 					
 		if(dvdr >= 0 || d <= 0)

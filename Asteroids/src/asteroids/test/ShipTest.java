@@ -289,8 +289,8 @@ public class ShipTest {
 	@Test
 	public void testSetRadius(){
 		Ship ship = new Ship();
-		ship.setRadius(10);
-		assertEquals(10,ship.getRadius(),Util.EPSILON);
+		ship.setRadius(30);
+		assertEquals(30,ship.getRadius(),Util.EPSILON);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
@@ -396,7 +396,7 @@ public class ShipTest {
 	    Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
 	    Ship ship2 = new Ship(20, 20, -20,-20 , 10, (5* Math.PI)/4);
 	    
-	    assertEquals(((Math.sqrt(800)-20)/(Math.sqrt(200))),Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
+	    assertEquals((-(-800+ Math.sqrt(320000))/(800)),Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
 	 }
 	
 	@Test
@@ -416,10 +416,10 @@ public class ShipTest {
 	@Test
 	public void testGetCollisionPosition(){
 		Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
-	    Ship ship2 = new Ship(200, 200, -200, -200 , 10, Math.PI/4);
+	    Ship ship2 = new Ship(20, 20, -20, -20 , 10, Math.PI/4);
 	    double[] collision = new double[2];
-	    collision[0] = 10*Math.cos(Math.PI /4);
-	    collision[1] = 10*Math.sin(Math.PI /4);
+	    collision[0] = 0;
+	    collision[1] = 0;
 	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
 	}
 	

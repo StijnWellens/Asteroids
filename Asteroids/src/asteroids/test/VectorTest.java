@@ -22,6 +22,12 @@ public class VectorTest {
 	}
 	
 	@Test
+	  public void testSumOfComponents_ZeroComp() {
+	    assertEquals(-4,Vector.sumOfComponents(-4,0), Util.EPSILON);
+	   
+	}
+	
+	@Test
 	  public void testSumOfComponents_Max_Value() {
 		assertEquals( Double.MAX_VALUE,Vector.sumOfComponents(Double.MAX_VALUE,5), Util.EPSILON);
 	 }
