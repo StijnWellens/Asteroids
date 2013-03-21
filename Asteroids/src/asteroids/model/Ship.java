@@ -1,6 +1,6 @@
 package asteroids.model;
 
-import asteroids.IShip;
+
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -30,7 +30,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			https://github.com/StijnWellens/Asteroids.git
  * 
  */
-public class Ship implements IShip {
+public class Ship {
 
 	/**
 	 * Create a new default ship with default settings.
@@ -84,7 +84,7 @@ public class Ship implements IShip {
 	 *         | setRadius(radius);
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity,
-			double radius, double angle) throws IllegalArgumentException {
+			double radius, double angle, double mass) throws IllegalArgumentException {
 		setMaxVelocity(300000);
 
 		setPosition(x,y);
