@@ -691,17 +691,22 @@ public class Ship implements IShip {
 			collision = null;
 		}
 		else{
-			//TODO alpha
-			
-			
+						
 			Vector newPositionShip1 = new Vector(ship1.getPosition().getXComp() + ship1.getXVelocity() * time, ship1.getPosition().getYComp() + ship1.getYVelocity() * time);
 			Vector newPositionShip2 = new Vector(ship2.getPosition().getXComp() + ship2.getXVelocity() * time, ship2.getPosition().getYComp() + ship2.getYVelocity() * time);
 			Vector directionCollision = Vector.subtraction(newPositionShip1, newPositionShip2);
 			
-			double alpha = (Math.atan(directionCollision.getYComp()/directionCollision.getXComp())) % (PI);
+			double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
 			
-			double collisionPositionX = ship1.getPosition().getXComp() + ship1.getXVelocity() * time + Math.cos(alpha) * ship1.getRadius() ;
-			double collisionPositionY = ship1.getPosition().getYComp() + ship1.getYVelocity() * time + Math.sin(alpha) * ship1.getRadius() ;
+			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
+				alpha = PI - alpha;
+			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
+				alpha = PI + alpha;
+			if(directionCollision.getXComp() > 0 && directionCollision.getYComp() < 0 )
+				alpha = - alpha;
+			
+			double collisionPositionX = ship1.getPosition().getXComp() + ship1.getXVelocity() * time - Math.cos(alpha) * ship1.getRadius() ;
+			double collisionPositionY = ship1.getPosition().getYComp() + ship1.getYVelocity() * time - Math.sin(alpha) * ship1.getRadius() ;
 			
 			collision[0] = collisionPositionX; 
 			collision[1] = collisionPositionY; 
