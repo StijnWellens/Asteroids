@@ -418,8 +418,8 @@ public class ShipTest {
 		Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
 	    Ship ship2 = new Ship(20, 20, -20, -20 , 10, Math.PI/4);
 	    double[] collision = new double[2];
-	    collision[0] = 0;
-	    collision[1] = 0;
+	    collision[0] = 5*Math.sqrt(2);
+	    collision[1] = 5*Math.sqrt(2);
 	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
 	}
 	
