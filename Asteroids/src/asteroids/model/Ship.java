@@ -666,11 +666,10 @@ public class Ship {
 	 * 			The first ship to compare with the other.
 	 * @param 	ship2
 	 * 			The second ship to compare with the other.
-	 * @return	An array with the position of the future collision.
-	 * 			| Vector collisionPosition = Vector.sum(ship1.getPosition(), Vector.multiplyScalar(ship1.getVelocity(),time));
-	 *			| collision[0] = collisionPosition.getXComp()
-				| collision[1] = collisionPosition.getYComp()
-				| result == collision
+	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spaceships when they collide.
+	 * 			| collision[0] = ship1.getXPosition() + ship1.getXVelocity() * getTimeToCollisiion() + cos(alpha)* ship1.getRadius();
+	 *			| collision[1] = ship1.getYPosition() + ship1.getYVelocity() * getTimeToCollisiion() + sin(alpha)* ship1.getRadius();
+	 *			| result == collision
 	 * @return	Null if the two ships never collide.
 	 * 			| if(getTimeToCollision(ship1,ship2) == Double.POSITIVE_INFINITY)
 	 * 			|	then collision == null
