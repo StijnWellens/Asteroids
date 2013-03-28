@@ -27,7 +27,7 @@ public abstract class SpaceObject {
 		setPosition(0,0);
 		setVelocity(0, 0);
 		setDirection(PI / 2);
-		this.radius = 1;
+		this.radius = 11;
 
 	}
 

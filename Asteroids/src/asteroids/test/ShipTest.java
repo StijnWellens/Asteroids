@@ -181,7 +181,7 @@ public class ShipTest {
 	
 	@Test
 	public void testGetDirection(){
-		Ship ship = new Ship(0,0,0,0,1,3.14/4);
+		Ship ship = new Ship(0,0,0,0,11,3.14/4);
 		assertEquals(3.14/4,ship.getDirection(),Util.EPSILON);
 	}
 	
@@ -241,8 +241,7 @@ public class ShipTest {
 	
 	@Test
 	public void testGetLowerBoundRadius(){
-		Ship ship = new Ship();
-		assertEquals(0,ship.getLowerBoundRadius(),Util.EPSILON);
+		assertEquals(10,Ship.getLowerBoundRadius(),Util.EPSILON);
 	}
 	
 	@Test
@@ -262,14 +261,14 @@ public class ShipTest {
 	
 	@Test
 	public void testGetRadius(){
-		Ship ship = new Ship(0,0,0,0,10,3.14/2);
-		assertEquals(10, ship.getRadius(),Util.EPSILON);
+		Ship ship = new Ship(0,0,0,0,11,3.14/2);
+		assertEquals(11, ship.getRadius(),Util.EPSILON);
 	}
 	
 	@Test
 	public void testIsValidRadius(){
 		Ship ship = new Ship();
-		assertTrue(ship.isValidRadius(5));
+		assertTrue(ship.isValidRadius(11));
 	}
 	
 	@Test
@@ -310,7 +309,7 @@ public class ShipTest {
 	
 	@Test
 	public void testMove(){
-		Ship ship = new Ship(0,0,10000,10000,10,3.14/2);
+		Ship ship = new Ship(0,0,10000,10000,11,3.14/2);
 		ship.move(20);
 		assertEquals(10000 * 20, ship.getX(),Util.EPSILON);
 	}
@@ -329,9 +328,9 @@ public class ShipTest {
 	
 	@Test
 	public void testGetDistanceBetween(){
-		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
-		Ship ship2 = new Ship(40,40,0,0,10,3.14/2);
-		assertEquals(Math.sqrt(800)-10-10,Ship.getDistanceBetween(ship1, ship2),Util.EPSILON);
+		Ship ship1 = new Ship(20,20,0,0,11,3.14/2);
+		Ship ship2 = new Ship(40,40,0,0,11,3.14/2);
+		assertEquals(Math.sqrt(800)-11-11,Ship.getDistanceBetween(ship1, ship2),Util.EPSILON);
 	}
 	
 	@Test (expected=IllegalArgumentException.class)
@@ -350,8 +349,8 @@ public class ShipTest {
 	
 	@Test
 	public void testOverlap(){
-		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
-		Ship ship2 = new Ship(30,30,0,0,10,3.14/2);
+		Ship ship1 = new Ship(20,20,0,0,11,3.14/2);
+		Ship ship2 = new Ship(30,30,0,0,11,3.14/2);
 		assertTrue(Ship.overlap(ship1, ship2));
 	}
 	
@@ -364,8 +363,8 @@ public class ShipTest {
 	
 	@Test
 	public void testOverlap_False(){
-		Ship ship1 = new Ship(20,20,0,0,10,3.14/2);
-		Ship ship2 = new Ship(40,40,0,0,10,3.14/2);
+		Ship ship1 = new Ship(20,20,0,0,11,3.14/2);
+		Ship ship2 = new Ship(40,40,0,0,11,3.14/2);
 		assertFalse(Ship.overlap(ship1, ship2));
 	}
 	
@@ -378,15 +377,15 @@ public class ShipTest {
 	
 	@Test 
 	  public void testGetTimeToCollision() {
-	    Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
-	    Ship ship2 = new Ship(20, 20, -20,-20 , 10, (5* Math.PI)/4);
+	    Ship ship1 = new Ship(0, 0, 0, 0, 11, 0);
+	    Ship ship2 = new Ship(20, 20, -20,-20 , 11, (5* Math.PI)/4);
 	    
-	    assertEquals((-(-800+ Math.sqrt(320000))/(800)),Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
+	    assertEquals((-(-800+ Math.sqrt(387200))/(800)),Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
 	 }
 	
 	@Test
 	public void testGetTimeToCollision_NoCollision(){
-		Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
+		Ship ship1 = new Ship(0, 0, 0, 0, 11, 0);
 	    Ship ship2 = new Ship(200, 200, 200, 200 , 100, Math.PI/4);
 	    assertEquals(Double.POSITIVE_INFINITY,Ship.getTimeToCollision(ship1, ship2),Util.EPSILON);
 	}
@@ -400,28 +399,28 @@ public class ShipTest {
 	
 	@Test
 	public void testGetCollisionPosition(){
-		Ship ship1 = new Ship(0, 0, 0, 0, 10, 0);
-	    Ship ship2 = new Ship(20, 20, -20, -20 , 10, Math.PI/4);
+		Ship ship1 = new Ship(0, 0, 0, 0, 11, 0);
+	    Ship ship2 = new Ship(20, 20, -20, -20 , 11, Math.PI/4);
 	    double[] collision = new double[2];
-	    collision[0] = 5*Math.sqrt(2);
-	    collision[1] = 5*Math.sqrt(2);
+	    collision[0] = 5.5*Math.sqrt(2);
+	    collision[1] = 5.5*Math.sqrt(2);
 	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
 	}
 	
 	@Test
 	public void testGetCollisionPosition_SameXCoordinate(){
-		Ship ship1 = new Ship(20, 0, 0, 0, 10, 0);
-	    Ship ship2 = new Ship(20, -20, 0, 20 , 10, Math.PI/4);
+		Ship ship1 = new Ship(20, 0, 0, 0, 11, 0);
+	    Ship ship2 = new Ship(20, -20, 0, 20 , 11, Math.PI/4);
 	    double[] collision = new double[2];
 	    collision[0] = 20;
-	    collision[1] = -10;
+	    collision[1] = -11;
 	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
 	}
 	
 	@Test
 	public void testGetCollisionPosition_NoCollision(){
-		Ship ship1 = new Ship(20, 0, 0, 20, 10, 0);
-	    Ship ship2 = new Ship(20, -20, 0, 20 , 10, Math.PI/4);
+		Ship ship1 = new Ship(20, 0, 0, 20, 11, 0);
+	    Ship ship2 = new Ship(20, -20, 0, 20 , 11, Math.PI/4);
 	    assertArrayEquals(null, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
 	}
 	
