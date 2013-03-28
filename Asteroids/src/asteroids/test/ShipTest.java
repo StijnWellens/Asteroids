@@ -408,6 +408,23 @@ public class ShipTest {
 	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
 	}
 	
+	@Test
+	public void testGetCollisionPosition_SameXCoordinate(){
+		Ship ship1 = new Ship(20, 0, 0, 0, 10, 0);
+	    Ship ship2 = new Ship(20, -20, 0, 20 , 10, Math.PI/4);
+	    double[] collision = new double[2];
+	    collision[0] = 20;
+	    collision[1] = -10;
+	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
+	}
+	
+	@Test
+	public void testGetCollisionPosition_NoCollision(){
+		Ship ship1 = new Ship(20, 0, 0, 20, 10, 0);
+	    Ship ship2 = new Ship(20, -20, 0, 20 , 10, Math.PI/4);
+	    assertArrayEquals(null, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
+	}
+	
 	
 
 }

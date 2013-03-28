@@ -8,8 +8,6 @@ import asteroids.IFacade;
 import asteroids.ModelException;
 
 public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
-
-	private static final double PI = Math.PI;
 	
 	public Facade() {
 		
@@ -22,9 +20,9 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 			Ship newShip = new Ship(x,y, xVelocity, yVelocity, radius, angle);
 			return newShip;
 		}
-		catch(IllegalArgumentException iae)
+		catch(Exception e)
 		{
-			throw new ModelException(iae);
+			throw new ModelException(e);
 		}
 		
 	}
@@ -60,51 +58,36 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	}
 
 	@Override
-	public void turn(Ship ship, double angle) {
+	public void turn(Ship ship, double angle) throws ModelException {
 		try{
-			angle = makeAngleValid(angle);
+			angle = SpaceObject.makeAngleValid(angle);
 			ship.turn(angle);
 		}
-		catch(IllegalArgumentException iae) {
-			throw new ModelException(iae);			
+		catch(Exception e) {
+			throw new ModelException(e);			
 		}
 		
 	}
 	
-	public double makeAngleValid(double angle)
-	{
-		if(Double.isNaN(angle))
-		{
-			angle = 0;
-		}
-		
-		double tempAngle = angle%(2*PI);
-		if(tempAngle < 0)
-		{
-			return tempAngle + (2*PI);
-		}
-		else
-		{
-			return tempAngle;
-		}
-	}
-
 	@Override
-	public World createWorld(double width, double height) {
-		// TODO Auto-generated method stub
-		return null;
+	public World createWorld(double width, double height) throws ModelException {
+		try{
+			return new World(width,height);
+		}
+		catch(Exception e)
+		{
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
 	public double getWorldWidth(World world) {
-		// TODO Auto-generated method stub
-		return 0;
+		return world.getWidth();
 	}
 
 	@Override
 	public double getWorldHeight(World world) {
-		// TODO Auto-generated method stub
-		return 0;
+		return world.getHeight();
 	}
 
 	@Override

@@ -18,12 +18,12 @@ public abstract class SpaceObject {
 	 *         | setPosition(0,0); 
 	 *         | setVelocity(0,0); 
 	 *         | setDirection(PI / 2); 
-	 *         | setRadius(1);
-	 *         | 
+	 * @post	The new radius of the spaceObject is equal to 1. 
+	 * 			| (new this).getRadius() == 1
 	 */
 	public SpaceObject() {
 		setMaxVelocity(300000);
-		
+		setLowerBoundRadius(10);
 		setPosition(0,0);
 		setVelocity(0, 0);
 		setDirection(PI / 2);
@@ -57,12 +57,17 @@ public abstract class SpaceObject {
 	 *         | setPosition(x,y); 
 	 *         | setVelocity(xVelocity, yVelocity); 
 	 *         | setDirection(angle); 
-	 *         | setRadius(radius);
+	 * @post 	The new radius of the spaceObject is equal to the given radius. 
+	 * 			| (new this).getRadius() == radius       
+	 * @throws 	IllegalArgumentException
+	 *          The given radius is not a valid radius for this spaceObject. 
+	 *          | !isValidRadius(radius)
 	 */
 	public SpaceObject(double x, double y, double xVelocity, double yVelocity,
 			double radius, double angle) throws IllegalArgumentException {
 		setMaxVelocity(300000);
-
+		setLowerBoundRadius(10);
+		
 		setPosition(x,y);
 		setVelocity(xVelocity, yVelocity);
 		setDirection(angle);
@@ -407,6 +412,38 @@ public abstract class SpaceObject {
 
 		setDirection(getDirection() + angle);
 	}
+	
+	/**
+	 * Converts the given angle to a valid angle (0-2PI)
+	 * 
+	 * @param 	angle
+	 * 			the angle to convert
+	 * @return	The converted valid angle which is between zero and two PI.
+	 * 			| result == convertedAngle 
+	 * 			|	with 0 <= convertedAngle < (2PI)
+	 * @return 	Return 0 if the given angle is not a number or infinite.
+	 * 			| if(Double.isNaN(angle) || Double.isInfinite(angle))
+	 * 			|	then result == 0
+	 */
+	public static double makeAngleValid(double angle)
+	{
+		if(Double.isNaN(angle) || Double.isInfinite(angle))
+		{
+			angle = 0;
+		}
+		
+		double tempAngle = angle%(2*PI);
+		if(tempAngle < 0)
+		{
+			return tempAngle + (2*PI);
+		}
+		else
+		{
+			return tempAngle;
+		}
+	}
+	
+	
 
 	// Radius
 
@@ -420,8 +457,7 @@ public abstract class SpaceObject {
 	 *         spaceObject
 	 */
 	@Basic
-	@Raw
-	public double getLowerBoundRadius() {
+	public static double getLowerBoundRadius() {
 		return lowerBoundRadius;
 	}
 
@@ -430,13 +466,14 @@ public abstract class SpaceObject {
 	 * 
 	 * @param 	lowerBoundRadius
 	 *          the lower bound to check
-	 * @return True if and only if the lower bound of the radius is not zero or below zero and if is a number. 
+	 * @return True if and only if the lower bound of the radius is not infinite, not zero or below zero and if is a number. 
 	 * 			| result == 
-	 * 			| ( (lowerBoundRadius >= 0) 
-	 * 			| && (!Double.isNaN(lowerBoundRadius)) )
+	 * 			| ( (!Double.isInfinite(lowerBoundRadius))
+	 * 			|	  && (!Double.isNaN(lowerBoundRadius)) 
+	 * 			|		&& (lowerBoundRadius >= 0) )
 	 */
 	public static boolean isValidLowerBoundRadius(double lowerBoundRadius) {
-		return ((!Double.isNaN(lowerBoundRadius)) && (lowerBoundRadius >= 0));
+		return ((!Double.isNaN(lowerBoundRadius)) && (!Double.isInfinite(lowerBoundRadius)) && (lowerBoundRadius >= 0));
 	}
 
 	/**
@@ -481,22 +518,6 @@ public abstract class SpaceObject {
 	 */
 	public boolean isValidRadius(double radius) {
 		return ((!Double.isNaN(radius)) && (!Double.isInfinite(radius)) && (radius > getLowerBoundRadius()));
-	}
-
-	/**
-	 * Set the radius of the spaceObject to the given radius.
-	 * 
-	 * @param 	radius
-	 *         	The new radius for the spaceObject.
-	 * @post 	The new radius of the spaceObject is equal to the given radius. 
-	 * 			| (new this).getRadius() == radius
-	 * @throws 	IllegalArgumentException
-	 *          The given radius is not a valid radius for this spaceObject. 
-	 *          | !isValidRadius(radius)
-	 */
-	//TODO documentatie naar constructor
-	public final void setRadius(double radius) throws IllegalArgumentException {
-		
 	}
 
 	/**
@@ -678,6 +699,18 @@ public abstract class SpaceObject {
 			
 			double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
 			
+			if(directionCollision.getYComp() == 0) {
+				if(Math.signum(directionCollision.getXComp()) < 0)
+					alpha = PI;
+				else
+					alpha = 0;
+			}
+			if(directionCollision.getXComp() == 0) {
+				if(Math.signum(directionCollision.getYComp()) < 0)
+					alpha = -PI/2;
+				else
+					alpha = PI/2;
+			}
 			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
 				alpha = PI - alpha;
 			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
