@@ -5,7 +5,6 @@ import java.util.Set;
 
 import asteroids.CollisionListener;
 import asteroids.IFacade;
-import asteroids.model.*;
 import asteroids.ModelException;
 
 public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
@@ -20,7 +19,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	public Ship createShip(double x, double y, double xVelocity,
 			double yVelocity, double radius, double angle, double mass) throws ModelException{
 		try{ 
-			Ship newShip = new Ship(x,y, xVelocity, yVelocity, radius, angle,mass);
+			Ship newShip = new Ship(x,y, xVelocity, yVelocity, radius, angle);
 			return newShip;
 		}
 		catch(IllegalArgumentException iae)

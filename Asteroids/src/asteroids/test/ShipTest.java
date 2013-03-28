@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import asteroids.IShip;
-import asteroids.ModelException;
 import asteroids.Util;
 import asteroids.model.Ship;
 
@@ -18,13 +16,13 @@ public class ShipTest {
 
 	@Test
 	  public void testConstructorShip() {
-	    IShip ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI);
 	    assertNotNull(ship);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	  public void testConstructorShip_IllegalCase() {
-	    Ship ship = new Ship(Double.NaN, 200, 10, -10, 20, -Math.PI);
+	    new Ship(Double.NaN, 200, 10, -10, 20, -Math.PI);
 	 }
 	
 	@Test
@@ -36,7 +34,7 @@ public class ShipTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	  public void testGetCoordinate_IllegalCase() {
-	    Ship ship = new Ship(Double.NaN, Double.NaN, 10, -10, 20, -Math.PI);
+	    new Ship(Double.NaN, Double.NaN, 10, -10, 20, -Math.PI);
 	 }
 	
 	@Test
@@ -287,22 +285,9 @@ public class ShipTest {
 	}
 	
 	@Test
-	public void testSetRadius(){
+	public void testIsValidRadius_Infinity(){
 		Ship ship = new Ship();
-		ship.setRadius(30);
-		assertEquals(30,ship.getRadius(),Util.EPSILON);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testSetRadius_IllegalCase(){
-		Ship ship = new Ship();
-		ship.setRadius(Double.NaN);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testSetRadius_BelowLowerBound(){
-		Ship ship = new Ship();
-		ship.setRadius(-10);
+		assertFalse(ship.isValidRadius(Double.POSITIVE_INFINITY));
 	}
 	
 	@Test
