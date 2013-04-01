@@ -17,7 +17,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	public Ship createShip(double x, double y, double xVelocity,
 			double yVelocity, double radius, double angle, double mass) throws ModelException{
 		try{ 
-			Ship newShip = new Ship(x,y, xVelocity, yVelocity, radius, angle);
+			Ship newShip = new Ship(x,y, xVelocity, yVelocity, radius, angle, mass);
 			return newShip;
 		}
 		catch(Exception e)
@@ -92,9 +92,9 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public Set<Ship> getShips(World world) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
 	@Override
 	public Set<Asteroid> getAsteroids(World world) {
@@ -141,14 +141,17 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public boolean isShip(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+		if(o == null)
+			return false;
+		if(Ship.class.isInstance(o))
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public double getShipMass(Ship ship) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ship.getMass();
 	}
 
 	@Override
@@ -159,13 +162,17 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public boolean isShipThrusterActive(Ship ship) {
-		// TODO Auto-generated method stub
-		return false;
+		return ship.getThruster().isThrusterEnabled();
 	}
 
 	@Override
-	public void setThrusterActive(Ship ship, boolean active) {
-		// TODO Auto-generated method stub
+	public void setThrusterActive(Ship ship, boolean active)throws ModelException {
+		try{
+			ship.getThruster().setEnabled(active);
+		}
+		catch(Exception e) {
+			throw new ModelException(e);
+		}
 		
 	}
 
@@ -178,8 +185,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public Asteroid createAsteroid(double x, double y, double xVelocity,
 			double yVelocity, double radius) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Asteroid(x, y, xVelocity, yVelocity, radius);
 	}
 
 	@Override

@@ -1,10 +1,32 @@
 package asteroids.model;
 
 import asteroids.Util;
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Immutable;
-import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing a spaceObject with a position, velocity, direction and radius
+ * 
+ * @invar 	The x position of the spaceObject must always be a valid x position. 
+ * 			| isValidX(getX())
+ * @invar 	The y position of the spaceObject must always be a valid y position. 
+ * 			| isValidY(getY())
+ * @invar 	The maximum velocity of the spaceObject must always be a valid maximum
+ *        	velocity. 
+ *        	| isValidMaxVelocity(getMaxVelocity())
+ * @invar 	The velocity of the spaceObject must always be a valid velocity. 
+ * 			| isValidVelocity(getXVelocity(), getYVelocity())
+ * @invar 	The lowerBoundRadius of the spaceObject must always be a valid.
+ *        	lowerBoundRadius. 
+ *        	| isValidLowerBoundRadius(getLowerBoundRadius())
+ * @invar 	The radius of the spaceObject must always be a valid radius. 
+ * 			| isValidRadius(getRadius())
+ * @author 	Julie Wouters & Stijn Wellens
+ * 			Students Bachelor of Science in Engineering 
+ * 			(Computer Science and electrical engineering)
+ * 			link to our code repository:
+ * 			https://github.com/StijnWellens/Asteroids.git
+ * 
+ */
 public abstract class SpaceObject {
 
 	/**
@@ -21,9 +43,10 @@ public abstract class SpaceObject {
 	 * @post	The new radius of the spaceObject is equal to 1. 
 	 * 			| (new this).getRadius() == 1
 	 */
-	public SpaceObject() {
+	@Model
+	protected SpaceObject() {
 		setMaxVelocity(300000);
-		setLowerBoundRadius(10);
+		setLowerBoundRadius(0);
 		setPosition(0,0);
 		setVelocity(0, 0);
 		setDirection(PI / 2);
@@ -63,10 +86,11 @@ public abstract class SpaceObject {
 	 *          The given radius is not a valid radius for this spaceObject. 
 	 *          | !isValidRadius(radius)
 	 */
-	public SpaceObject(double x, double y, double xVelocity, double yVelocity,
+	@Model
+	protected SpaceObject(double x, double y, double xVelocity, double yVelocity,
 			double radius, double angle) throws IllegalArgumentException {
 		setMaxVelocity(300000);
-		setLowerBoundRadius(10);
+		setLowerBoundRadius(0);
 		
 		setPosition(x,y);
 		setVelocity(xVelocity, yVelocity);
@@ -288,74 +312,17 @@ public abstract class SpaceObject {
 	 *       | if(isValidVelocity(vx,vy))
 	 *       |		then ((new this).getXVelocity() == vx) && ((new this).getYVelocity() == vy)
 	 */
-	private void setVelocity(double vx, double vy) {
+	protected void setVelocity(double vx, double vy) {
 		if (isValidVelocity(vx, vy)) {
 			this.velocity.setComp(vx, vy);
 		}
 	}
 
-	/**
-	 * Check if the amount that has to be added to a velocity is valid.
-	 * 
-	 * @param amount
-	 *            The amount to be checked.
-	 * @post True if and only if the amount is a number and is higher than or
-	 *       equal to zero. 
-	 *       | result == 
-	 *       | ( (!Double.isNaN(amount)) 
-	 *       | && (amount >= 0) )
-	 */
-	private boolean isValidAmount(double amount) {
-		return ((!Double.isNaN(amount)) && (amount >= 0));
-	}
-
-	/**
-	 * Changes the spaceObject's velocity based on the current velocity, its direction
-	 * and on a given amount.
-	 * 
-	 * @param 	amount
-	 *        	The amount that needs to be added to the current velocity.
-	 * @post 	If the given amount is valid, the new x velocity will be set to
-	 *         	the sum of the old x velocity and the amount that has been
-	 *         	multiplied with the cosine of the direction. 
-	 *         	| if(!isValidAmount(amount)) 
-	 *         	| then (new this).getXVelocity() == this.getXVelocity() + amount*Math.sin(this.direction);
-	 * @post 	If the given amount is valid, the new y velocity will be set to
-	 *         	the sum of the old y velocity and the amount that has been
-	 *         	multiplied with the sine of the direction. 
-	 *         	| if(!isValidAmount(amount)) 
-	 *         	| then (new this).getYVelocity() == this.getYVelocity() + amount*Math.cos(this.direction);
-	 * @post	If the new x and y velocity, calculated as above, aren't valid which means they exceed the maximum velocity.
-	 * 			Then they will be reduced such that the speed becomes the maximum velocity.
-	 * 			| if((new this).getVelocity().getModulus() > this.getMaxVelocity())
-	 * 			| 		then (new(new this)).getVelocity().getModulus() == this.getMaxVelocity()
-	 */
-	public void thrust(double amount) {
-
-		if (!isValidAmount(amount)) {
-			amount = 0;
-		}
-
-		double tempVx = getXVelocity() + amount * Math.cos(getDirection());
-		double tempVy = getYVelocity() + amount * Math.sin(getDirection());
-
-		if (isValidVelocity(tempVx, tempVy)) {
-			setVelocity(tempVx, tempVy);
-		} else {
-			double tempAmount = (getMaxVelocity())
-					/ Math.sqrt(tempVx * tempVx + tempVy * tempVy);
-			tempVx = tempVx * tempAmount;
-			tempVy = tempVy * tempAmount;
-
-			setVelocity(tempVx, tempVy);
-		}
-	}
-
 	// Direction: nominal programming
 
-	private double				direction;
+	
 	private static final double	PI	= Math.PI;
-
+	private double				direction;
 	/**
 	 * Returns the angle of the direction of this spaceObject.
 	 * 
@@ -487,7 +454,7 @@ public abstract class SpaceObject {
 	 *          The given lowerBoundRadius is not a valid lowerBoundRadius for any spaceObject. 
 	 *          | ! isValidLowerBoundRadius(lowerBoundRadius)
 	 */
-	private static void setLowerBoundRadius(double lowerBoundRadius)
+	protected static void setLowerBoundRadius(double lowerBoundRadius)
 			throws IllegalArgumentException {
 		if (!isValidLowerBoundRadius(lowerBoundRadius))
 			throw new IllegalArgumentException();
@@ -557,6 +524,51 @@ public abstract class SpaceObject {
 		setPosition(getX() + getXVelocity() * duration, getY() + getYVelocity() * duration);
 		
 	}
+	
+	// Mass
+	
+	/**
+	 * Return the mass of this ship.
+	 * @return	the mass
+	 * 			| this.mass
+	 */
+	@Basic
+	public double getMass(){
+		return this.mass;
+	}
+	
+	/**
+	 * Check whether the mass of the ship is valid.
+	 * 
+	 * @param	mass
+	 * 			The mass to check.
+	 * @return	True if and only if the mass is a number, strictly positive and not infinite.
+	 * 			| result == ( (!Double.isNaN(mass)) 
+	 * 			| 	&& (!Double.isInfinite(mass))
+	 * 			|	&& (mass > 0) )
+	 */
+	public boolean isValidMass(double mass) {
+		return (!Double.isNaN(mass)) && (!Double.isInfinite(mass)) && (mass > 0); 
+	}
+	
+	/**
+	 * Set the mass of this ship.
+	 * 
+	 * @param 	mass
+	 * 			The mass to set.
+	 * @post	The new mass of the ship is equal to the given mass.
+	 * 			| (new this).getMass() == mass
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception if the given mass is not valid.
+	 * 			| !isValidMass(mass)
+	 */
+	public void setMass(double mass) throws IllegalArgumentException{
+		if(!isValidMass(mass))
+			throw new IllegalArgumentException();
+		this.mass = mass;
+	}
+	
+	private double mass;
 	
 	/**
 	 * Calculate the distance between two spaceObjects.

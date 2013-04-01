@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.util.*;
+
 import be.kuleuven.cs.som.annotate.*;
 
 
@@ -108,4 +110,84 @@ public class World {
 		World.upperBoundCoordinate = upperBoundCoordinate;
 
 	}
+	
+	/**
+	 * 
+	 * @param spaceObject
+	 * @return	...
+	 * 			| spaceObjects.contains(spaceObject)
+	 * @throws	IllegalArgumentException
+	 * 			| (spaceObject == null)
+	 */
+	@Basic
+	public boolean containsSpaceObject(SpaceObject spaceObject) {
+		if(spaceObject == null)
+			throw new IllegalArgumentException();
+		return(spaceObjects.contains(spaceObject));
+	}
+	
+	/**
+	 * 
+	 * @return 	...
+	 * 			| this.spaceObjects
+	 */
+	@Basic
+	public Set<SpaceObject> getSpaceObjects() {
+		return new HashSet<SpaceObject>(spaceObjects);
+	}
+	
+	/**
+	 * 
+	 * @param spaceObjectClass
+	 * @return	...
+	 * 			| result == (setSpaceObjects == new HashSet<SpaceObject>())
+	 * 				&& for each spaceObject in setSpaceObjects: spaceObjectClass.isInstance(spaceObject)
+	 */
+	/*public Set<? extends SpaceObject> getSpaceObjects(Class<?> spaceObjectClass)
+	{
+		Set<SpaceObject> setSpaceObjects = new HashSet<>();
+		for(SpaceObject spaceObject: getSpaceObjects())
+		{
+			if(spaceObjectClass.isInstance(spaceObject))
+				setSpaceObjects.add(spaceObject);
+		}
+		return setSpaceObjects;
+	}*/
+	
+	public Set<Ship> getShips() 
+	{
+		Set<Ship> setShips = new HashSet<Ship>();
+		for(SpaceObject spaceObject: getSpaceObjects())
+			if(Ship.class.isInstance(spaceObject))
+				setShips.add((Ship)spaceObject);
+		return setShips;
+	}
+	
+	public Set<Asteroid> getAsteroids() 
+	{
+		Set<Asteroid> setAsteroids = new HashSet<Asteroid>();
+		for(SpaceObject spaceObject: getSpaceObjects())
+			if(Asteroid.class.isInstance(spaceObject))
+				setAsteroids.add((Asteroid)spaceObject);
+		return setAsteroids;
+	}
+	
+	public Set<Bullet> getBullets() 
+	{
+		Set<Bullet> setBullets = new HashSet<Bullet>();
+		for(SpaceObject spaceObject: getSpaceObjects())
+			if(Bullet.class.isInstance(spaceObject))
+				setBullets.add((Bullet)spaceObject);
+		return setBullets;
+	}
+	
+	public void addSpaceObject(SpaceObject spaceObject)
+	{
+		
+	}
+	
+	//public boolean canHaveAsObject(SpaceObject)
+	
+	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
+	
 }

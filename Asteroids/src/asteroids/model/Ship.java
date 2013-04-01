@@ -23,6 +23,8 @@ import be.kuleuven.cs.som.annotate.*;
  *        	| isValidLowerBoundRadius(getLowerBoundRadius())
  * @invar 	The radius of the ship must always be a valid radius. 
  * 			| isValidRadius(getRadius())
+ * @invar	The mass of the ship must always be a valid mass.
+ * 			| isValidMass(getMass())
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -37,13 +39,30 @@ public class Ship extends SpaceObject{
 	}
 	
 	public Ship(double x, double y, double xVelocity, double yVelocity,
-			double radius, double angle) {
+			double radius, double angle, double mass) {
 		super(x, y , xVelocity, yVelocity,radius,angle);
+		setMass(mass);
+		setThruster(false, 1.1*100000000);
 	}
-
 	
-
-
+	public Thruster getThruster()
+	{
+		return this.thruster;
+	}
 	
+	public void setThruster(boolean enabled, double powerOutput) throws IllegalArgumentException
+	{
+		this.thruster = new Thruster(enabled, powerOutput);
+	}
+	
+	private Thruster thruster;	
+	
+	
+	public void thrust() {
+		Thruster thruster = this.getThruster();
+		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass());
+		
+		
+	}
 	
 }
