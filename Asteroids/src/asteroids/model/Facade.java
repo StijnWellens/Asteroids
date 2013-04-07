@@ -60,7 +60,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public void turn(Ship ship, double angle) throws ModelException {
 		try{
-			angle = SpaceObject.makeAngleValid(angle);
+			angle = Ship.makeAngleValid(angle);
 			ship.turn(angle);
 		}
 		catch(Exception e) {
@@ -92,32 +92,28 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public Set<Ship> getShips(World world) {
-		return null;
+		return world.getShips();
 	}
 	
 
 	@Override
 	public Set<Asteroid> getAsteroids(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getAsteroids();
 	}
 
 	@Override
 	public Set<Bullet> getBullets(World world) {
-		// TODO Auto-generated method stub
-		return null;
+		return world.getBullets();
 	}
 
 	@Override
 	public void addShip(World world, Ship ship) {
-		// TODO Auto-generated method stub
-		
+		world.addSpaceObject(ship);
 	}
 
 	@Override
 	public void addAsteroid(World world, Asteroid asteroid) {
-		// TODO Auto-generated method stub
-		
+		world.addSpaceObject(asteroid);
 	}
 
 	@Override

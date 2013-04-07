@@ -183,7 +183,7 @@ public class World {
 	
 	public void addSpaceObject(SpaceObject spaceObject)
 	{
-		
+		spaceObjects.add(spaceObject);
 	}
 	
 	//public boolean canHaveAsObject(SpaceObject)

@@ -28,7 +28,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  */
 public abstract class SpaceObject {
-
+	
 	/**
 	 * Create a new default spaceObject with default settings.
 	 * 
@@ -49,7 +49,6 @@ public abstract class SpaceObject {
 		setLowerBoundRadius(0);
 		setPosition(0,0);
 		setVelocity(0, 0);
-		setDirection(PI / 2);
 		this.radius = 11;
 
 	}
@@ -88,13 +87,12 @@ public abstract class SpaceObject {
 	 */
 	@Model
 	protected SpaceObject(double x, double y, double xVelocity, double yVelocity,
-			double radius, double angle) throws IllegalArgumentException {
+			double radius) throws IllegalArgumentException {
 		setMaxVelocity(300000);
 		setLowerBoundRadius(0);
 		
 		setPosition(x,y);
 		setVelocity(xVelocity, yVelocity);
-		setDirection(angle);
 		if (!isValidRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
@@ -317,101 +315,7 @@ public abstract class SpaceObject {
 			this.velocity.setComp(vx, vy);
 		}
 	}
-
-	// Direction: nominal programming
-
 	
-	private static final double	PI	= Math.PI;
-	private double				direction;
-	/**
-	 * Returns the angle of the direction of this spaceObject.
-	 * 
-	 * @return the angle of the direction of the spaceObject | this.direction
-	 */
-	@Basic
-	@Raw
-	public double getDirection() {
-		return this.direction;
-	}
-
-	/**
-	 * Returns whether the given direction is valid or not.
-	 * 
-	 * @param angle
-	 *            The angle in which the spaceObject moves.
-	 * @return True if and only if the given angle is a number and is between
-	 *         zero and 2*Pi. 
-	 *         | result == ((!Double.isNaN(angle)) && (angle >=0) && (angle < 2*PI))
-	 */
-	public boolean isValidDirection(double angle) {
-		return ((!Double.isNaN(angle)) && (angle >= 0) && (angle < 2 * PI));
-	}
-
-	/**
-	 * Set the direction of the spaceObject to the given direction.
-	 * 
-	 * @param angle
-	 *            The angle of the given direction.
-	 * @pre The given direction must be a valid direction. 
-	 * 		| isValidDirection(angle)
-	 * @post The new direction of the spaceObject is equal to the modulo 2*Pi of the given direction of the spaceObject. 
-	 * 		| (new this).getDirection() == angle
-	 */
-	public void setDirection(double angle) {
-		assert isValidDirection(angle);
-
-		this.direction = angle;
-
-	}
-
-	/**
-	 * Turns the spaceObject with a given angle.
-	 * 
-	 * @param angle
-	 *            The angle that needs to be added to the current direction.
-	 * @pre The sum of the old direction and the given angle must be a valid direction. 
-	 * 		| isValidDirection(this.getDirection()+angle)
-	 * @effect The direction of the spaceObject is set to the sum of the current direction and the given angle. 
-	 * 		| (new this).setDirection(this.getDirection() + angle)
-	 */
-	public void turn(double angle) {
-		assert isValidDirection(getDirection() + angle);
-
-		setDirection(getDirection() + angle);
-	}
-	
-	/**
-	 * Converts the given angle to a valid angle (0-2PI)
-	 * 
-	 * @param 	angle
-	 * 			the angle to convert
-	 * @return	The converted valid angle which is between zero and two PI.
-	 * 			| result == convertedAngle 
-	 * 			|	with 0 <= convertedAngle < (2PI)
-	 * @return 	Return 0 if the given angle is not a number or infinite.
-	 * 			| if(Double.isNaN(angle) || Double.isInfinite(angle))
-	 * 			|	then result == 0
-	 */
-	public static double makeAngleValid(double angle)
-	{
-		if(Double.isNaN(angle) || Double.isInfinite(angle))
-		{
-			angle = 0;
-		}
-		
-		double tempAngle = angle%(2*PI);
-		if(tempAngle < 0)
-		{
-			return tempAngle + (2*PI);
-		}
-		else
-		{
-			return tempAngle;
-		}
-	}
-	
-	
-
 	// Radius
 
 	private final double	radius;
@@ -740,5 +644,6 @@ public abstract class SpaceObject {
 		return collision;
 	}
 	
+	private static final double	PI	= Math.PI;
 	
 }

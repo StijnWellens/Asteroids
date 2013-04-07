@@ -11,9 +11,9 @@ public class Bullet extends SpaceObject {
 	}
 	
 	public Bullet(double x, double y, double xVelocity, double yVelocity,
-			double radius, double angle)
+			double radius)
 	{
-		super(x, y , xVelocity, yVelocity,radius,angle);
+		super(x, y , xVelocity, yVelocity,radius);
 		setMass((4/3)*PI*(radius*radius*radius)*DENSITY);
 	}
 	

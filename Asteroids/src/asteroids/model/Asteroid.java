@@ -11,9 +11,9 @@ public class Asteroid extends SpaceObject {
 	}
 	
 	public Asteroid(double x, double y, double xVelocity, double yVelocity,
-			double radius, double direction) throws IllegalArgumentException
+			double radius) throws IllegalArgumentException
 	{
-		super(x, y , xVelocity, yVelocity,radius,direction);
+		super(x, y , xVelocity, yVelocity,radius);
 		setMass((4/3)*PI*(radius*radius*radius)*DENSITY);
 	}
 	
