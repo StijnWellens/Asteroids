@@ -1,7 +1,7 @@
 package asteroids.model;
 
 public class Thruster {
-
+	
 	public Thruster(boolean enabled, double powerOutput) throws IllegalArgumentException
 	{
 		this.setEnabled(true);

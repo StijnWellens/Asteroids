@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import javax.swing.Timer;
 
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
@@ -154,10 +155,12 @@ public class Ship extends SpaceObject{
 	
 	
 	public void thrust() {
+		Timer timer = new Timer(0,null);
+		timer.start();
 		Thruster thruster = this.getThruster();
 		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass());
-		
-		
+		timer.stop();
+		super.setVelocity(getXVelocity()+acceleration.getXComp()*timer.getDelay(), getYVelocity()+acceleration.getYComp()*timer.getDelay());
 	}
 	
 }
