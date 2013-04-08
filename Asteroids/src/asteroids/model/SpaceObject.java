@@ -577,6 +577,34 @@ public abstract class SpaceObject {
 			
 	}
 	
+	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMax)
+	{
+		
+		double dt;
+		
+		if(velocity>0)
+			dt = Vector.multiplyComponents(axisMax-this.getRadius()-position, 1/velocity);
+		else if(velocity<0)
+			dt = Vector.multiplyComponents(this.getRadius()-position, 1/velocity);
+		else
+			dt = Double.POSITIVE_INFINITY;
+		return dt;
+	}
+	
+	public double getTimeToCollisionWithBorder(){
+		if(this.getWorld()==null)
+			return Double.POSITIVE_INFINITY;
+		double width = this.getWorld().getWidth();
+		double height = this.getWorld().getHeight();
+		double dtx = getTimeToCollisionWithAxis(this.getX(), this.getXVelocity(), width);
+		double dty = getTimeToCollisionWithAxis(this.getY(),this.getYVelocity(), height);
+						
+		if(dtx <= dty)
+			return dtx;
+		else
+			return dty;
+	}
+	
 	/**
 	 * Return where two spaceObjects will collide.
 	 * 
@@ -676,6 +704,13 @@ public abstract class SpaceObject {
 		if(!this.canHaveAsWorld(world))
 			throw new IllegalArgumentException();
 		this.world = world;
+	}
+	
+	public void die(){
+		if(this.getWorld()!=null){
+			this.getWorld().removeSpaceObject(this);
+			this.setWorld(null);
+		}
 	}
 	
 }

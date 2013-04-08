@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -92,18 +93,18 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public Set<Ship> getShips(World world) {
-		return world.getShips();
+		return new HashSet<Ship>(world.getShips());
 	}
 	
 
 	@Override
 	public Set<Asteroid> getAsteroids(World world) {
-		return world.getAsteroids();
+		return new HashSet<Asteroid>(world.getAsteroids());
 	}
 
 	@Override
 	public Set<Bullet> getBullets(World world) {
-		return world.getBullets();
+		return new HashSet<Bullet>(world.getBullets());
 	}
 
 	@Override
@@ -204,7 +205,8 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	public Asteroid createAsteroid(double x, double y, double xVelocity,
 			double yVelocity, double radius)throws ModelException {
 		try{
-		return new Asteroid(x, y, xVelocity, yVelocity, radius);
+		Asteroid newAsteroid = new Asteroid(x, y, xVelocity, yVelocity, radius);
+		return newAsteroid;
 		}
 		catch(Exception e){
 			throw new ModelException(e);
@@ -214,8 +216,13 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public Asteroid createAsteroid(double x, double y, double xVelocity,
 			double yVelocity, double radius, Random random) {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			Asteroid newAsteroid = new Asteroid(x, y, xVelocity, yVelocity, radius,random);
+			return newAsteroid;
+			}
+			catch(Exception e){
+				throw new ModelException(e);
+			}
 	}
 
 	@Override
