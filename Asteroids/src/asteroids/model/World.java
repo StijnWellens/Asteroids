@@ -186,7 +186,9 @@ public class World {
 		spaceObjects.add(spaceObject);
 	}
 	
-	//public boolean canHaveAsObject(SpaceObject)
+	public boolean canHaveAsObject(SpaceObject spaceObject){
+		return (spaceObject!=null)&& spaceObject.canHaveAsWorld(this);
+	}
 	
 	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
 	

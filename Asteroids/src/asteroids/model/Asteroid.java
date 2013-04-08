@@ -17,4 +17,9 @@ public class Asteroid extends SpaceObject {
 		setMass((4/3)*PI*(radius*radius*radius)*DENSITY);
 	}
 	
+	public boolean canHaveAsWorld(World world){
+		return (super.canHaveAsWorld(world))&& 
+		(this.overlapWithWorldObject(world));	
+	}
+	
 }

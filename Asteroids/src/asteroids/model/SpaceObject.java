@@ -646,4 +646,36 @@ public abstract class SpaceObject {
 	
 	private static final double	PI	= Math.PI;
 	
+	public boolean canHaveAsWorld(World world){
+		if(world == null)
+			return false;
+		if((this.getX()+this.getRadius())> world.getWidth())
+			return false;
+		if((this.getY()+this.getRadius())> world.getHeight())
+			return false;
+		return true;
+	}
+	
+	public boolean overlapWithWorldObject(World world){
+		for(SpaceObject spaceObject: world.getSpaceObjects()){
+			if(Bullet.class.isInstance(spaceObject)){}
+			if(SpaceObject.overlap(spaceObject, this))
+				return false;
+		}
+		return true;
+	}
+	
+	private World world;
+	
+	@Basic
+	public World getWorld(){
+		return this.world;
+	}
+	
+	public void setWorld(World world)throws IllegalArgumentException{
+		if(!this.canHaveAsWorld(world))
+			throw new IllegalArgumentException();
+		this.world = world;
+	}
+	
 }

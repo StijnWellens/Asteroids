@@ -162,4 +162,9 @@ public class Ship extends SpaceObject{
 		
 		}
 	
+	public boolean canHaveAsWorld(World world){
+		return (super.canHaveAsWorld(world)) && 
+				(this.overlapWithWorldObject(world));
+	}
+	
 }
