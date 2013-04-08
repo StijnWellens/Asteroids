@@ -154,11 +154,12 @@ public class Ship extends SpaceObject{
 	private Thruster thruster;	
 	
 	
-	public void thrust() {
+	public void thrust(double time) {
 		
 		Thruster thruster = this.getThruster();
 		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass());
-			
+		this.setVelocity(this.getXVelocity()+acceleration.getXComp()*time, this.getYVelocity()+acceleration.getYComp()*time);
+		
 		}
 	
 }
