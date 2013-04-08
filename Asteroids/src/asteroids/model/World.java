@@ -116,14 +116,12 @@ public class World {
 	 * @param spaceObject
 	 * @return	...
 	 * 			| spaceObjects.contains(spaceObject)
-	 * @throws	IllegalArgumentException
-	 * 			| (spaceObject == null)
 	 */
 	@Basic
 	public boolean containsSpaceObject(SpaceObject spaceObject) {
 		if(spaceObject == null)
-			throw new IllegalArgumentException();
-		return(spaceObjects.contains(spaceObject));
+			return false;
+		return(this.spaceObjects.contains(spaceObject));
 	}
 	
 	/**
@@ -133,7 +131,7 @@ public class World {
 	 */
 	@Basic
 	public Set<SpaceObject> getSpaceObjects() {
-		return new HashSet<SpaceObject>(spaceObjects);
+		return new HashSet<SpaceObject>(this.spaceObjects);
 	}
 	
 	/**
@@ -181,15 +179,25 @@ public class World {
 		return setBullets;
 	}
 	
-	public void addSpaceObject(SpaceObject spaceObject)
+	public void addSpaceObject(SpaceObject spaceObject)throws IllegalArgumentException
 	{
-		spaceObjects.add(spaceObject);
+		if(!this.canHaveAsObject(spaceObject))
+			throw new IllegalArgumentException();
+		this.spaceObjects.add(spaceObject);
 	}
 	
 	public boolean canHaveAsObject(SpaceObject spaceObject){
-		return (spaceObject!=null)&& spaceObject.canHaveAsWorld(this);
+		return (spaceObject!=null) && (spaceObject.canHaveAsWorld(this));
 	}
 	
 	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
+	
+	public void removeSpaceObject(SpaceObject spaceObject) throws IllegalArgumentException{
+		if(containsSpaceObject(spaceObject))
+			this.spaceObjects.remove(spaceObject);
+		else
+			throw new IllegalArgumentException();
+	}
+	
 	
 }

@@ -167,4 +167,12 @@ public class Ship extends SpaceObject{
 				(this.overlapWithWorldObject(world));
 	}
 	
+	public void fireBullet() throws IllegalArgumentException {
+		if(this.getWorld()!=null){
+			SpaceObject bullet = new Bullet(this);
+			this.getWorld().addSpaceObject(bullet);
+		}
+			
+	}
+	
 }

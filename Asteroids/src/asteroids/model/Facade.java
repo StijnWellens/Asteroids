@@ -107,24 +107,44 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	}
 
 	@Override
-	public void addShip(World world, Ship ship) {
-		world.addSpaceObject(ship);
+	public void addShip(World world, Ship ship) throws ModelException{
+		try{
+			world.addSpaceObject(ship);
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
-	public void addAsteroid(World world, Asteroid asteroid) {
-		world.addSpaceObject(asteroid);
+	public void addAsteroid(World world, Asteroid asteroid) throws ModelException {
+		try{
+			world.addSpaceObject(asteroid);
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
-	public void removeShip(World world, Ship ship) {
-		// TODO Auto-generated method stub
+	public void removeShip(World world, Ship ship) throws ModelException{
+		try{
+			world.removeSpaceObject(ship);
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 		
 	}
 
 	@Override
 	public void removeAsteroid(World world, Asteroid asteroid) {
-		// TODO Auto-generated method stub
+		try{
+			world.removeSpaceObject(asteroid);
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 		
 	}
 
@@ -152,8 +172,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public World getShipWorld(Ship ship) {
-		// TODO Auto-generated method stub
-		return null;
+		return ship.getWorld();
 	}
 
 	@Override
@@ -169,19 +188,27 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 		catch(Exception e) {
 			throw new ModelException(e);
 		}
-		
 	}
 
 	@Override
-	public void fireBullet(Ship ship) {
-		// TODO Auto-generated method stub
-		
+	public void fireBullet(Ship ship)throws ModelException {
+		try{
+			ship.fireBullet();
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
 	public Asteroid createAsteroid(double x, double y, double xVelocity,
-			double yVelocity, double radius) {
+			double yVelocity, double radius)throws ModelException {
+		try{
 		return new Asteroid(x, y, xVelocity, yVelocity, radius);
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
@@ -233,8 +260,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public World getAsteroidWorld(Asteroid asteroid) {
-		// TODO Auto-generated method stub
-		return null;
+		return asteroid.getWorld();
 	}
 
 	@Override
@@ -279,8 +305,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public World getBulletWorld(Bullet bullet) {
-		// TODO Auto-generated method stub
-		return null;
+		return bullet.getWorld();
 	}
 
 	@Override
