@@ -8,6 +8,13 @@ public class Bullet extends SpaceObject {
 	private static final double RADIUS = 3;
 	private static final double INITIAL_SPEED = 250;
 	
+	public Bullet(double x, double y, double xVelocity, double yVelocity)
+	{
+		super(x, y, xVelocity, yVelocity, RADIUS);
+		this.ship = null;
+		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
+	}
+	
 	public Bullet(Ship ship)
 	{
 		super(ship.getX()+(ship.getRadius()+RADIUS)*Math.cos(ship.getDirection()), ship.getY()+(ship.getRadius()+RADIUS)*Math.sin(ship.getDirection()) , 

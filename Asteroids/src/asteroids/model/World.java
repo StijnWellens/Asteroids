@@ -9,8 +9,8 @@ public class World {
 	
 	public World() {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
-		this.height = 10;
-		this.width = 10;		
+		this.height = 100;
+		this.width = 100;		
 	}
 	
 	public World(double width, double height) throws IllegalArgumentException {

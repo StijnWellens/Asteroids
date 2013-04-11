@@ -274,14 +274,12 @@ public abstract class SpaceObject {
 	 *            The x component of the velocity to be checked.
 	 * @param vy
 	 *            The y component of the velocity to be checked.
-	 * @return False if the double vx or vy is not a number. 
-	 * 			|if((Double.isNaN(vx) == true)|| (Double.isNaN(vy) == true)) 
+	 * @return False if the doubles vx and vy aren't valid velocity components. 
+	 * 			|if((!isValidVelocityComp(vx))|| (!isValidVelocityComp(vy))) 
 	 * 			| then result == false
 	 * @return True if and only if the velocity is equal or less than the valid
 	 *         maximum speed of the spaceObject. 
-	 *         | if (vx <0 && vy<0) 
-	 *         | then result == false 
-	 *         | else if(isValidMaxVelocity(this.maxV))&&(Math.sqrt(vx*vx+vy*vy) <= this.maxV) ) 
+	 *         | if((Math.sqrt(vx*vx+vy*vy) <= this.maxV) ) 
 	 *         | then result == true 
 	 *         | else 
 	 *         | then result == false
@@ -290,12 +288,9 @@ public abstract class SpaceObject {
 		if ((!isValidVelocityComp(vx)) || (!isValidVelocityComp(vy))) {
 			return false;
 		}
-		if (isValidMaxVelocity(this.maxV)) {
-			return Util.fuzzyLessThanOrEqualTo(Math.sqrt(vx * vx + vy * vy),
+		return Util.fuzzyLessThanOrEqualTo(Math.sqrt(vx * vx + vy * vy),
 					this.maxV);
-		} else {
-			return false;
-		}
+		
 	}
 
 	/**
@@ -396,12 +391,12 @@ public abstract class SpaceObject {
 	 * 
 	 * @param 	duration
 	 *       	The duration to check.
-	 * @return 	True if and only if the given duration is not below zero and if it is a number. 
+	 * @return 	True if and only if the given duration is not below zero, is not infinite and if it is a number. 
 	 * 			|result == 
-	 * 			| (duration >= 0 && Double.isNaN(duration))
+	 * 			| (duration >= 0 && Double.isNaN(duration) && !Double.isInfinite(duration))
 	 */
 	public boolean isValidDuration(double duration) {
-		return (duration >= 0 && !Double.isNaN(duration));
+		return ((duration >= 0) && (!Double.isNaN(duration)) && (!Double.isInfinite(duration)));
 	}
 
 	/**
@@ -487,9 +482,6 @@ public abstract class SpaceObject {
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given spaceObjects is null.
 	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
-	 * @throws	IllegalArgumentException
-	 * 			The distance between the two spaceObjects is not a number.
-	 * 			| Double.isNaN(distance) 
 	 */
 	public static double getDistanceBetween(SpaceObject spaceObject1, SpaceObject spaceObject2) throws IllegalArgumentException
 	{
@@ -501,11 +493,7 @@ public abstract class SpaceObject {
 		double sumOfRadius = Vector.sumOfComponents( spaceObject1.getRadius(),spaceObject2.getRadius() );
 		double distanceWithoutRadius = Vector.getModulus(Vector.sumOfComponents(spaceObject1.getX(),-spaceObject2.getX()), Vector.sumOfComponents(spaceObject1.getY(),-spaceObject2.getY()));
 		distance = Vector.sumOfComponents(distanceWithoutRadius, -sumOfRadius);
-		
-		
-		if(Double.isNaN(distance))
-			throw new IllegalArgumentException();
-		
+				
 		return distance;	
 			
 	}
@@ -577,6 +565,15 @@ public abstract class SpaceObject {
 			
 	}
 	
+	/**
+	 * Return the time to collision from a point of a ship with a border in one direction.
+	 * 
+	 * @param position
+	 * @param velocity
+	 * @param axisMax
+	 * @return
+	 */
+	//TODO
 	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMax)
 	{
 		
@@ -591,6 +588,11 @@ public abstract class SpaceObject {
 		return dt;
 	}
 	
+	/**
+	 * Returns the time to collision for this ship with the border.
+	 * 
+	 * @return
+	 */
 	public double getTimeToCollisionWithBorder(){
 		if(this.getWorld()==null)
 			return Double.POSITIVE_INFINITY;
@@ -675,8 +677,6 @@ public abstract class SpaceObject {
 	private static final double	PI	= Math.PI;
 	
 	public boolean canHaveAsWorld(World world){
-		if(world == null)
-			return false;
 		if((this.getX()+this.getRadius())> world.getWidth())
 			return false;
 		if((this.getY()+this.getRadius())> world.getHeight())
@@ -687,7 +687,7 @@ public abstract class SpaceObject {
 	public boolean overlapWithWorldObject(World world){
 		for(SpaceObject spaceObject: world.getSpaceObjects()){
 			if(Bullet.class.isInstance(spaceObject)){}
-			if(SpaceObject.overlap(spaceObject, this))
+			else if(SpaceObject.overlap(spaceObject, this))
 				return false;
 		}
 		return true;
