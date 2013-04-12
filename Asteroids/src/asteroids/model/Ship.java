@@ -175,4 +175,18 @@ public class Ship extends SpaceObject{
 			
 	}
 	
+	public void collision(SpaceObject spaceObject) throws IllegalArgumentException
+	{
+		if(spaceObject == null)
+			throw new IllegalArgumentException();
+		if(Ship.class.isInstance(spaceObject))
+			this.bounceOff(spaceObject);
+		else if(Asteroid.class.isInstance(spaceObject))
+			this.die();
+		else if(Bullet.class.isInstance(spaceObject))
+		{
+			spaceObject.die();
+			this.die();
+		}
+	}
 }

@@ -645,6 +645,8 @@ public class ShipTest {
 		ship.setWorld(world);
 	}
 	
+	
+	
 	@Test
 	public void testThrust(){
 		Ship ship = new Ship();

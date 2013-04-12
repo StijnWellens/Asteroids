@@ -75,4 +75,17 @@ public class Asteroid extends SpaceObject {
 			}
 		}
 	}
+	
+	public void collision(SpaceObject spaceObject) throws IllegalArgumentException
+	{
+		if(spaceObject == null)
+			throw new IllegalArgumentException();
+		if(Asteroid.class.isInstance(spaceObject))
+			this.bounceOff(spaceObject);
+		else if(Bullet.class.isInstance(spaceObject))
+		{
+			spaceObject.die();
+			this.die();
+		}
+	}
 }

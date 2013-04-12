@@ -305,9 +305,15 @@ public abstract class SpaceObject {
 	 *       | if(isValidVelocity(vx,vy))
 	 *       |		then ((new this).getXVelocity() == vx) && ((new this).getYVelocity() == vy)
 	 */
-	protected void setVelocity(double vx, double vy) {
+	public void setVelocity(double vx, double vy) {
 		if (isValidVelocity(vx, vy)) {
 			this.velocity.setComp(vx, vy);
+		}
+	}
+	
+	public void setVelocity(Vector velocity) {
+		if (isValidVelocity(velocity.getXComp(), velocity.getYComp())) {
+			this.velocity = velocity;
 		}
 	}
 	
@@ -713,4 +719,49 @@ public abstract class SpaceObject {
 		}
 	}
 	
+	public void collision(SpaceObject spaceObject){}
+	
+	public void collisionWithBorder()
+	{
+		if(this.getWorld()!=null){
+			double time = this.getTimeToCollisionWithBorder();
+			Vector position = this.getPosition();
+			Vector velocity = this.getVelocity();
+			
+			if(Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, 0) || Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, this.getWorld().getWidth()))
+			{
+				this.setVelocity(-velocity.getXComp(), velocity.getYComp());
+			}
+			else
+			{
+				this.setVelocity(velocity.getXComp(), -velocity.getYComp());
+			}
+				
+		}
+	}
+	
+	public void bounceOff(SpaceObject spaceObject) throws IllegalArgumentException
+	{
+		if(spaceObject == null)
+			throw new IllegalArgumentException();
+		
+		Vector dv = Vector.subtraction(this.getVelocity(), spaceObject.getVelocity());
+		Vector dr = Vector.subtraction(this.getPosition(), spaceObject.getPosition());
+		double dvdr = Vector.dotProduct(dv, dr);
+		double sigma = Vector.sumOfComponents(this.getRadius(),spaceObject.getRadius());
+		
+		double mi = this.getMass();
+		double mj = spaceObject.getMass();
+		
+		double J = (2*mi*mj*dvdr)/(sigma*(mi+mj));
+		double Jx = (J*dr.getXComp())/sigma;
+		double Jy = (J*dr.getYComp())/sigma;
+		
+		Vector newVelocityThis = new Vector(this.getVelocity().getXComp() + (Jx/mi), this.getVelocity().getYComp() + (Jy/mi));
+		Vector newVelocityOther = new Vector(spaceObject.getVelocity().getXComp() + (Jx/mj), spaceObject.getVelocity().getYComp() + (Jy/mj));
+		
+		this.setVelocity(newVelocityThis);
+		spaceObject.setVelocity(newVelocityOther);
+		
+	}
 }
