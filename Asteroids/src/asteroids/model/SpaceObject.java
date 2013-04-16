@@ -523,32 +523,7 @@ public abstract class SpaceObject {
 		if((spaceObject1 == null) || (spaceObject2 == null))
 			throw new IllegalArgumentException();
 		return (getDistanceBetween(spaceObject1,spaceObject2) <= 0);
-	}
-	
-	
-	
-	/**
-	 * Return the time to collision from a point of a ship with a border in one direction.
-	 * 
-	 * @param position
-	 * @param velocity
-	 * @param axisMax
-	 * @return
-	 */
-	//TODO
-	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMax)
-	{
-		
-		double dt;
-		
-		if(velocity>0)
-			dt = Vector.multiplyComponents(axisMax-this.getRadius()-position, 1/velocity);
-		else if(velocity<0)
-			dt = Vector.multiplyComponents(this.getRadius()-position, 1/velocity);
-		else
-			dt = Double.POSITIVE_INFINITY;
-		return dt;
-	}
+	}	
 	
 	public boolean overlapWithWorldObject(World world){
 		for(SpaceObject spaceObject: world.getSpaceObjects()){
@@ -626,43 +601,7 @@ public abstract class SpaceObject {
 		
 	}
 	
-	public void collisionWithBorder()
-	{
-		if(this.getWorld()!=null){
-			double time = this.getTimeToCollisionWithBorder();
-			Vector position = this.getPosition();
-			Vector velocity = this.getVelocity();
-			
-			if(Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, 0) || Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, this.getWorld().getWidth()))
-			{
-				this.setVelocity(-velocity.getXComp(), velocity.getYComp());
-			}
-			else
-			{
-				this.setVelocity(velocity.getXComp(), -velocity.getYComp());
-			}
-				
-		}
-	}
 	
-	/**
-	 * Returns the time to collision for this ship with the border.
-	 * 
-	 * @return
-	 */
-	public double getTimeToCollisionWithBorder(){
-		if(this.getWorld()==null)
-			return Double.POSITIVE_INFINITY;
-		double width = this.getWorld().getWidth();
-		double height = this.getWorld().getHeight();
-		double dtx = getTimeToCollisionWithAxis(this.getX(), this.getXVelocity(), width);
-		double dty = getTimeToCollisionWithAxis(this.getY(),this.getYVelocity(), height);
-						
-		if(dtx <= dty)
-			return dtx;
-		else
-			return dty;
-	}
 		
 	
 }

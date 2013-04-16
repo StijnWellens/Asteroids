@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 public class Collision {
@@ -80,28 +81,66 @@ public class Collision {
 	 */
 	public double getTimeToCollision() 
 	{
+		if(getObject2() == null)
+		{
+			double width = getObject1().getWorld().getWidth();
+			double height = getObject1().getWorld().getHeight();
+			double dtx = getTimeToCollisionWithAxis(getObject1().getX(), getObject1().getXVelocity(), width);
+			double dty = getTimeToCollisionWithAxis(getObject1().getY(), getObject1().getYVelocity(), height);
+							
+			if(dtx <= dty)
+				return dtx;
+			else
+				return dty;
+		}
+		else
+		{
+			double dt;
+			
+			Vector dv = Vector.subtraction(getObject1().getVelocity(), getObject2().getVelocity());
+			Vector dr = Vector.subtraction(getObject1().getPosition(), getObject2().getPosition());
+			double dvdr = Vector.dotProduct(dv, dr);
+			double dvdv = Vector.dotProduct(dv, dv);
+			double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
+			double sigma = Vector.sumOfComponents(getObject1().getRadius(),getObject2().getRadius());
+			double sigmaSquare = Vector.multiplyComponents(sigma, sigma);
+			double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -sigmaSquare) );
+			double d = Vector.sumOfComponents(d1, -d2);
+						
+			if(dvdr >= 0 || d <= 0)
+			{
+				dt = Double.POSITIVE_INFINITY;
+			}		
+			else{
+				dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),(1d/(dvdv))));
+			}
+									
+			return dt;
+		}
+			
+	}
+	
+	/**
+	 * Return the time to collision from a point of a ship with a border in one direction.
+	 * 
+	 * @param position
+	 * @param velocity
+	 * @param axisMax
+	 * @return
+	 */
+	//TODO
+	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMax)
+	{
+		
 		double dt;
 		
-		Vector dv = Vector.subtraction(getObject1().getVelocity(), getObject2().getVelocity());
-		Vector dr = Vector.subtraction(getObject1().getPosition(), getObject2().getPosition());
-		double dvdr = Vector.dotProduct(dv, dr);
-		double dvdv = Vector.dotProduct(dv, dv);
-		double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
-		double sigma = Vector.sumOfComponents(getObject1().getRadius(),getObject2().getRadius());
-		double sigmaSquare = Vector.multiplyComponents(sigma, sigma);
-		double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -sigmaSquare) );
-		double d = Vector.sumOfComponents(d1, -d2);
-					
-		if(dvdr >= 0 || d <= 0)
-		{
+		if(velocity>0)
+			dt = Vector.multiplyComponents(axisMax-getObject1().getRadius()-position, 1/velocity);
+		else if(velocity<0)
+			dt = Vector.multiplyComponents(getObject1().getRadius()-position, 1/velocity);
+		else
 			dt = Double.POSITIVE_INFINITY;
-		}		
-		else{
-			dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),(1d/(dvdv))));
-		}
-								
 		return dt;
-			
 	}
 	
 	/**
@@ -124,48 +163,55 @@ public class Collision {
 	 */
 	public double[] getCollisionPosition() 
 	{
-		double[] collision = new double[2];
-		
-		double time = getTimeToCollision();
-		if(time == Double.POSITIVE_INFINITY)
+		if(getObject2() == null)
 		{
-			collision = null;
+			return null;
 		}
-		else{
-						
-			Vector newPositionspaceObject1 = new Vector(getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time, getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time);
-			Vector newPositionspaceObject2 = new Vector(getObject2().getPosition().getXComp() + getObject2().getXVelocity() * time, getObject2().getPosition().getYComp() + getObject2().getYVelocity() * time);
-			Vector directionCollision = Vector.subtraction(newPositionspaceObject1, newPositionspaceObject2);
+		else
+		{
+			double[] collision = new double[2];
 			
-			double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
-			
-			if(directionCollision.getYComp() == 0) {
-				if(Math.signum(directionCollision.getXComp()) < 0)
-					alpha = PI;
-				else
-					alpha = 0;
+			double time = getTimeToCollision();
+			if(time == Double.POSITIVE_INFINITY)
+			{
+				collision = null;
 			}
-			if(directionCollision.getXComp() == 0) {
-				if(Math.signum(directionCollision.getYComp()) < 0)
-					alpha = -PI/2;
-				else
-					alpha = PI/2;
-			}
-			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
-				alpha = PI - alpha;
-			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
-				alpha = PI + alpha;
-			if(directionCollision.getXComp() > 0 && directionCollision.getYComp() < 0 )
-				alpha = - alpha;
-			
-			double collisionPositionX = getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time - Math.cos(alpha) * getObject1().getRadius() ;
-			double collisionPositionY = getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time - Math.sin(alpha) * getObject1().getRadius() ;
-			
-			collision[0] = collisionPositionX; 
-			collision[1] = collisionPositionY; 
-		}
+			else{
+							
+				Vector newPositionspaceObject1 = new Vector(getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time, getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time);
+				Vector newPositionspaceObject2 = new Vector(getObject2().getPosition().getXComp() + getObject2().getXVelocity() * time, getObject2().getPosition().getYComp() + getObject2().getYVelocity() * time);
+				Vector directionCollision = Vector.subtraction(newPositionspaceObject1, newPositionspaceObject2);
 				
-		return collision;
+				double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
+				
+				if(directionCollision.getYComp() == 0) {
+					if(Math.signum(directionCollision.getXComp()) < 0)
+						alpha = PI;
+					else
+						alpha = 0;
+				}
+				if(directionCollision.getXComp() == 0) {
+					if(Math.signum(directionCollision.getYComp()) < 0)
+						alpha = -PI/2;
+					else
+						alpha = PI/2;
+				}
+				if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
+					alpha = PI - alpha;
+				if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
+					alpha = PI + alpha;
+				if(directionCollision.getXComp() > 0 && directionCollision.getYComp() < 0 )
+					alpha = - alpha;
+				
+				double collisionPositionX = getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time - Math.cos(alpha) * getObject1().getRadius() ;
+				double collisionPositionY = getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time - Math.sin(alpha) * getObject1().getRadius() ;
+				
+				collision[0] = collisionPositionX; 
+				collision[1] = collisionPositionY; 
+			}
+					
+			return collision;
+		}
 	}
 	
 	public void bounceOff() 
@@ -192,20 +238,39 @@ public class Collision {
 	
 	public void execute() 
 	{
-		if(Bullet.class.isInstance(getObject1()) || Bullet.class.isInstance(getObject2()))
+		if(getObject2()== null)
 		{
-			getObject1().die(getObject1().getWorld());
-			getObject2().die(getObject2().getWorld());
+			double time = getTimeToCollision();
+			Vector position = getObject1().getPosition();
+			Vector velocity = getObject1().getVelocity();
+			
+			if(Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, 0) || Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, getObject1().getWorld().getWidth()))
+			{
+				getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
+			}
+			else
+			{
+				getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
+			}
 		}
-		else if(getObject1().getClass() == getObject2().getClass())
-			bounceOff();
-		else if(Asteroid.class.isInstance(getObject1()))
+		else
 		{
-			getObject2().die(getObject2().getWorld());
-		}
-		else if(Asteroid.class.isInstance(getObject2()))
-		{
-			getObject1().die(getObject1().getWorld());
+			if(Bullet.class.isInstance(getObject1()) || Bullet.class.isInstance(getObject2()))
+				
+			{
+				getObject1().die(getObject1().getWorld());
+				getObject2().die(getObject2().getWorld());
+			}
+			else if(getObject1().getClass() == getObject2().getClass())
+				bounceOff();
+			else if(Asteroid.class.isInstance(getObject1()))
+			{
+				getObject2().die(getObject2().getWorld());
+			}
+			else if(Asteroid.class.isInstance(getObject2()))
+			{
+				getObject1().die(getObject1().getWorld());
+			}
 		}
 	}
 }

@@ -364,10 +364,12 @@ public class World {
 		double tc = Double.POSITIVE_INFINITY;
 		double collisionWithBorder;
 		double collisionTime;
+		Collision firstCollision;
 		
 		try{
 			collisionWithBorder = this.getFirstObjectToCollideWithBorder().getTimeToCollisionWithBorder();
-			collisionTime = this.getFirstCollision().getTimeToCollision();
+			firstCollision = this.getFirstCollision();
+			collisionTime = firstCollision.getTimeToCollision();
 		}
 		catch(NullPointerException npe)
 		{
@@ -389,7 +391,7 @@ public class World {
 			if(tc < dt)
 			{
 				advanceObjects(tc);
-				this.getFirstCollision().execute();
+				firstCollision.execute();
 			}
 		}
 		
@@ -407,7 +409,7 @@ public class World {
 		while(tc <= newdt)
 		{
 			newdt = newdt - tc;
-			tc = evolveBeforeCollision(dt);
+			tc = evolveBeforeCollision(newdt);
 		}
 		
 		advanceObjects(newdt);
