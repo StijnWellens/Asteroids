@@ -111,6 +111,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	public void addShip(World world, Ship ship) throws ModelException{
 		try{
 			world.addSpaceObject(ship);
+			ship.setWorld(world);
 		}
 		catch(Exception e){
 			throw new ModelException(e);
@@ -121,6 +122,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	public void addAsteroid(World world, Asteroid asteroid) throws ModelException {
 		try{
 			world.addSpaceObject(asteroid);
+			asteroid.setWorld(world);
 		}
 		catch(Exception e){
 			throw new ModelException(e);
@@ -151,8 +153,15 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public void evolve(World world, double dt,
-			CollisionListener collisionListener) {
-		// TODO Auto-generated method stub
+			CollisionListener collisionListener) throws ModelException {
+		// TODO 
+		try{
+			world.evolve(dt);
+		}
+		catch(Exception e)
+		{
+			throw new ModelException(e);
+		}
 		
 	}
 

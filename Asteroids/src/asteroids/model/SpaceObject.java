@@ -524,52 +524,7 @@ public abstract class SpaceObject {
 		return (getDistanceBetween(spaceObject1,spaceObject2) <= 0);
 	}
 	
-	/**
-	 * Return when two spaceObjects will collide.
-	 * 
-	 * @param 	spaceObject1
-	 * 			The first spaceObject to compare with the other.
-	 * @param 	spaceObject2
-	 * 			The second spaceObject to compare with the other.
-	 * @return	Return when two spaceObjects will collide. Positive infinity if they never collide. For the specific calculation see the code.
-	 * 			| dt
-	 * @throws	IllegalArgumentException
-	 * 			Throws exception when one of the given spaceObjects is null.
-	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
-	 *
-	 // infinity, time could not be negative
-	  * if(result == Double.POSITIVE_INFINITY) then
-	  * 	(this == other) 
-	 * 
-	 */
-	public static double getTimeToCollision(SpaceObject spaceObject1, SpaceObject spaceObject2) throws IllegalArgumentException
-	{
-		if((spaceObject1 == null) || (spaceObject2 == null))
-			throw new IllegalArgumentException();
-				
-		double dt;
-		
-		Vector dv = Vector.subtraction(spaceObject1.getVelocity(), spaceObject2.getVelocity());
-		Vector dr = Vector.subtraction(spaceObject1.getPosition(), spaceObject2.getPosition());
-		double dvdr = Vector.dotProduct(dv, dr);
-		double dvdv = Vector.dotProduct(dv, dv);
-		double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
-		double sigma = Vector.sumOfComponents(spaceObject1.getRadius(),spaceObject2.getRadius());
-		double sigmaSquare = Vector.multiplyComponents(sigma, sigma);
-		double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -sigmaSquare) );
-		double d = Vector.sumOfComponents(d1, -d2);
-					
-		if(dvdr >= 0 || d <= 0)
-		{
-			dt = Double.POSITIVE_INFINITY;
-		}		
-		else{
-			dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),(1d/(dvdv))));
-		}
-								
-		return dt;
-			
-	}
+	
 	
 	/**
 	 * Return the time to collision from a point of a ship with a border in one direction.
@@ -594,94 +549,6 @@ public abstract class SpaceObject {
 		return dt;
 	}
 	
-	/**
-	 * Returns the time to collision for this ship with the border.
-	 * 
-	 * @return
-	 */
-	public double getTimeToCollisionWithBorder(){
-		if(this.getWorld()==null)
-			return Double.POSITIVE_INFINITY;
-		double width = this.getWorld().getWidth();
-		double height = this.getWorld().getHeight();
-		double dtx = getTimeToCollisionWithAxis(this.getX(), this.getXVelocity(), width);
-		double dty = getTimeToCollisionWithAxis(this.getY(),this.getYVelocity(), height);
-						
-		if(dtx <= dty)
-			return dtx;
-		else
-			return dty;
-	}
-	
-	/**
-	 * Return where two spaceObjects will collide.
-	 * 
-	 * @param 	spaceObject1
-	 * 			The first spaceObject to compare with the other.
-	 * @param 	spaceObject2
-	 * 			The second spaceObject to compare with the other.
-	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spacespaceObjects when they collide.
-	 * 			| collision[0] = spaceObject1.getXPosition() + spaceObject1.getXVelocity() * getTimeToCollisiion() + cos(alpha)* spaceObject1.getRadius();
-	 *			| collision[1] = spaceObject1.getYPosition() + spaceObject1.getYVelocity() * getTimeToCollisiion() + sin(alpha)* spaceObject1.getRadius();
-	 *			| result == collision
-	 * @return	Null if the two spaceObjects never collide.
-	 * 			| if(getTimeToCollision(spaceObject1,spaceObject2) == Double.POSITIVE_INFINITY)
-	 * 			|	then collision == null
-	 * @throws	IllegalArgumentException
-	 * 			Throws exception when one of the given spaceObjects is null.
-	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
-	 */
-	public static double[] getCollisionPosition(SpaceObject spaceObject1, SpaceObject spaceObject2) throws IllegalArgumentException
-	{
-		if((spaceObject1 == null) || (spaceObject2 == null))
-			throw new IllegalArgumentException();
-		
-		double[] collision = new double[2];
-		
-		double time = getTimeToCollision(spaceObject1,spaceObject2);
-		if(time == Double.POSITIVE_INFINITY)
-		{
-			collision = null;
-		}
-		else{
-						
-			Vector newPositionspaceObject1 = new Vector(spaceObject1.getPosition().getXComp() + spaceObject1.getXVelocity() * time, spaceObject1.getPosition().getYComp() + spaceObject1.getYVelocity() * time);
-			Vector newPositionspaceObject2 = new Vector(spaceObject2.getPosition().getXComp() + spaceObject2.getXVelocity() * time, spaceObject2.getPosition().getYComp() + spaceObject2.getYVelocity() * time);
-			Vector directionCollision = Vector.subtraction(newPositionspaceObject1, newPositionspaceObject2);
-			
-			double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
-			
-			if(directionCollision.getYComp() == 0) {
-				if(Math.signum(directionCollision.getXComp()) < 0)
-					alpha = PI;
-				else
-					alpha = 0;
-			}
-			if(directionCollision.getXComp() == 0) {
-				if(Math.signum(directionCollision.getYComp()) < 0)
-					alpha = -PI/2;
-				else
-					alpha = PI/2;
-			}
-			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
-				alpha = PI - alpha;
-			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
-				alpha = PI + alpha;
-			if(directionCollision.getXComp() > 0 && directionCollision.getYComp() < 0 )
-				alpha = - alpha;
-			
-			double collisionPositionX = spaceObject1.getPosition().getXComp() + spaceObject1.getXVelocity() * time - Math.cos(alpha) * spaceObject1.getRadius() ;
-			double collisionPositionY = spaceObject1.getPosition().getYComp() + spaceObject1.getYVelocity() * time - Math.sin(alpha) * spaceObject1.getRadius() ;
-			
-			collision[0] = collisionPositionX; 
-			collision[1] = collisionPositionY; 
-		}
-				
-		return collision;
-	}
-	
-	private static final double	PI	= Math.PI;
-	
 	public boolean canHaveAsWorld(World world){
 		if((this.getX()+this.getRadius())> world.getWidth())
 			return false;
@@ -694,9 +561,9 @@ public abstract class SpaceObject {
 		for(SpaceObject spaceObject: world.getSpaceObjects()){
 			if(Bullet.class.isInstance(spaceObject)){}
 			else if(SpaceObject.overlap(spaceObject, this))
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 	
 	private World world;
@@ -710,6 +577,7 @@ public abstract class SpaceObject {
 		if(!this.canHaveAsWorld(world))
 			throw new IllegalArgumentException();
 		this.world = world;
+		
 	}
 	
 	public void die(){
@@ -718,8 +586,6 @@ public abstract class SpaceObject {
 			this.setWorld(null);
 		}
 	}
-	
-	public void collision(SpaceObject spaceObject){}
 	
 	public void collisionWithBorder()
 	{
@@ -740,28 +606,27 @@ public abstract class SpaceObject {
 		}
 	}
 	
-	public void bounceOff(SpaceObject spaceObject) throws IllegalArgumentException
-	{
-		if(spaceObject == null)
-			throw new IllegalArgumentException();
-		
-		Vector dv = Vector.subtraction(this.getVelocity(), spaceObject.getVelocity());
-		Vector dr = Vector.subtraction(this.getPosition(), spaceObject.getPosition());
-		double dvdr = Vector.dotProduct(dv, dr);
-		double sigma = Vector.sumOfComponents(this.getRadius(),spaceObject.getRadius());
-		
-		double mi = this.getMass();
-		double mj = spaceObject.getMass();
-		
-		double J = (2*mi*mj*dvdr)/(sigma*(mi+mj));
-		double Jx = (J*dr.getXComp())/sigma;
-		double Jy = (J*dr.getYComp())/sigma;
-		
-		Vector newVelocityThis = new Vector(this.getVelocity().getXComp() + (Jx/mi), this.getVelocity().getYComp() + (Jy/mi));
-		Vector newVelocityOther = new Vector(spaceObject.getVelocity().getXComp() + (Jx/mj), spaceObject.getVelocity().getYComp() + (Jy/mj));
-		
-		this.setVelocity(newVelocityThis);
-		spaceObject.setVelocity(newVelocityOther);
-		
+	/**
+	 * Returns the time to collision for this ship with the border.
+	 * 
+	 * @return
+	 */
+	public double getTimeToCollisionWithBorder(){
+		if(this.getWorld()==null)
+			return Double.POSITIVE_INFINITY;
+		double width = this.getWorld().getWidth();
+		double height = this.getWorld().getHeight();
+		double dtx = getTimeToCollisionWithAxis(this.getX(), this.getXVelocity(), width);
+		double dty = getTimeToCollisionWithAxis(this.getY(),this.getYVelocity(), height);
+						
+		if(dtx <= dty)
+			return dtx;
+		else
+			return dty;
 	}
+	
+	
+	
+	
+	
 }

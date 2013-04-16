@@ -1,8 +1,5 @@
 package asteroids.model;
 
-import javax.swing.Timer;
-
-import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -160,11 +157,11 @@ public class Ship extends SpaceObject{
 		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass());
 		this.setVelocity(this.getXVelocity()+acceleration.getXComp()*time, this.getYVelocity()+acceleration.getYComp()*time);
 		
-		}
+	}
 	
 	public boolean canHaveAsWorld(World world){
 		return (super.canHaveAsWorld(world)) && 
-				(this.overlapWithWorldObject(world));
+				(!this.overlapWithWorldObject(world));
 	}
 	
 	public void fireBullet() throws IllegalArgumentException {
@@ -174,19 +171,5 @@ public class Ship extends SpaceObject{
 		}
 			
 	}
-	
-	public void collision(SpaceObject spaceObject) throws IllegalArgumentException
-	{
-		if(spaceObject == null)
-			throw new IllegalArgumentException();
-		if(Ship.class.isInstance(spaceObject))
-			this.bounceOff(spaceObject);
-		else if(Asteroid.class.isInstance(spaceObject))
-			this.die();
-		else if(Bullet.class.isInstance(spaceObject))
-		{
-			spaceObject.die();
-			this.die();
-		}
-	}
+		
 }

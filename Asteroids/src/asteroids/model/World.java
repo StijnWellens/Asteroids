@@ -183,7 +183,8 @@ public class World {
 	{
 		if(!this.canHaveAsObject(spaceObject))
 			throw new IllegalArgumentException();
-		this.spaceObjects.add(spaceObject);
+		this.getSpaceObjects().add(spaceObject);
+		this.addCollisions(spaceObject);
 	}
 	
 	public boolean canHaveAsObject(SpaceObject spaceObject){
@@ -194,11 +195,195 @@ public class World {
 	
 	public void removeSpaceObject(SpaceObject spaceObject) throws IllegalArgumentException{
 		if(containsSpaceObject(spaceObject))
-			this.spaceObjects.remove(spaceObject);
+		{
+			this.getSpaceObjects().remove(spaceObject);
+			this.removeCollisions(spaceObject);
+		}
 		else
 			throw new IllegalArgumentException();
 	}
 	
+	private ArrayList<Collision> possibleCollisions;
 	
+	@Basic
+	public ArrayList<Collision> getPossibleCollisions()
+	{
+		if(this.possibleCollisions== null)
+			return null;
+		return new ArrayList<Collision>(possibleCollisions);
+	}
 	
+	public void setPossibleCollisions(List<Collision> collisions)
+	{
+		this.possibleCollisions = new ArrayList<Collision>(collisions);
+	}
+	
+	/*
+	public void createCollisions()
+	{
+		List<Collision> collisions = new ArrayList<Collision>();
+		
+		List<SpaceObject> objects = new ArrayList<SpaceObject>(this.getSpaceObjects());
+		
+		for(int i = 0; i < objects.size()-1; i++)
+		{
+			SpaceObject spaceObject = objects.get(i);
+			
+			for(int j = i+1; j < objects.size(); j++)
+			{
+				Collision collision = new Collision(spaceObject, objects.get(j));
+				collisions.add(collision);
+			}
+			
+		}
+		
+		
+	}*/
+	
+
+	public void addCollisions(SpaceObject spaceObject)
+	{
+		List<Collision> collisions;
+		if(this.getPossibleCollisions() == null)
+			collisions = new ArrayList<Collision>();
+		else
+			collisions = new ArrayList<Collision>(this.getPossibleCollisions());
+		
+		List<SpaceObject> objects = new ArrayList<SpaceObject>(this.getSpaceObjects());
+		
+		for(int i = 0; i < objects.size(); i++)
+		{
+			try{
+				Collision collision = new Collision(spaceObject, objects.get(i));
+				collisions.add(collision);
+			}
+			catch(Exception e)
+			{}
+					
+		}		
+		
+		this.setPossibleCollisions(collisions);
+	}
+	
+	public void removeCollisions(SpaceObject spaceObject)
+	{
+		List<Collision> collisions = new ArrayList<Collision>(this.getPossibleCollisions());
+				
+		for(Collision collision: collisions)
+		{
+			if(collision.contains(spaceObject))
+				collisions.remove(collision);
+					
+		}		
+		
+		this.setPossibleCollisions(collisions);
+	}
+	
+	public Collision getFirstCollision()
+	{
+		List<Collision> collisions = this.getPossibleCollisions();
+		
+		Collision firstCollision = null;
+		double time = Double.POSITIVE_INFINITY;
+		
+		for(Collision collision: collisions)
+		{
+			double timeToCollision = collision.getTimeToCollision();
+			if(time > timeToCollision)
+			{
+				time = timeToCollision;
+				firstCollision = collision;
+			}
+		}
+		
+		return firstCollision;
+		
+	}
+	
+	public SpaceObject getFirstObjectToCollideWithBorder()
+	{
+		Set<SpaceObject> objects = this.getSpaceObjects();
+		Iterator<SpaceObject> it = objects.iterator();
+		
+		SpaceObject firstObject = null;
+		double time = Double.POSITIVE_INFINITY;
+		
+		while(it.hasNext())
+		{
+			double timeToCollision = it.next().getTimeToCollisionWithBorder();
+			if(time > timeToCollision)
+			{
+				time = timeToCollision;
+				firstObject = it.next();
+			}
+		}
+		
+		return firstObject;
+	}
+	
+	public void advanceObjects(double time)
+	{
+		for(SpaceObject spaceObject: this.getSpaceObjects())
+		{
+			if(spaceObject != null)
+			{
+				spaceObject.move(time);
+				if(Ship.class.isInstance(spaceObject))
+				{
+					((Ship)spaceObject).thrust(time);
+				}
+			}
+		}
+	}
+	
+	public double evolveBeforeCollision(double dt)
+	{
+		double tc = Double.POSITIVE_INFINITY;
+		double collisionWithBorder;
+		double collisionTime;
+		
+		try{
+			collisionWithBorder = this.getFirstObjectToCollideWithBorder().getTimeToCollisionWithBorder();
+			collisionTime = this.getFirstCollision().getTimeToCollision();
+		}
+		catch(NullPointerException npe)
+		{
+			return tc;
+		}
+				
+		if(collisionWithBorder < collisionTime)
+		{
+			tc = collisionWithBorder;
+			if(tc < dt)
+			{
+				advanceObjects(tc);
+				this.getFirstObjectToCollideWithBorder().collisionWithBorder();
+			}
+		}
+		else
+		{
+			tc = collisionTime;
+			if(tc < dt)
+			{
+				advanceObjects(tc);
+				this.getFirstCollision().execute();
+			}
+		}
+		
+		return tc;
+	}
+	
+	public void evolve(double dt)
+	{
+		double tc = evolveBeforeCollision(dt);
+		double newdt = dt;
+		
+		while(tc <= newdt)
+		{
+			newdt = newdt - tc;
+			tc = evolveBeforeCollision(dt);
+		}
+		
+		advanceObjects(newdt);
+	}
 }
