@@ -571,6 +571,8 @@ public abstract class SpaceObject {
 
 	@Raw
 	public boolean canHaveAsWorld(World world){
+		if(world == null)
+			return true;
 		if((this.getX()+this.getRadius())> world.getWidth())
 			return false;
 		if((this.getY()+this.getRadius())> world.getHeight())

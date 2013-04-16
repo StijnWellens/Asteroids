@@ -134,6 +134,11 @@ public class World {
 		return new HashSet<SpaceObject>(this.spaceObjects);
 	}
 	
+	public void setSpaceObjects(Set<SpaceObject> objects)
+	{
+		this.spaceObjects = new HashSet<SpaceObject>(objects);
+	}
+	
 	/**
 	 * 
 	 * @param spaceObjectClass
@@ -156,8 +161,10 @@ public class World {
 	{
 		Set<Ship> setShips = new HashSet<Ship>();
 		for(SpaceObject spaceObject: getSpaceObjects())
+		{
 			if(Ship.class.isInstance(spaceObject))
 				setShips.add((Ship)spaceObject);
+		}
 		return setShips;
 	}
 	
@@ -165,8 +172,10 @@ public class World {
 	{
 		Set<Asteroid> setAsteroids = new HashSet<Asteroid>();
 		for(SpaceObject spaceObject: getSpaceObjects())
+		{
 			if(Asteroid.class.isInstance(spaceObject))
 				setAsteroids.add((Asteroid)spaceObject);
+		}
 		return setAsteroids;
 	}
 	
@@ -174,8 +183,10 @@ public class World {
 	{
 		Set<Bullet> setBullets = new HashSet<Bullet>();
 		for(SpaceObject spaceObject: getSpaceObjects())
+		{
 			if(Bullet.class.isInstance(spaceObject))
 				setBullets.add((Bullet)spaceObject);
+		}
 		return setBullets;
 	}
 	
@@ -184,7 +195,9 @@ public class World {
 	{
 		assert (spaceObject != null) && (spaceObject.getWorld() == this);
 		
-		this.getSpaceObjects().add(spaceObject);
+		Set<SpaceObject> objects = this.getSpaceObjects();
+		objects.add(spaceObject);
+		this.setSpaceObjects(objects);
 		this.addCollisions(spaceObject);
 	}
 	
@@ -311,25 +324,27 @@ public class World {
 	public SpaceObject getFirstObjectToCollideWithBorder()
 	{
 		Set<SpaceObject> objects = this.getSpaceObjects();
-		Iterator<SpaceObject> it = objects.iterator();
-		
+				
 		SpaceObject firstObject = null;
 		double time = Double.POSITIVE_INFINITY;
 		
-		while(it.hasNext())
+		for(SpaceObject object: objects)
 		{
-			double timeToCollision = it.next().getTimeToCollisionWithBorder();
-			if(time > timeToCollision)
+			if(object != null)
 			{
-				time = timeToCollision;
-				firstObject = it.next();
+				double timeToCollision = object.getTimeToCollisionWithBorder();
+				if(time > timeToCollision)
+				{
+					time = timeToCollision;
+					firstObject = object;
+				}
 			}
 		}
 		
 		return firstObject;
 	}
 	
-	public void advanceObjects(double time)
+	public void advanceObjects(double time) throws IllegalArgumentException
 	{
 		for(SpaceObject spaceObject: this.getSpaceObjects())
 		{
@@ -344,7 +359,7 @@ public class World {
 		}
 	}
 	
-	public double evolveBeforeCollision(double dt)
+	public double evolveBeforeCollision(double dt) throws IllegalArgumentException
 	{
 		double tc = Double.POSITIVE_INFINITY;
 		double collisionWithBorder;
@@ -381,8 +396,11 @@ public class World {
 		return tc;
 	}
 	
-	public void evolve(double dt)
+	public void evolve(double dt) throws IllegalArgumentException
 	{
+		if(Double.isNaN(dt) || Double.isInfinite(dt) || dt < 0)
+			throw new IllegalArgumentException();
+		
 		double tc = evolveBeforeCollision(dt);
 		double newdt = dt;
 		
