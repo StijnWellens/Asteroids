@@ -165,10 +165,12 @@ public class Ship extends SpaceObject{
 	}
 	
 	public void fireBullet() throws IllegalArgumentException {
-		if(this.getWorld()!=null){
-			SpaceObject bullet = new Bullet(this);
-			this.getWorld().addSpaceObject(bullet);
-		}
+		if(this.getState() != State.ACTIVE || this.getWorld() == null)
+			throw new IllegalArgumentException();
+		
+		SpaceObject bullet = new Bullet(this);
+		bullet.flyIntoWorld(this.getWorld());
+		
 			
 	}
 		

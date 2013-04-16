@@ -110,8 +110,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public void addShip(World world, Ship ship) throws ModelException{
 		try{
-			world.addSpaceObject(ship);
-			ship.setWorld(world);
+			ship.flyIntoWorld(world);
 		}
 		catch(Exception e){
 			throw new ModelException(e);
@@ -121,8 +120,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public void addAsteroid(World world, Asteroid asteroid) throws ModelException {
 		try{
-			world.addSpaceObject(asteroid);
-			asteroid.setWorld(world);
+			asteroid.flyIntoWorld(world);
 		}
 		catch(Exception e){
 			throw new ModelException(e);
@@ -132,7 +130,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public void removeShip(World world, Ship ship) throws ModelException{
 		try{
-			world.removeSpaceObject(ship);
+			ship.die(world);
 		}
 		catch(Exception e){
 			throw new ModelException(e);
@@ -143,7 +141,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public void removeAsteroid(World world, Asteroid asteroid) {
 		try{
-			world.removeSpaceObject(asteroid);
+			asteroid.die(world);
 		}
 		catch(Exception e){
 			throw new ModelException(e);

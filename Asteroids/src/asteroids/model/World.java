@@ -179,28 +179,36 @@ public class World {
 		return setBullets;
 	}
 	
-	public void addSpaceObject(SpaceObject spaceObject)throws IllegalArgumentException
+	@Raw
+	public void addSpaceObject(SpaceObject spaceObject)
 	{
-		if(!this.canHaveAsObject(spaceObject))
-			throw new IllegalArgumentException();
+		assert (spaceObject != null) && (spaceObject.getWorld() == this);
+		
 		this.getSpaceObjects().add(spaceObject);
 		this.addCollisions(spaceObject);
 	}
 	
-	public boolean canHaveAsObject(SpaceObject spaceObject){
-		return (spaceObject!=null) && (spaceObject.canHaveAsWorld(this));
-	}
-	
 	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
 	
+	@Raw
 	public void removeSpaceObject(SpaceObject spaceObject) throws IllegalArgumentException{
-		if(containsSpaceObject(spaceObject))
+		assert (spaceObject != null) && (spaceObject.getWorld() == this) && containsSpaceObject(spaceObject);
+		
+		this.getSpaceObjects().remove(spaceObject);
+		this.removeCollisions(spaceObject);
+		
+	}
+	
+	public boolean hasProperSpaceObjects()
+	{
+		for(SpaceObject spaceObject: getSpaceObjects())
 		{
-			this.getSpaceObjects().remove(spaceObject);
-			this.removeCollisions(spaceObject);
+			if(!spaceObject.canHaveAsWorld(this))
+				return false;
+			if(spaceObject.getWorld() != this)
+				return false;
 		}
-		else
-			throw new IllegalArgumentException();
+		return true;
 	}
 	
 	private ArrayList<Collision> possibleCollisions;

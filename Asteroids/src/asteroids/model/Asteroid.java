@@ -51,29 +51,25 @@ public class Asteroid extends SpaceObject {
 		(!this.overlapWithWorldObject(world));	
 	}
 	
-	public void die(){
-		World world = this.getWorld();
-		if(world!=null){
-			world.removeSpaceObject(this);
-			this.setWorld(null);
-			if(this.getRadius()>=30 && getRandom() != null){
-				double randomDouble = getRandom().nextDouble();
-				double speedParent = this.getVelocity().getModulus();
-				double newVelocity = 1.5*speedParent;
-				double newXVelocity = newVelocity*Math.sqrt(randomDouble);
-				double newYVelocity = newVelocity*Math.sqrt(1-randomDouble);
-				double cos = newXVelocity/newVelocity;
-				double sin = newYVelocity/newVelocity;
-				SpaceObject child1 = new Asteroid(this.getX()+(this.getRadius()/2)*cos,this.getY()+(this.getRadius()/2)*sin,
-						newXVelocity,newYVelocity,this.getRadius()/2,this.getRandom());
-				SpaceObject child2 = new Asteroid(this.getX()-(this.getRadius()/2)*cos,this.getY()-(this.getRadius()/2)*sin,
-						-newXVelocity,-newYVelocity,this.getRadius()/2,this.getRandom());
-				child1.setWorld(world);
-				child2.setWorld(world);
-				world.addSpaceObject(child1);
-				world.addSpaceObject(child2);
-			}
+	public void die(World world){
+		super.die(world);
+		
+		if(this.getRadius()>=30 && getRandom() != null){
+			double randomDouble = getRandom().nextDouble();
+			double speedParent = this.getVelocity().getModulus();
+			double newVelocity = 1.5*speedParent;
+			double newXVelocity = newVelocity*Math.sqrt(randomDouble);
+			double newYVelocity = newVelocity*Math.sqrt(1-randomDouble);
+			double cos = newXVelocity/newVelocity;
+			double sin = newYVelocity/newVelocity;
+			SpaceObject child1 = new Asteroid(this.getX()+(this.getRadius()/2)*cos,this.getY()+(this.getRadius()/2)*sin,
+					newXVelocity,newYVelocity,this.getRadius()/2,this.getRandom());
+			SpaceObject child2 = new Asteroid(this.getX()-(this.getRadius()/2)*cos,this.getY()-(this.getRadius()/2)*sin,
+					-newXVelocity,-newYVelocity,this.getRadius()/2,this.getRandom());
+			child1.flyIntoWorld(world);
+			child2.flyIntoWorld(world);
 		}
+		
 	}
 	
 	

@@ -194,18 +194,18 @@ public class Collision {
 	{
 		if(Bullet.class.isInstance(getObject1()) || Bullet.class.isInstance(getObject2()))
 		{
-			getObject1().die();
-			getObject2().die();
+			getObject1().die(getObject1().getWorld());
+			getObject2().die(getObject2().getWorld());
 		}
 		else if(getObject1().getClass() == getObject2().getClass())
 			bounceOff();
 		else if(Asteroid.class.isInstance(getObject1()))
 		{
-			getObject2().die();
+			getObject2().die(getObject2().getWorld());
 		}
 		else if(Asteroid.class.isInstance(getObject2()))
 		{
-			getObject1().die();
+			getObject1().die(getObject1().getWorld());
 		}
 	}
 }

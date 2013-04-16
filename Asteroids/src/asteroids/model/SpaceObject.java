@@ -50,6 +50,7 @@ public abstract class SpaceObject {
 		setPosition(0,0);
 		setVelocity(0, 0);
 		this.radius = 11;
+		this.state = State.CREATED;
 
 	}
 
@@ -96,7 +97,7 @@ public abstract class SpaceObject {
 		if (!isValidRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
-
+		this.state = State.CREATED;
 	}
 	
 
@@ -549,14 +550,6 @@ public abstract class SpaceObject {
 		return dt;
 	}
 	
-	public boolean canHaveAsWorld(World world){
-		if((this.getX()+this.getRadius())> world.getWidth())
-			return false;
-		if((this.getY()+this.getRadius())> world.getHeight())
-			return false;
-		return true;
-	}
-	
 	public boolean overlapWithWorldObject(World world){
 		for(SpaceObject spaceObject: world.getSpaceObjects()){
 			if(Bullet.class.isInstance(spaceObject)){}
@@ -566,6 +559,31 @@ public abstract class SpaceObject {
 		return false;
 	}
 	
+	protected enum State {
+		TERMINATED, CREATED, ACTIVE
+	};
+
+	protected State state;
+
+	protected State getState() {
+		return this.state;
+	}
+
+	@Raw
+	public boolean canHaveAsWorld(World world){
+		if((this.getX()+this.getRadius())> world.getWidth())
+			return false;
+		if((this.getY()+this.getRadius())> world.getHeight())
+			return false;
+		return true;
+	}
+	
+	@Raw
+	public boolean hasProperWorld() {
+		return canHaveAsWorld(getWorld()) && ( (getWorld() == null) || (getWorld().containsSpaceObject(this)) );
+		
+	}
+	
 	private World world;
 	
 	@Basic
@@ -573,18 +591,37 @@ public abstract class SpaceObject {
 		return this.world;
 	}
 	
-	public void setWorld(World world)throws IllegalArgumentException{
+	@Raw
+	protected void setWorld(World world)throws IllegalArgumentException{
 		if(!this.canHaveAsWorld(world))
 			throw new IllegalArgumentException();
 		this.world = world;
 		
 	}
 	
-	public void die(){
-		if(this.getWorld()!=null){
-			this.getWorld().removeSpaceObject(this);
-			this.setWorld(null);
-		}
+	public void flyIntoWorld(World world) throws IllegalStateException, IllegalArgumentException
+	{
+		if((this.getState() != State.CREATED) || (this.getWorld()!= null))
+			throw new IllegalStateException();
+		if(world == null)
+			throw new IllegalArgumentException();
+		if(! this.canHaveAsWorld(world))
+			throw new IllegalArgumentException();
+		this.setWorld(world);
+		world.addSpaceObject(this);
+		this.state = State.ACTIVE;
+	}
+	
+	public void die(World world) throws IllegalStateException, IllegalArgumentException{
+		if(world != this.getWorld())
+			throw new IllegalArgumentException();
+		if(this.getState() != State.ACTIVE || this.getWorld() == null)
+			throw new IllegalStateException();
+		
+		this.getWorld().removeSpaceObject(this);
+		this.setWorld(null);
+		this.state = State.TERMINATED;
+		
 	}
 	
 	public void collisionWithBorder()
@@ -624,9 +661,6 @@ public abstract class SpaceObject {
 		else
 			return dty;
 	}
-	
-	
-	
-	
+		
 	
 }

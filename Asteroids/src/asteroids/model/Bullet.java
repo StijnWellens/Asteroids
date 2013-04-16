@@ -36,7 +36,7 @@ public class Bullet extends SpaceObject {
 		this.borderCollisions ++;
 		
 		if(borderCollisions >= 2 )
-			this.die();
+			this.die(this.getWorld());
 			
 	}
 	
