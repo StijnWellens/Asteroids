@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -44,6 +45,7 @@ public class Ship extends SpaceObject{
 		setDirection(angle);
 		setMass(mass);
 		setThruster(false, 1.1E18);
+		setAcceleration(0,0);
 	}
 	
 	// direction: nominal programming
@@ -91,6 +93,108 @@ public class Ship extends SpaceObject{
 		this.direction = angle;
 
 	}
+	
+	/**
+	 * Returns the x component of the acceleration of the ship.
+	 */
+	@Basic
+	public double getXAcceleration() {
+		return this.acceleration.getXComp();
+	}
+
+	/**
+	 * Returns the y component of the acceleration of the ship.
+	 */
+	@Basic
+	public double getYAcceleration() {
+		return this.acceleration.getYComp();
+	}
+	
+	/**
+	 * Returns the acceleration of the ship.
+	 */
+	@Basic
+	public Vector getAcceleration() {
+		return this.acceleration;
+	}
+
+	
+	/**
+	 * Check if the acceleration component is valid.
+	 * 
+	 * @param 	comp
+	 *        	The velocity component to be checked.
+	 * @post 	True if and only if the acceleration component is a number and not infinite. 
+	 * 			| result == (!Double.isNaN(comp) && !Double.isInfinite(comp))
+	 */
+	public boolean isValidAccelerationComp(double comp) {
+		return (!Double.isNaN(comp) && !Double.isInfinite(comp));
+	}
+
+	/**
+	 * Checks if the given acceleration components are valid.
+	 * 
+	 * @param ax
+	 *            The x component of the acceleration to be checked.
+	 * @param ay
+	 *            The y component of the acceleration to be checked.
+	 * @return False if the doubles ax and ay aren't valid acceleration components. 
+	 * 			|if((!isValidAccelerationComp(ax))|| (!isValidAccelerationComp(ay))) 
+	 * 			| then result == false
+	 * @return True if and only if the acceleration is equal or less than the maximum value of a Double
+	 *         | if((Math.sqrt(ax*ax+ay*ay) <= Double.MAX_VALUE) ) 
+	 *         | then result == true 
+	 *         | else 
+	 *         | then result == false
+	 */
+	public boolean isValidAcceleration(double ax, double ay) {
+		if ((!isValidAccelerationComp(ax)) || (!isValidAccelerationComp(ay))) {
+			return false;
+		}
+		return Util.fuzzyLessThanOrEqualTo(Math.sqrt(ax * ax + ay * ay),
+					Double.MAX_VALUE);
+		
+	}
+
+	/**
+	 * Set the acceleration of the ship.
+	 * 
+	 * @param ax
+	 *        The given x component of the acceleration.
+	 * @param ay
+	 *        The given y component of the acceleration.
+	 * @post If the given acceleration components are valid, then the new acceleration
+	 *       components will be the given components. 
+	 *       | if(isValidAcceleration(ax,ay))
+	 *       |		then ((new this).getXAcceleration() == ax) && ((new this).getYAcceleration() == ay)
+	 */
+	public void setAcceleration(double ax, double ay) {
+		if (isValidAcceleration(ax, ay)) {
+			if(this.getAcceleration() == null)
+				this.acceleration = new Vector(ax,ay);
+			else
+				this.acceleration.setComp(ax, ay);
+		}
+	}
+	
+	/**
+	 * Set the acceleration of the ship.
+	 * 
+	 * @param acceleration
+	 *        The given acceleration vector.
+	 * @post If the given acceleration components of the acceleration vector are valid, then the new acceleration
+	 *       vector will be the given acceleration vector. 
+	 *       | if(isValidAcceleration(acceleration.getXComp(),acceleration.getYComp()))
+	 *       |		then ((new this).getXAcceleration() == acceleration.getXComp()) && ((new this).getYAcceleration() == acceleration.getYComp())
+	 */
+	public void setAcceleration(Vector acceleration) {
+		if (isValidAcceleration(acceleration.getXComp(), acceleration.getYComp())) {
+			this.acceleration = acceleration;
+		}
+	}
+	
+	private Vector acceleration;
+	
 
 	/**
 	 * Turns the spaceObject with a given angle.
@@ -152,11 +256,14 @@ public class Ship extends SpaceObject{
 	
 	
 	public void thrust(double time) {
-		
-		Thruster thruster = this.getThruster();
-		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass(), time);
-		this.setVelocity(this.getXVelocity()+acceleration.getXComp()*time, this.getYVelocity()+acceleration.getYComp()*time);
-				
+		if( !Double.isNaN(time) && !Double.isInfinite(time) && time >=0)
+		{
+			Thruster thruster = this.getThruster();
+			Vector acceleration = this.getAcceleration();
+			Vector newAcceleration = thruster.generateAcceleration(this.getDirection(), this.getMass(), time);
+			this.setAcceleration(acceleration.getXComp()+newAcceleration.getXComp(), acceleration.getYComp()+newAcceleration.getYComp());
+			this.setVelocity(this.getXVelocity()+this.getXAcceleration()*time, this.getYVelocity()+acceleration.getYComp()*time);
+		}				
 	}
 	
 	public boolean canHaveAsWorld(World world){

@@ -63,9 +63,12 @@ public class Thruster {
 	public Vector generateAcceleration (double direction, double mass, double time) throws IllegalArgumentException {
 		if(this.isThrusterEnabled()) 
 		{
-			double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
+			/*double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
 			double x = Vector.multiplyComponents(a, Math.cos(direction));
-			double y = Vector.multiplyComponents(a, Math.sin(direction));
+			double y = Vector.multiplyComponents(a, Math.sin(direction));*/
+			double a = (this.getPowerOutput()*time)/mass;
+			double x = a * Math.cos(direction);
+			double y = a * Math.sin(direction);
 			return new Vector(x,y);
 		}
 		else

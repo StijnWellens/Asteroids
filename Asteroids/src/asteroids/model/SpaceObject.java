@@ -265,11 +265,11 @@ public abstract class SpaceObject {
 	 * 
 	 * @param 	comp
 	 *        	The velocity component to be checked.
-	 * @post 	True if and only if the velocity component is a number. 
-	 * 			| result == (!Double.isNaN(comp))
+	 * @post 	True if and only if the velocity component is a number and not infinite. 
+	 * 			| result == (!Double.isNaN(comp) && !Double.isInfinite(comp))
 	 */
 	public boolean isValidVelocityComp(double comp) {
-		return (!Double.isNaN(comp));
+		return (!Double.isNaN(comp) && !Double.isInfinite(comp));
 	}
 
 	/**
@@ -316,6 +316,16 @@ public abstract class SpaceObject {
 		}
 	}
 	
+	/**
+	 * Set the velocity of the spaceObject.
+	 * 
+	 * @param velocity
+	 *        The given velocity vector.
+	 * @post If the given velocity components of the velocity vector are valid, then the new velocity
+	 *       vector will be the given velocity vector. 
+	 *       | if(isValidVelocity(velocity.getXComp(),velocity.getYComp()))
+	 *       |		then ((new this).getXVelocity() == velocity.getXComp()) && ((new this).getYVelocity() == velocity.getYComp())
+	 */
 	public void setVelocity(Vector velocity) {
 		if (isValidVelocity(velocity.getXComp(), velocity.getYComp())) {
 			this.velocity = velocity;
@@ -544,20 +554,20 @@ public abstract class SpaceObject {
 		TERMINATED, CREATED, ACTIVE
 	};
 
-	protected State state;
+	private State state;
 
-	protected State getState() {
+	public State getState() {
 		return this.state;
 	}
 	
-	protected boolean isValidState(State state) {
+	public boolean isValidState(State state) {
 		if(state == null)
 			return false;
 		else
 			return true;
 	}
 	
-	protected void setState(State state) throws IllegalArgumentException {
+	public void setState(State state) throws IllegalArgumentException {
 		if(!isValidState(state))
 			throw new IllegalArgumentException();
 		this.state = state;
