@@ -236,32 +236,12 @@ public class World {
 	
 	public void setPossibleCollisions(List<Collision> collisions)
 	{
-		this.possibleCollisions = new ArrayList<Collision>(collisions);
+		if(collisions == null)
+			this.possibleCollisions = new ArrayList<Collision>();
+		else
+			this.possibleCollisions = new ArrayList<Collision>(collisions);
 	}
 	
-	/*
-	public void createCollisions()
-	{
-		List<Collision> collisions = new ArrayList<Collision>();
-		
-		List<SpaceObject> objects = new ArrayList<SpaceObject>(this.getSpaceObjects());
-		
-		for(int i = 0; i < objects.size()-1; i++)
-		{
-			SpaceObject spaceObject = objects.get(i);
-			
-			for(int j = i+1; j < objects.size(); j++)
-			{
-				Collision collision = new Collision(spaceObject, objects.get(j));
-				collisions.add(collision);
-			}
-			
-		}
-		
-		
-	}*/
-	
-
 	public void addCollisions(SpaceObject spaceObject)
 	{
 		List<Collision> collisions;
@@ -271,6 +251,9 @@ public class World {
 			collisions = new ArrayList<Collision>(this.getPossibleCollisions());
 		
 		List<SpaceObject> objects = new ArrayList<SpaceObject>(this.getSpaceObjects());
+		
+		Collision collisionWithBorder = new Collision(spaceObject);
+		collisions.add(collisionWithBorder);
 		
 		for(int i = 0; i < objects.size(); i++)
 		{
@@ -288,13 +271,19 @@ public class World {
 	
 	public void removeCollisions(SpaceObject spaceObject)
 	{
-		List<Collision> collisions = new ArrayList<Collision>(this.getPossibleCollisions());
-				
-		for(Collision collision: collisions)
+		List<Collision> collisions;
+		if(this.getPossibleCollisions() == null)
+			collisions = new ArrayList<Collision>();
+		else
+			collisions = new ArrayList<Collision>(this.getPossibleCollisions());
+		
+		Iterator<Collision> it = collisions.iterator(); 
+		
+		while(it.hasNext())
 		{
+			Collision collision = it.next();
 			if(collision.contains(spaceObject))
-				collisions.remove(collision);
-					
+				it.remove();					
 		}		
 		
 		this.setPossibleCollisions(collisions);
@@ -321,29 +310,6 @@ public class World {
 		
 	}
 	
-	public SpaceObject getFirstObjectToCollideWithBorder()
-	{
-		Set<SpaceObject> objects = this.getSpaceObjects();
-				
-		SpaceObject firstObject = null;
-		double time = Double.POSITIVE_INFINITY;
-		
-		for(SpaceObject object: objects)
-		{
-			if(object != null)
-			{
-				double timeToCollision = object.getTimeToCollisionWithBorder();
-				if(time > timeToCollision)
-				{
-					time = timeToCollision;
-					firstObject = object;
-				}
-			}
-		}
-		
-		return firstObject;
-	}
-	
 	public void advanceObjects(double time) throws IllegalArgumentException
 	{
 		for(SpaceObject spaceObject: this.getSpaceObjects())
@@ -362,12 +328,10 @@ public class World {
 	public double evolveBeforeCollision(double dt) throws IllegalArgumentException
 	{
 		double tc = Double.POSITIVE_INFINITY;
-		double collisionWithBorder;
 		double collisionTime;
 		Collision firstCollision;
 		
 		try{
-			collisionWithBorder = this.getFirstObjectToCollideWithBorder().getTimeToCollisionWithBorder();
 			firstCollision = this.getFirstCollision();
 			collisionTime = firstCollision.getTimeToCollision();
 		}
@@ -376,24 +340,13 @@ public class World {
 			return tc;
 		}
 				
-		if(collisionWithBorder < collisionTime)
+		tc = collisionTime;
+		
+		if(tc < dt)
 		{
-			tc = collisionWithBorder;
-			if(tc < dt)
-			{
-				advanceObjects(tc);
-				this.getFirstObjectToCollideWithBorder().collisionWithBorder();
-			}
-		}
-		else
-		{
-			tc = collisionTime;
-			if(tc < dt)
-			{
-				advanceObjects(tc);
-				firstCollision.execute();
-			}
-		}
+			advanceObjects(tc);
+			firstCollision.execute();
+		}		
 		
 		return tc;
 	}

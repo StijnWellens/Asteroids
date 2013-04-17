@@ -419,175 +419,7 @@ public class ShipTest {
 		assertFalse(Ship.overlap(ship1, ship2));
 	}
 	
-	@Test 
-	  public void testGetTimeToCollision() {
-	    Ship ship1 = new Ship(0, 0, 0, 0, 11, 0,10);
-	    Ship ship2 = new Ship(20, 20, -20,-20 , 11, (5* Math.PI)/4,10);
-	    
-	    assertEquals((-(-800+ Math.sqrt(387200))/(800)),Ship.getTimeToCollision(ship1,ship2), Util.EPSILON);
-	 }
 	
-	@Test (expected = IllegalArgumentException.class)
-	public void testGetTimeToCollision_ShipIsNull(){
-		Ship ship1 = new Ship(20,20,0,0,10,3.14/2,10);
-		Ship ship2 = null;
-		Ship.getTimeToCollision(ship1, ship2);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testGetTimeToCollision_ShipsAreNull(){
-		Ship ship1 = null;
-		Ship ship2 = null;
-		Ship.getTimeToCollision(ship1, ship2);
-	}
-	
-	@Test
-	public void testGetTimeToCollision_NoCollision(){
-		Ship ship1 = new Ship(0, 0, 0, 0, 11, 0,10);
-	    Ship ship2 = new Ship(200, 200, 200, 200 , 100, Math.PI/4,10);
-	    assertEquals(Double.POSITIVE_INFINITY,Ship.getTimeToCollision(ship1, ship2),Util.EPSILON);
-	}
-	
-	@Test 
-	  public void testGetTimeToCollisionWithBorder_VerticalPosVelocity() {
-	    Ship ship1 = new Ship(20, 20, 20, 10, 10, 0,10);
-	    World world = new World(40,100);
-	    ship1.setWorld(world);
-	    	    
-	    assertEquals(0.5,ship1.getTimeToCollisionWithBorder(), Util.EPSILON);
-	 }
-	
-	@Test 
-	  public void testGetTimeToCollisionWithBorder_HorizontalPosVelocity() {
-	    Ship ship1 = new Ship(20, 20, 10, 20, 10, 0,10);
-	    World world = new World(100,40);
-	    ship1.setWorld(world);
-	    	    
-	    assertEquals(0.5,ship1.getTimeToCollisionWithBorder(), Util.EPSILON);
-	 }
-	
-	@Test 
-	  public void testGetTimeToCollisionWithBorder_VerticalNegVelocity() {
-	    Ship ship1 = new Ship(20, 20, -20, 10, 10, 0,10);
-	    World world = new World(40,100);
-	    ship1.setWorld(world);
-	    	    
-	    assertEquals(0.5,ship1.getTimeToCollisionWithBorder(), Util.EPSILON);
-	 }
-	
-	@Test 
-	  public void testGetTimeToCollisionWithBorder_HorizontalNegVelocity() {
-	    Ship ship1 = new Ship(20, 20, 10, -20, 10, 0,10);
-	    World world = new World(100,40);
-	    ship1.setWorld(world);
-	    	    
-	    assertEquals(0.5,ship1.getTimeToCollisionWithBorder(), Util.EPSILON);
-	 }
-	
-	@Test 
-	public void testGetTimeToCollisionWithBorder_NoWorld(){
-		Ship ship1 = new Ship(20,20,20,20,10,3.14/2,10);
-		 assertEquals(Double.POSITIVE_INFINITY,ship1.getTimeToCollisionWithBorder(), Util.EPSILON);
-	}
-	
-	@Test 
-	public void testGetTimeToCollisionWithBorder_NoCollision(){
-		Ship ship1 = new Ship(20,20,0,0,10,3.14/2,10);
-		World world = new World(100,40);
-	    ship1.setWorld(world);	    	    
-		assertEquals(Double.POSITIVE_INFINITY,ship1.getTimeToCollisionWithBorder(), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_Case1(){
-		Ship ship1 = new Ship(0, 0, 0, 0, 11, 0,10);
-	    Ship ship2 = new Ship(20, 20, -20, -20 , 11, Math.PI/4,10);
-	    double[] collision = new double[2];
-	    collision[0] = 5.5*Math.sqrt(2);
-	    collision[1] = 5.5*Math.sqrt(2);
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_Case2(){
-		Ship ship1 = new Ship(20, 0, -20, 20 , 11, Math.PI/4,10);
-		Ship ship2 = new Ship(0, 20, 0, 0, 11, 0, 10);	    
-	    double[] collision = new double[2];
-	    collision[0] = 5.5*Math.sqrt(2);
-	    collision[1] = 20-(5.5*Math.sqrt(2));
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_Case3(){
-		Ship ship1 = new Ship(0, 20, 0, 0, 11, 0, 10);
-	    Ship ship2 = new Ship(20, 0, -20, 20 , 11, Math.PI/4,10);
-	    double[] collision = new double[2];
-	    collision[0] = 5.5*Math.sqrt(2);
-	    collision[1] = 20-(5.5*Math.sqrt(2));
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testGetCollisionPosition_ShipIsNull(){
-		Ship ship1 = new Ship();
-	    Ship ship2 = null;
-	    Ship.getCollisionPosition(ship1, ship2);
-	}
-	
-	@Test (expected = IllegalArgumentException.class)
-	public void testGetCollisionPosition_ShipsAreNull(){
-		Ship ship1 = null;
-	    Ship ship2 = null;
-	    Ship.getCollisionPosition(ship1, ship2);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_SameXCoordinate_DirectionY1(){
-		Ship ship1 = new Ship(20, 0, 0, 0, 11, 0, 10);
-	    Ship ship2 = new Ship(20, -20, 0, 20 , 11, Math.PI/4, 10);
-	    double[] collision = new double[2];
-	    collision[0] = 20;
-	    collision[1] = -11;
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_SameXCoordinate_DirectionY2(){
-		Ship ship1 = new Ship(20, 0, 0, 0, 11, 0, 10);
-	    Ship ship2 = new Ship(20, 20, 0, -20 , 11, Math.PI/4, 10);
-	    double[] collision = new double[2];
-	    collision[0] = 20;
-	    collision[1] = 11;
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_SameYCoordinate_DirectionX1(){
-		Ship ship1 = new Ship(0, 20, 0, 0, 11, 0, 10);
-	    Ship ship2 = new Ship(-20, 20, 20, 0 , 11, Math.PI/4, 10);
-	    double[] collision = new double[2];
-	    collision[0] = -11;
-	    collision[1] = 20;
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_SameYCoordinate_DirectionX2(){
-		Ship ship1 = new Ship(0, 20, 0, 0, 11, 0, 10);
-	    Ship ship2 = new Ship(20, 20, -20, 0 , 11, Math.PI/4, 10);
-	    double[] collision = new double[2];
-	    collision[0] = 11;
-	    collision[1] = 20;
-	    assertArrayEquals(collision, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
-	
-	@Test
-	public void testGetCollisionPosition_NoCollision(){
-		Ship ship1 = new Ship(20, 0, 0, 20, 11, 0,10);
-	    Ship ship2 = new Ship(20, -20, 0, 20 , 11, Math.PI/4,10);
-	    assertArrayEquals(null, Ship.getCollisionPosition(ship1, ship2), Util.EPSILON);
-	}
 	
 	@Test
 	public void testGetWorld(){
@@ -601,8 +433,8 @@ public class ShipTest {
 		Bullet bullet = new Bullet(20, 0, 0, 20);
 		Ship ship2 = new Ship(80, 80, 0, 20, 11, 0, 10);
 		World world = new World(100,100);
-		world.addSpaceObject(bullet);
-		world.addSpaceObject(ship2);
+		bullet.flyIntoWorld(world);
+		ship2.flyIntoWorld(world);
 		assertTrue(ship1.canHaveAsWorld(world));	
 	}
 	
@@ -626,34 +458,17 @@ public class ShipTest {
 		Ship ship1 = new Ship(20, 40, 0, 20, 11, 0, 10);
 		Ship ship2 = new Ship(40, 40, 0, 20, 11, 0, 10);
 		World world = new World(100,100);
-		world.addSpaceObject(ship1);
+		ship1.flyIntoWorld(world);
 		assertFalse(ship2.canHaveAsWorld(world));	
 	}
 	
 	@Test
-	public void testSetWorld(){
-		Ship ship = new Ship();
-		World world = new World();
-		ship.setWorld(world);
-		assertEquals(world, ship.getWorld());
-	}
-	
-	@Test (expected=IllegalArgumentException.class)
-	public void testSetWorld_IllegalCase(){
-		Ship ship = new Ship(20, 60, 0, 20, 11, 0, 10);
-		World world = new World(10,10);
-		ship.setWorld(world);
-	}
-	
-	
-	
-	@Test
 	public void testThrust(){
-		Ship ship = new Ship();
-		ship.setDirection(3.14/4);
-		ship.thrust(100000);
-		assertEquals(100000*Math.cos(3.14/4),ship.getXVelocity(),Util.EPSILON);
-		assertEquals(100000*Math.sin(3.14/4),ship.getYVelocity(),Util.EPSILON);
+		Ship ship = new Ship(0, 0, 10, 20, 10, -(Math.PI)/2, 1);
+		ship.getThruster().setEnabled(true);
+		ship.thrust(10);
+		assertEquals(10,ship.getXVelocity(),Util.EPSILON);
+		assertEquals(20*(-1.1E20),ship.getYVelocity(),Util.EPSILON);
 	}
 	
 	@Test

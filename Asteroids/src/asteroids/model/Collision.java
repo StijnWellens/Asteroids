@@ -6,10 +6,18 @@ import be.kuleuven.cs.som.annotate.*;
 public class Collision {
 	
 	private static final double	PI	= Math.PI;
+	private int nmbOfCollisions;
 
 	public Collision(SpaceObject so1, SpaceObject so2) throws IllegalArgumentException
 	{
-		setObjects(so1,so2);
+		this.setObjects(so1,so2);
+		this.nmbOfCollisions = 0;
+	}
+	
+	public Collision(SpaceObject so1) throws IllegalArgumentException
+	{
+		this.setObject(so1);
+		this.nmbOfCollisions = 0;
 	}
 	
 	@Basic
@@ -24,13 +32,18 @@ public class Collision {
 		return this.spaceObject2;
 	}
 	
+	public boolean isValidObject(SpaceObject object)
+	{
+		if((object == null) || (object.getWorld() ==  null))
+			return false;
+		return true;
+	}
+	
 	public boolean areValidObjects(SpaceObject object1, SpaceObject object2)
 	{
-		if((object1 == null) || (object2 == null))
+		if(!isValidObject(object1) || !isValidObject(object2))
 			return false;
 		if(object1 == object2)
-			return false;
-		if((object1.getWorld() == null) || (object2.getWorld()== null))
 			return false;
 		if(object1.getWorld() != object2.getWorld())
 			return false;
@@ -40,6 +53,13 @@ public class Collision {
 			return false;
 		return true;
 	}
+	
+	public void setObject(SpaceObject object) throws IllegalArgumentException
+	{
+		if(!isValidObject(object))
+			throw new IllegalArgumentException();
+		this.spaceObject1 = object;
+	}	
 	
 	public void setObjects(SpaceObject object1, SpaceObject object2) throws IllegalArgumentException
 	{
@@ -238,25 +258,34 @@ public class Collision {
 	
 	public void execute() 
 	{
+		this.nmbOfCollisions ++;
+		
 		if(getObject2()== null)
 		{
-			double time = getTimeToCollision();
-			Vector position = getObject1().getPosition();
-			Vector velocity = getObject1().getVelocity();
+			if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
+			{
+				getObject1().die(getObject1().getWorld());
+			}
+			else {
+				Vector position = getObject1().getPosition();
+				Vector velocity = getObject1().getVelocity();
+				
+				if(Util.fuzzyEquals(position.getXComp(), 0) || Util.fuzzyEquals(position.getXComp(), getObject1().getWorld().getWidth()))
+				{
+					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
+				}
+				else
+				{
+					getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
+				}
+							
+			}
 			
-			if(Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, 0) || Util.fuzzyEquals(position.getXComp()+velocity.getXComp()*time, getObject1().getWorld().getWidth()))
-			{
-				getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
-			}
-			else
-			{
-				getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
-			}
+			
 		}
 		else
 		{
 			if(Bullet.class.isInstance(getObject1()) || Bullet.class.isInstance(getObject2()))
-				
 			{
 				getObject1().die(getObject1().getWorld());
 				getObject2().die(getObject2().getWorld());

@@ -2,9 +2,15 @@ package asteroids.model;
 
 public class Thruster {
 	
+	/**
+	 * 
+	 * @param enabled
+	 * @param powerOutput
+	 * @throws IllegalArgumentException
+	 */
 	public Thruster(boolean enabled, double powerOutput) throws IllegalArgumentException
 	{
-		this.setEnabled(true);
+		this.setEnabled(enabled);
 		this.setPowerOutput(powerOutput);
 	}
 	
@@ -54,11 +60,16 @@ public class Thruster {
 	
 	private double powerOutput;
 	
-	public Vector generateAcceleration (double direction, double mass) throws IllegalArgumentException {
-		 double a = Vector.multiplyComponents((getPowerOutput()),(1/mass));
-		 double x = Vector.multiplyComponents(a, Math.cos(direction));
-		 double y = Vector.multiplyComponents(a, Math.sin(direction));
-		 return new Vector(x,y);
+	public Vector generateAcceleration (double direction, double mass, double time) throws IllegalArgumentException {
+		if(this.isThrusterEnabled()) 
+		{
+			double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
+			double x = Vector.multiplyComponents(a, Math.cos(direction));
+			double y = Vector.multiplyComponents(a, Math.sin(direction));
+			return new Vector(x,y);
+		}
+		else
+			return new Vector(0,0);
 	}
 	
 }

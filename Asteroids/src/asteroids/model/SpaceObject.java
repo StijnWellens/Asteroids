@@ -20,6 +20,10 @@ import be.kuleuven.cs.som.annotate.*;
  *        	| isValidLowerBoundRadius(getLowerBoundRadius())
  * @invar 	The radius of the spaceObject must always be a valid radius. 
  * 			| isValidRadius(getRadius())
+ * @invar	The mass of the spaceObject must always be a valid mass.
+ * 			| isValidMass(getMass())
+ * @invar	Each spaceObject must have a proper world.
+ * 			| hasProperWorld()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -403,7 +407,7 @@ public abstract class SpaceObject {
 	 * 			| (duration >= 0 && Double.isNaN(duration) && !Double.isInfinite(duration))
 	 */
 	public boolean isValidDuration(double duration) {
-		return ((duration >= 0) && (!Double.isNaN(duration)) && (!Double.isInfinite(duration)));
+		return ((Util.fuzzyEquals(duration,0) || !Util.fuzzyLessThanOrEqualTo(duration,0)) && (!Double.isNaN(duration)) && (!Double.isInfinite(duration)));
 	}
 
 	/**
@@ -526,6 +530,8 @@ public abstract class SpaceObject {
 	}	
 	
 	public boolean overlapWithWorldObject(World world){
+		if(world == null)
+			return false;
 		for(SpaceObject spaceObject: world.getSpaceObjects()){
 			if(Bullet.class.isInstance(spaceObject)){}
 			else if(SpaceObject.overlap(spaceObject, this))
@@ -542,6 +548,19 @@ public abstract class SpaceObject {
 
 	protected State getState() {
 		return this.state;
+	}
+	
+	protected boolean isValidState(State state) {
+		if(state == null)
+			return false;
+		else
+			return true;
+	}
+	
+	protected void setState(State state) throws IllegalArgumentException {
+		if(!isValidState(state))
+			throw new IllegalArgumentException();
+		this.state = state;
 	}
 
 	@Raw
@@ -600,8 +619,5 @@ public abstract class SpaceObject {
 		this.state = State.TERMINATED;
 		
 	}
-	
-	
 		
-	
 }

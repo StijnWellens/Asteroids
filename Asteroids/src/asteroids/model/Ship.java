@@ -43,7 +43,7 @@ public class Ship extends SpaceObject{
 		super(x, y , xVelocity, yVelocity,radius);
 		setDirection(angle);
 		setMass(mass);
-		setThruster(false, 1.1*100000000);
+		setThruster(false, 1.1E18);
 	}
 	
 	// direction: nominal programming
@@ -154,9 +154,9 @@ public class Ship extends SpaceObject{
 	public void thrust(double time) {
 		
 		Thruster thruster = this.getThruster();
-		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass());
+		Vector acceleration = thruster.generateAcceleration(this.getDirection(), this.getMass(), time);
 		this.setVelocity(this.getXVelocity()+acceleration.getXComp()*time, this.getYVelocity()+acceleration.getYComp()*time);
-		
+				
 	}
 	
 	public boolean canHaveAsWorld(World world){
@@ -164,9 +164,9 @@ public class Ship extends SpaceObject{
 				(!this.overlapWithWorldObject(world));
 	}
 	
-	public void fireBullet() throws IllegalArgumentException {
+	public void fireBullet() throws IllegalStateException {
 		if(this.getState() != State.ACTIVE || this.getWorld() == null)
-			throw new IllegalArgumentException();
+			throw new IllegalStateException();
 		
 		SpaceObject bullet = new Bullet(this);
 		bullet.flyIntoWorld(this.getWorld());
