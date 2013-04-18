@@ -5,17 +5,17 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import asteroids.Util;
-import asteroids.model.Ship;
+import asteroids.model.*;
 
 public class ThrusterTest {
 
 	@Test
-	public void testThrust(){
-		Ship ship = new Ship(0, 0, 10, 20, 10, -(Math.PI)/2, 1);
-		ship.getThruster().setEnabled(true);
-		ship.thrust(10);
-		assertEquals(10,ship.getXVelocity(),Util.EPSILON);
-		assertEquals(20*(-1.1E20),ship.getYVelocity(),Util.EPSILON);
+	public void testGenerateAcceleration(){
+		Thruster thruster = new Thruster(true, 1.1E18);
+		Vector acceleration = thruster.generateAcceleration((3*(Math.PI)/2), 1, 10);
+				
+		assertEquals(0,acceleration.getXComp(),Util.EPSILON);
+		assertEquals((-1.1E19),acceleration.getYComp(),Util.EPSILON);
 	}
 	
 	@Test
