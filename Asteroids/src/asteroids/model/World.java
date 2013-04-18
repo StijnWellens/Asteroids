@@ -111,6 +111,17 @@ public class World {
 
 	}
 	
+	@Raw
+	public void addSpaceObject(SpaceObject spaceObject)
+	{
+		assert (spaceObject != null) && (spaceObject.getWorld() == this);
+		
+		Set<SpaceObject> objects = this.getSpaceObjects();
+		objects.add(spaceObject);
+		this.setSpaceObjects(objects);
+		this.addCollisions(spaceObject);
+	}
+	
 	/**
 	 * 
 	 * @param spaceObject
@@ -188,17 +199,6 @@ public class World {
 				setBullets.add((Bullet)spaceObject);
 		}
 		return setBullets;
-	}
-	
-	@Raw
-	public void addSpaceObject(SpaceObject spaceObject)
-	{
-		assert (spaceObject != null) && (spaceObject.getWorld() == this);
-		
-		Set<SpaceObject> objects = this.getSpaceObjects();
-		objects.add(spaceObject);
-		this.setSpaceObjects(objects);
-		this.addCollisions(spaceObject);
 	}
 	
 	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
