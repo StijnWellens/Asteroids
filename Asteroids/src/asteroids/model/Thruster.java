@@ -1,5 +1,15 @@
 package asteroids.model;
+
+import asteroids.Util;
  
+/**
+ * 
+ * @author 	Julie Wouters & Stijn Wellens
+ * 			Students Bachelor of Science in Engineering 
+ * 			(Computer Science and electrical engineering)
+ * 			link to our code repository:
+ * 			https://github.com/StijnWellens/Asteroids.git
+ */
 public class Thruster {
 	
 	/**
@@ -63,13 +73,19 @@ public class Thruster {
 	public Vector generateAcceleration (double direction, double mass, double time) throws IllegalArgumentException {
 		if(this.isThrusterEnabled()) 
 		{
-			/*double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
-			double x = Vector.multiplyComponents(a, Math.cos(direction));
-			double y = Vector.multiplyComponents(a, Math.sin(direction));*/
-			double f = (this.getPowerOutput()*time);
-			double a = f/mass;
-			double x = Math.cos(direction);
-			double y = a * Math.sin(direction);
+			double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
+			double x;
+			double y;
+			
+			if(Util.fuzzyEquals(Math.cos(direction), 0))
+				x = 0;
+			else
+				x = a * Math.cos(direction);
+			
+			if(Util.fuzzyEquals(Math.sin(direction), 0))
+				y = 0;
+			else
+				y = a * Math.sin(direction);
 			return new Vector(x,y);
 		}
 		else

@@ -1,5 +1,14 @@
 package asteroids.model;
 
+
+/**
+ * 
+ * @author 	Julie Wouters & Stijn Wellens
+ * 			Students Bachelor of Science in Engineering 
+ * 			(Computer Science and electrical engineering)
+ * 			link to our code repository:
+ * 			https://github.com/StijnWellens/Asteroids.git
+ */
 public class Bullet extends SpaceObject {
 
 	private static final double DENSITY = 7.8*1000000000000.0;

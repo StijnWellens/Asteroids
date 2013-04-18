@@ -3,6 +3,14 @@ package asteroids.model;
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * 
+ * @author 	Julie Wouters & Stijn Wellens
+ * 			Students Bachelor of Science in Engineering 
+ * 			(Computer Science and electrical engineering)
+ * 			link to our code repository:
+ * 			https://github.com/StijnWellens/Asteroids.git
+ */
 public class Collision {
 	
 	private static final double	PI	= Math.PI;

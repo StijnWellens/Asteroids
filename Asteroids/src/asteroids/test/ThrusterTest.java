@@ -18,23 +18,5 @@ public class ThrusterTest {
 		assertEquals((-1.1E19),acceleration.getYComp(),Util.EPSILON);
 	}
 	
-	@Test
-	public void testThrust_IllegalCase(){
-		Ship ship = new Ship();
-		ship.setDirection(3.14/4);
-		ship.thrust(Double.NaN);
-		assertEquals(0,ship.getXVelocity(),Util.EPSILON);
-		assertEquals(0,ship.getYVelocity(),Util.EPSILON);
-	}
-	
-	@Test
-	public void testThrust_NegativeAmount(){
-		Ship ship = new Ship();
-		ship.setDirection(3.14/4);
-		ship.thrust(-200000);
-		assertEquals(0,ship.getXVelocity(),Util.EPSILON);
-		assertEquals(0,ship.getYVelocity(),Util.EPSILON);
-	}
-	
 
 }

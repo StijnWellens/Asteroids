@@ -40,21 +40,23 @@ public abstract class SpaceObject {
 	 *         its x coordinate, 0 as its y coordinate, 300000 as its maximum
 	 *         velocity, 0 as its x velocity component, 0 as its y velocity
 	 *         component, PI/2 as its direction, 1 as its radius. 
+	 *         The state of the spaceObject is initialized to CREATED.
 	 *         | setMaxVelocity(300000); 
 	 *         | setPosition(0,0); 
 	 *         | setVelocity(0,0); 
 	 *         | setDirection(PI / 2); 
+	 *         | setState(State.CREATED);
 	 * @post	The new radius of the spaceObject is equal to 1. 
 	 * 			| (new this).getRadius() == 1
 	 */
 	@Model
 	protected SpaceObject() {
 		setMaxVelocity(300000);
-		setLowerBoundRadius(0);
+		
 		setPosition(0,0);
 		setVelocity(0, 0);
 		this.radius = 11;
-		this.state = State.CREATED;
+		setState(State.CREATED);
 
 	}
 
@@ -79,11 +81,12 @@ public abstract class SpaceObject {
 	 *         its maximum velocity, the given xVelocity as its x velocity
 	 *         component, the given YVelocity as its y velocity component, the
 	 *         given angle as its initial direction, the given radius as its
-	 *         radius. 
+	 *         radius.  The state of the spaceObject is initialized to CREATED.
 	 *         | setMaxVelocity(300000); 
 	 *         | setPosition(x,y); 
 	 *         | setVelocity(xVelocity, yVelocity); 
 	 *         | setDirection(angle); 
+	 *         | setState(State.CREATED);
 	 * @post 	The new radius of the spaceObject is equal to the given radius. 
 	 * 			| (new this).getRadius() == radius       
 	 * @throws 	IllegalArgumentException
@@ -94,14 +97,13 @@ public abstract class SpaceObject {
 	protected SpaceObject(double x, double y, double xVelocity, double yVelocity,
 			double radius) throws IllegalArgumentException {
 		setMaxVelocity(300000);
-		setLowerBoundRadius(0);
-		
+				
 		setPosition(x,y);
 		setVelocity(xVelocity, yVelocity);
 		if (!isValidRadius(radius))
 			throw new IllegalArgumentException();
 		this.radius = radius;
-		this.state = State.CREATED;
+		setState(State.CREATED);
 	}
 	
 
@@ -335,7 +337,7 @@ public abstract class SpaceObject {
 	// Radius
 
 	private final double	radius;
-	private static double	lowerBoundRadius;
+	private static double	lowerBoundRadius = 0;
 
 	/**
 	 * Returns the lower bound of the radius of all spaceObjects.
@@ -543,7 +545,8 @@ public abstract class SpaceObject {
 		if(world == null)
 			return false;
 		for(SpaceObject spaceObject: world.getSpaceObjects()){
-			if(Bullet.class.isInstance(spaceObject)){}
+			if(spaceObject == this){}
+			else if(Bullet.class.isInstance(spaceObject)){}
 			else if(SpaceObject.overlap(spaceObject, this))
 				return true;
 		}
@@ -615,7 +618,7 @@ public abstract class SpaceObject {
 			throw new IllegalArgumentException();
 		this.setWorld(world);
 		world.addSpaceObject(this);
-		this.state = State.ACTIVE;
+		this.setState(State.ACTIVE);
 	}
 	
 	public void die(World world) throws IllegalStateException, IllegalArgumentException{
@@ -626,7 +629,7 @@ public abstract class SpaceObject {
 		
 		this.getWorld().removeSpaceObject(this);
 		this.setWorld(null);
-		this.state = State.TERMINATED;
+		this.setState(State.TERMINATED);
 		
 	}
 		

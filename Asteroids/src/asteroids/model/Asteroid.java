@@ -2,15 +2,24 @@ package asteroids.model;
 
 import java.util.Random;
 
+/**
+ * 
+ * @author 	Julie Wouters & Stijn Wellens
+ * 			Students Bachelor of Science in Engineering 
+ * 			(Computer Science and electrical engineering)
+ * 			link to our code repository:
+ * 			https://github.com/StijnWellens/Asteroids.git
+ */
 public class Asteroid extends SpaceObject {
 	
-	private static final double DENSITY = 2.65*1000000000000.0;
+	private static final double DENSITY = 2.65E12;
 	private static final double PI = Math.PI;
 	
 	private Random random;
 	
 	public Asteroid() {
 		super();
+		setRandom(new Random());
 		setMass((4/3)*PI*(11*11*11)*DENSITY);
 	}
 	
@@ -18,6 +27,7 @@ public class Asteroid extends SpaceObject {
 			double radius) throws IllegalArgumentException
 	{
 		super(x, y , xVelocity, yVelocity,radius);
+		setRandom(new Random());
 		setMass((4/3)*PI*(radius*radius*radius)*DENSITY);
 	}
 	
@@ -66,8 +76,14 @@ public class Asteroid extends SpaceObject {
 					newXVelocity,newYVelocity,this.getRadius()/2,this.getRandom());
 			SpaceObject child2 = new Asteroid(this.getX()-(this.getRadius()/2)*cos,this.getY()-(this.getRadius()/2)*sin,
 					-newXVelocity,-newYVelocity,this.getRadius()/2,this.getRandom());
-			child1.flyIntoWorld(world);
-			child2.flyIntoWorld(world);
+			try{
+				child1.flyIntoWorld(world);
+				child2.flyIntoWorld(world);
+			}
+			catch(IllegalArgumentException iae){
+				
+			}
+			
 		}
 		
 	}
