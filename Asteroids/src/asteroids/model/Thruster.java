@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.lang.Math;
+
 public class Thruster {
 	
 	/**
@@ -66,8 +68,9 @@ public class Thruster {
 			/*double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
 			double x = Vector.multiplyComponents(a, Math.cos(direction));
 			double y = Vector.multiplyComponents(a, Math.sin(direction));*/
-			double a = (this.getPowerOutput()*time)/mass;
-			double x = a * Math.cos(direction);
+			double f = (this.getPowerOutput()*time);
+			double a = f/mass;
+			double x = Math.cos(direction);
 			double y = a * Math.sin(direction);
 			return new Vector(x,y);
 		}
