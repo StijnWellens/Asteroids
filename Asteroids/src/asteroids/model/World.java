@@ -1,9 +1,22 @@
 package asteroids.model;
 
+
 import java.util.*;
 
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing a world with a height and width.
+ * 
+ * @invar 	The height of the world must always be a valid height. 
+ * 			| isValidHeight(getHeight())
+ * @invar 	The width of the world must always be a valid width. 
+ * 			| isValidWidth(getWidth())
+ * @invar 	The upper bound coordinate of the world must always be a 
+ * 			valid upper bound coordinate.
+ *        	| isValidUpperBoundCoordinate(getUpperBoundCoordinate())
+ * @author 	Julie Wouters & Stijn Wellens
+ */
 
 public class World {
 	
@@ -30,6 +43,7 @@ public class World {
 	 * @return 	...
 	 * 			| this.height
 	 */
+	@Basic
 	public double getHeight() {
 		return this.height;
 	}
@@ -52,6 +66,7 @@ public class World {
 	 * @return 	...
 	 * 			| this.width
 	 */
+	@Basic
 	public double getWidth() {
 		return this.width;
 	}
@@ -74,6 +89,11 @@ public class World {
 
 	private static double	upperBoundCoordinate;
 
+	/**
+	 * 
+	 * @return	...
+	 * 			| upperBoundCoordinate
+	 */
 	@Basic
 	public static double getUpperBoundCoordinate() {
 		return upperBoundCoordinate;
@@ -111,6 +131,17 @@ public class World {
 
 	}
 	
+	/**
+	 * 
+	 * @param 	spaceObject
+	 * 
+	 * @pre		...
+	 * 			| (spaceObject != null) && (spaceObject.getWorld() == this)
+	 * @effect	...
+	 * 			| (new this).getSpaceObjects() == this.getSpaceObjects().add(spaceObject)
+	 * @effect	...
+	 * 			| (new this).getPossibleCollisions() == this.getPossibleCollisions()
+	 */
 	@Raw
 	public void addSpaceObject(SpaceObject spaceObject)
 	{
@@ -126,7 +157,8 @@ public class World {
 	 * 
 	 * @param spaceObject
 	 * @return	...
-	 * 			| spaceObjects.contains(spaceObject)
+	 * 			| result ==
+	 * 			| 	(spaceObjects.contains(spaceObject))
 	 */
 	@Basic
 	public boolean containsSpaceObject(SpaceObject spaceObject) {
@@ -203,6 +235,19 @@ public class World {
 	
 	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
 	
+	/**
+	 * 
+	 * @param 	spaceObject
+	 * 
+	 * @pre		...
+	 * 			| (spaceObject != null) && (spaceObject.getWorld()==this) && this.containsSpaceObject(spaceObject)
+	 * @effect	...
+	 * 			| (new this).getPossibleCollisions() == 
+	 * @throws 	IllegalArgumentException
+	 * 			...
+	 * 			| (spaceObject != null) && (spaceObject.getWorld()==this) && this.containsSpaceObject(spaceObject)
+	 */
+		// TODO
 	@Raw
 	public void removeSpaceObject(SpaceObject spaceObject) throws IllegalArgumentException{
 		assert (spaceObject != null) && (spaceObject.getWorld() == this) && containsSpaceObject(spaceObject);
@@ -218,10 +263,12 @@ public class World {
 	{
 		for(SpaceObject spaceObject: getSpaceObjects())
 		{
-			if(!spaceObject.canHaveAsWorld(this))
+			if(!spaceObject.canHaveAsWorld(this)){
 				return false;
-			if(spaceObject.getWorld() != this)
+			}
+			if(spaceObject.getWorld() != this){
 				return false;
+			}
 		}
 		return true;
 	}
