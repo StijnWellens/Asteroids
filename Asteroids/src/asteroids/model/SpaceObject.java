@@ -132,6 +132,9 @@ public abstract class SpaceObject {
 	
 	/**
 	 * Returns the position of the spaceObject.
+	 * 
+	 * @return 	position
+	 * 			the position vector of the spaceObject
 	 */
 	@Basic
 	public Vector getPosition() {
@@ -208,7 +211,6 @@ public abstract class SpaceObject {
 	 * 
 	 */
 	@Basic
-	@Immutable
 	public double getMaxVelocity() {
 		return this.maxV;
 	}
@@ -217,9 +219,9 @@ public abstract class SpaceObject {
 	 * Checks whether the given maximum velocity is valid.
 	 * 
 	 * @param maxV
-	 *            The given maximum velocity.
-	 * @return False if the double maxV is not a number. 
-	 * 			| if(Double.isNaN(maxV) == true) 
+	 *        The given maximum velocity.
+	 * @return 	False if the double maxV is not a number or is infinite. 
+	 * 			| if(Double.isNaN(maxV) == true || Double.isInfinite(maxV)  == true) 
 	 * 			| then result == false
 	 * @return True if and only if the given maximum velocity is positive or 0
 	 *         and not exceeding the speed of light. 
@@ -227,7 +229,7 @@ public abstract class SpaceObject {
 	 *         | then result == true
 	 */
 	public boolean isValidMaxVelocity(double maxV) {
-		if (Double.isNaN(maxV) == true) {
+		if (Double.isNaN(maxV) || Double.isInfinite(maxV)) {
 			return false;
 		} else {
 			return ((maxV >= 0) && (maxV <= LIGHTSPEED));
@@ -237,7 +239,7 @@ public abstract class SpaceObject {
 	/**
 	 * 
 	 * @param maxV
-	 *            The given maximum velocity of the spaceObject.
+	 *        The given maximum velocity of the spaceObject.
 	 * @post If the absolute value of the given maximum velocity is valid, the
 	 *       maximum velocity will be the absolute value of the given maximum
 	 *       velocity. 
@@ -304,10 +306,15 @@ public abstract class SpaceObject {
 	 *        The given x component of the velocity.
 	 * @param vy
 	 *        The given y component of the velocity.
-	 * @post If the given velocity components are valid, then the new velocity
+	 * @post If the given velocity is valid, then the new velocity
 	 *       components will be the given components. 
 	 *       | if(isValidVelocity(vx,vy))
 	 *       |		then ((new this).getXVelocity() == vx) && ((new this).getYVelocity() == vy)
+	 * @post	If the given velocity isn't valid but the components are, 
+	 * 			then the new velocity components will be equally scaled so the new velocity won't exceed the maximum velocity.
+	 * 			| if(!isValidVelocity(vx,vy) && (isValidVelocityComp(vx) && isValidVelocityComp(vy)))
+	 * 			|		then ((new this).getXVelocity() == vx * scaleFactor) && ((new this).getYVelocity() == vy * scaleFactor) 
+	 * 						&& ((new this).getVelocity().getModulus() == getMaxVelocity())
 	 */
 	public void setVelocity(double vx, double vy) {
 		if (isValidVelocity(vx, vy)) {
@@ -330,7 +337,7 @@ public abstract class SpaceObject {
 	 * 
 	 * @param velocity
 	 *        The given velocity vector.
-	 * @post If the given velocity components of the velocity vector are valid, then the new velocity
+	 * @effect If the given velocity components of the velocity vector are valid, then the new velocity
 	 *       vector will be the given velocity vector. 
 	 *       | if(isValidVelocity(velocity.getXComp(),velocity.getYComp()))
 	 *       |		then ((new this).getXVelocity() == velocity.getXComp()) && ((new this).getYVelocity() == velocity.getYComp())

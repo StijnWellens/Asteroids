@@ -328,8 +328,7 @@ public class Collision {
 				{
 					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
 				}
-				else{}
-							
+											
 			}
 			
 			
