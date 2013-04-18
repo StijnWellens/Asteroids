@@ -1,5 +1,6 @@
 package asteroids.model;
 
+
 import java.util.Random;
 
 /**

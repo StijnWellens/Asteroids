@@ -1,6 +1,7 @@
 package asteroids.model;
 
 
+
 /**
  * 
  * @author 	Julie Wouters & Stijn Wellens

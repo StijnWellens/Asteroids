@@ -1,5 +1,6 @@
 package asteroids.model;
 
+
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
  
@@ -39,15 +40,14 @@ public abstract class SpaceObject {
 	 * @effect This new spaceObject is initialized with the default x coordinate 0 as
 	 *         its x coordinate, 0 as its y coordinate, 300000 as its maximum
 	 *         velocity, 0 as its x velocity component, 0 as its y velocity
-	 *         component, PI/2 as its direction, 1 as its radius. 
+	 *         component, 11 as its radius. 
 	 *         The state of the spaceObject is initialized to CREATED.
 	 *         | setMaxVelocity(300000); 
 	 *         | setPosition(0,0); 
 	 *         | setVelocity(0,0); 
-	 *         | setDirection(PI / 2); 
 	 *         | setState(State.CREATED);
-	 * @post	The new radius of the spaceObject is equal to 1. 
-	 * 			| (new this).getRadius() == 1
+	 * @post	The new radius of the spaceObject is equal to 11. 
+	 * 			| (new this).getRadius() == 11
 	 */
 	@Model
 	protected SpaceObject() {
@@ -74,18 +74,15 @@ public abstract class SpaceObject {
 	 *        The initial y velocity component for this new spaceObject.
 	 * @param radius
 	 *        The radius of this new spaceObject.
-	 * @param angle
-	 *        The initial direction angle for this new spaceObject.
 	 * @effect This new spaceObject is initialized with the given x as its initial x
 	 *         coordinate, the given y as its initial y coordinate, 300000 as
 	 *         its maximum velocity, the given xVelocity as its x velocity
-	 *         component, the given YVelocity as its y velocity component, the
-	 *         given angle as its initial direction, the given radius as its
-	 *         radius.  The state of the spaceObject is initialized to CREATED.
+	 *         component, the given YVelocity as its y velocity component,
+	 *         the given radius as its radius.  
+	 *         The state of the spaceObject is initialized to CREATED.
 	 *         | setMaxVelocity(300000); 
 	 *         | setPosition(x,y); 
 	 *         | setVelocity(xVelocity, yVelocity); 
-	 *         | setDirection(angle); 
 	 *         | setState(State.CREATED);
 	 * @post 	The new radius of the spaceObject is equal to the given radius. 
 	 * 			| (new this).getRadius() == radius       
@@ -316,6 +313,16 @@ public abstract class SpaceObject {
 		if (isValidVelocity(vx, vy)) {
 			this.velocity.setComp(vx, vy);
 		}
+		else {
+			if(isValidVelocityComp(vx) && isValidVelocityComp(vy))
+			{
+				double tempAmount = (this.getMaxVelocity())	/ Math.sqrt(vx * vx + vy * vy);
+				double tempVx = vx * tempAmount;
+				double tempVy = vy * tempAmount;
+	
+				this.velocity.setComp(tempVx, tempVy);
+			}
+		}
 	}
 	
 	/**
@@ -329,9 +336,7 @@ public abstract class SpaceObject {
 	 *       |		then ((new this).getXVelocity() == velocity.getXComp()) && ((new this).getYVelocity() == velocity.getYComp())
 	 */
 	public void setVelocity(Vector velocity) {
-		if (isValidVelocity(velocity.getXComp(), velocity.getYComp())) {
-			this.velocity = velocity;
-		}
+		this.setVelocity(velocity.getXComp(), velocity.getYComp());
 	}
 	
 	// Radius

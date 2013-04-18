@@ -1,5 +1,6 @@
 package asteroids.model;
 
+
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -161,16 +162,7 @@ public class Ship extends SpaceObject{
 			double tempVx = this.getXVelocity() + newAcceleration.getXComp()* time;
 			double tempVy = this.getYVelocity() + newAcceleration.getYComp()* time;
 
-			if (isValidVelocity(tempVx, tempVy)) {
-				this.setVelocity(tempVx, tempVy);
-			} else {
-				double tempAmount = (this.getMaxVelocity())
-						/ Math.sqrt(tempVx * tempVx + tempVy * tempVy);
-				tempVx = tempVx * tempAmount;
-				tempVy = tempVy * tempAmount;
-
-				this.setVelocity(tempVx, tempVy);
-			}
+			this.setVelocity(tempVx,tempVy);
 		}				
 	}
 	

@@ -1,5 +1,6 @@
 package asteroids.model;
 
+
 import asteroids.Util;
  
 /**
@@ -68,7 +69,7 @@ public class Thruster {
 		
 	}
 	
-	private double powerOutput;
+	private double powerOutput; // in kN/s
 	
 	public Vector generateAcceleration (double direction, double mass, double time) throws IllegalArgumentException {
 		if(this.isThrusterEnabled()) 

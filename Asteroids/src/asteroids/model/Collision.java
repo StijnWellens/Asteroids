@@ -1,4 +1,5 @@
 package asteroids.model;
+
  
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
@@ -40,14 +41,14 @@ public class Collision {
 		return this.spaceObject2;
 	}
 	
-	public boolean isValidObject(SpaceObject object)
+	public static boolean isValidObject(SpaceObject object)
 	{
 		if((object == null) || (object.getWorld() ==  null))
 			return false;
 		return true;
 	}
 	
-	public boolean areValidObjects(SpaceObject object1, SpaceObject object2)
+	public static boolean areValidObjects(SpaceObject object1, SpaceObject object2)
 	{
 		if(!isValidObject(object1) || !isValidObject(object2))
 			return false;
@@ -193,7 +194,47 @@ public class Collision {
 	{
 		if(getObject2() == null)
 		{
-			return null;
+			double[] collision = new double[2];
+			
+			double time = getTimeToCollision();
+			if(time == Double.POSITIVE_INFINITY)
+			{
+				collision = null;
+			}
+			else
+			{
+				SpaceObject object = getObject1();
+				
+				double width = object.getWorld().getWidth();
+				double height = object.getWorld().getHeight();
+				double dtx = getTimeToCollisionWithAxis(object.getX(), object.getXVelocity(), width);
+				double dty = getTimeToCollisionWithAxis(object.getY(), object.getYVelocity(), height);
+								
+				if(dtx <= dty)
+				{
+					double sign;
+					if(object.getXVelocity() < 0)
+						sign = -1;
+					else
+						sign = 1;
+						
+					collision[0] = object.getX()+ object.getXVelocity()*dtx + sign * object.getRadius();
+					collision[1] = object.getY()+ object.getYVelocity()*dtx;
+				}
+				else
+				{
+					double sign;
+					if(object.getYVelocity() < 0)
+						sign = -1;
+					else
+						sign = 1;
+					
+					collision[0] = object.getX()+ object.getXVelocity()*dty;
+					collision[1] = object.getY()+ object.getYVelocity()*dty + sign * object.getRadius();
+				}					
+			}
+			
+			return collision;
 		}
 		else
 		{
@@ -275,17 +316,19 @@ public class Collision {
 				getObject1().die(getObject1().getWorld());
 			}
 			else {
-				Vector position = getObject1().getPosition();
 				Vector velocity = getObject1().getVelocity();
 				
-				if(Util.fuzzyEquals(position.getXComp(), 0) || Util.fuzzyEquals(position.getXComp(), getObject1().getWorld().getWidth()))
+				double[] collision = getCollisionPosition();
+				
+				if(Util.fuzzyEquals(collision[1], 0) || Util.fuzzyEquals(collision[1], getObject1().getWorld().getHeight()))
 				{ 
-					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
-				}
-				else
-				{
 					getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
 				}
+				else if(Util.fuzzyEquals(collision[0], 0) || Util.fuzzyEquals(collision[0], getObject1().getWorld().getWidth()))
+				{
+					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
+				}
+				else{}
 							
 			}
 			
