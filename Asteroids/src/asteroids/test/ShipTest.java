@@ -8,7 +8,7 @@ import org.junit.Test;
 import asteroids.Util;
 import asteroids.model.*;
 
-public class ShipTest {
+public class ShipTest { 
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {

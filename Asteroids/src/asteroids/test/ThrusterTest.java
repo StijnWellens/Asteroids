@@ -7,7 +7,7 @@ import org.junit.Test;
 import asteroids.Util;
 import asteroids.model.*;
 
-public class ThrusterTest {
+public class ThrusterTest { 
 
 	@Test
 	public void testGenerateAcceleration(){

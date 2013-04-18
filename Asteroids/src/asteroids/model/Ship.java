@@ -58,7 +58,7 @@ public class Ship extends SpaceObject{
 	 * @return the angle of the direction of the spaceObject | this.direction
 	 */
 	@Basic
-	@Raw
+	@Raw 
 	public double getDirection() {
 		return this.direction;
 	}

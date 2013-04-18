@@ -1,7 +1,5 @@
 package asteroids.model;
-
-import java.lang.Math;
-
+ 
 public class Thruster {
 	
 	/**

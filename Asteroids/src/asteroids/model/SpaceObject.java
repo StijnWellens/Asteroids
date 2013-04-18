@@ -2,7 +2,7 @@ package asteroids.model;
 
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
-
+ 
 /**
  * A class representing a spaceObject with a position, velocity, direction and radius
  * 
