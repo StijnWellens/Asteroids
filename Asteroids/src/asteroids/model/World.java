@@ -1,9 +1,6 @@
 package asteroids.model;
 
 
-import Collision;
-import SpaceObject;
-
 import java.util.*;
 
 import be.kuleuven.cs.som.annotate.*;
