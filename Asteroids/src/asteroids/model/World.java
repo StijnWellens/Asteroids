@@ -1,6 +1,9 @@
 package asteroids.model;
 
 
+import Collision;
+import SpaceObject;
+
 import java.util.*;
 
 import be.kuleuven.cs.som.annotate.*;
@@ -293,6 +296,9 @@ public class World {
 	
 	public void addCollisions(SpaceObject spaceObject)
 	{
+		if(spaceObject == null)
+			throw new IllegalArgumentException();
+		
 		List<Collision> collisions;
 		if(this.getPossibleCollisions() == null)
 			collisions = new ArrayList<Collision>();
@@ -306,12 +312,11 @@ public class World {
 		
 		for(int i = 0; i < objects.size(); i++)
 		{
-			try{
+			if(Collision.areValidObjects(spaceObject, objects.get(i)))
+			{
 				Collision collision = new Collision(spaceObject, objects.get(i));
 				collisions.add(collision);
-			}
-			catch(Exception e)
-			{}
+			}			
 					
 		}		
 		
