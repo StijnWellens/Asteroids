@@ -207,8 +207,10 @@ public class World {
 	public void removeSpaceObject(SpaceObject spaceObject) throws IllegalArgumentException{
 		assert (spaceObject != null) && (spaceObject.getWorld() == this) && containsSpaceObject(spaceObject);
 		
-		this.getSpaceObjects().remove(spaceObject);
+		Set<SpaceObject> objects = this.getSpaceObjects();
+		objects.remove(spaceObject);
 		this.removeCollisions(spaceObject);
+		this.setSpaceObjects(objects);
 		
 	}
 	

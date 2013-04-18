@@ -271,7 +271,7 @@ public class Collision {
 				Vector velocity = getObject1().getVelocity();
 				
 				if(Util.fuzzyEquals(position.getXComp(), 0) || Util.fuzzyEquals(position.getXComp(), getObject1().getWorld().getWidth()))
-				{
+				{ 
 					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
 				}
 				else
