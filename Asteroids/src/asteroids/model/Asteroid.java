@@ -242,7 +242,7 @@ public class Asteroid extends SpaceObject {
 			SpaceObject child1 = new Asteroid(this.getX()+(this.getRadius()/2)*cos,this.getY()+(this.getRadius()/2)*sin,
 					newXVelocity,newYVelocity,this.getRadius()/2,this.getRandom());
 			SpaceObject child2 = new Asteroid(this.getX()-(this.getRadius()/2)*cos,this.getY()-(this.getRadius()/2)*sin,
-					-newXVelocity,-newYVelocity,this.getRadius()/2,this.getRandom());
+					-1*newXVelocity,-1*newYVelocity,this.getRadius()/2,this.getRandom());
 			try{
 				child1.flyIntoWorld(world);
 				child2.flyIntoWorld(world);

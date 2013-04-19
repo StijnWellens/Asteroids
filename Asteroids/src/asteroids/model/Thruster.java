@@ -1,6 +1,7 @@
 package asteroids.model;
 
 
+import be.kuleuven.cs.som.annotate.*;
 import asteroids.Util;
  
 /**
@@ -42,6 +43,7 @@ public class Thruster {
 	 * @return	True if and only if the thruster is enabled.
 	 * 			| this.isEnabled
 	 */
+	@Basic
 	public boolean isThrusterEnabled() {
 		return this.isEnabled;
 	}
@@ -69,6 +71,7 @@ public class Thruster {
 	 * @return	The power output of this thruster.
 	 * 			| this.powerOutput
 	 */
+	@Basic
 	public double getPowerOutput() {
 		return this.powerOutput;
 	}
@@ -76,13 +79,26 @@ public class Thruster {
 	/**
 	 * Checks whether the given powerOutput is a valid powerOutput.
 	 * 
-	 * @param powerOutput
-	 * @return
+	 * @param 	powerOutput
+	 * 			The powerOutput to check.
+	 * @return	True if and only if the given powerOutput is a number and not infinite.
+	 * 			| result == (!Double.isNaN(powerOutput)) && (!Double.isInfinite(powerOutput))
 	 */
 	public boolean isValidPowerOutput(double powerOutput) {
 		return (!Double.isNaN(powerOutput)) && (!Double.isInfinite(powerOutput));
 	}
 	
+	/**
+	 * Set the powerOutput of this thruster to the given powerOutput.
+	 * 
+	 * @param 	powerOutput
+	 * 			The given powerOutput to set.
+	 * @post	The new powerOutput of this thruster will be the given powerOutput.
+	 * 			| (new this).getPowerOutput() = powerOutput
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when the given powerOutput isn't valid.
+	 * 			| !isValidPowerOutput(powerOutput)
+	 */
 	public void setPowerOutput(double powerOutput) throws IllegalArgumentException {
 		if(!isValidPowerOutput(powerOutput))
 			throw new IllegalArgumentException();
@@ -90,6 +106,22 @@ public class Thruster {
 		
 	}	
 	
+	/**
+	 * Generates an acceleration vector in a given direction for a given mass.
+	 * 
+	 * @param 	direction
+	 * 			The given direction in which the vector should point.
+	 * @param 	mass
+	 * 			The given mass that has to be accelerated by this thruster.
+	 * @return	The acceleration vector based on F = m * a , with F the powerOutput from this thruster
+	 * 			and m the given mass.
+	 * 			| a = (this.getPowerOutput())/mass	
+	 * 			|	result == new Vector( a * Math.cos(direction), a * Math.sin(direction))	
+	 * @return	A vector with both components 0, when the thruster isn't enabled.
+	 * 			| if(!isThrusterEnabled())
+	 * 			|	then result == new Vector(0,0)			
+	 * @throws IllegalArgumentException
+	 */
 	public Vector generateAcceleration (double direction, double mass) throws IllegalArgumentException {
 		if(this.isThrusterEnabled()) 
 		{
