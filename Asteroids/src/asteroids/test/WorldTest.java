@@ -160,8 +160,21 @@ public class WorldTest {
 		 World world = new World();
 		 SpaceObject ship = new Ship(20, 20, 0, 20, 11, 0, 5);
 		 ship.flyIntoWorld(world);
-		 ship.die(world);
+		 world.removeSpaceObject(ship);
 		 assertFalse(world.getSpaceObjects().contains(ship));
+	 }
+	 
+	 @Test (expected = AssertionError.class)
+	 public void testRemoveSpaceObject_ObjectIsNull(){
+		 World world = new World();
+		 world.removeSpaceObject(null);
+	 }
+	 
+	 @Test (expected = AssertionError.class)
+	 public void testRemoveSpaceObject_NotThisWorld(){
+		 World world = new World();
+		 SpaceObject ship = new Ship();
+		 world.removeSpaceObject(ship);
 	 }
 
 	 @Test
@@ -265,12 +278,68 @@ public class WorldTest {
 	 public void testEvolve(){
 		 World world = new World();
 		 SpaceObject ship = new Ship(60,60,0,10,5,Math.PI/2,5);
-		 SpaceObject asteroid1 = new Asteroid(10, 10, 10,0,2);
+		 SpaceObject asteroid1 = new Asteroid(10, 10,10,0,2);
 		 SpaceObject asteroid2 = new Asteroid(20, 10, 0,0, 2);
 		 asteroid2.flyIntoWorld(world);
 		 asteroid1.flyIntoWorld(world);
 		 ship.flyIntoWorld(world);
-		 world.evolve(7E-1, null);
+		 world.evolve(0.6,null);
 		 assertEquals(16,asteroid1.getX(),Util.EPSILON);
+		 assertEquals(20,asteroid2.getX(),Util.EPSILON);
+		 world.evolve(5.4,null);
+		 assertEquals(70,ship.getY(),Util.EPSILON);
+		 assertEquals(60,ship.getX(),Util.EPSILON);
 	 }
+	 
+	 @Test (expected = IllegalArgumentException.class)
+	 public void testEvolve_IllegalCase(){
+		 World world = new World();
+		 SpaceObject ship = new Ship(60,60,0,10,5,Math.PI/2,5);
+		 SpaceObject asteroid1 = new Asteroid(10, 10,10,0,2);
+		 SpaceObject asteroid2 = new Asteroid(20, 10, 0,0, 2);
+		 asteroid2.flyIntoWorld(world);
+		 asteroid1.flyIntoWorld(world);
+		 ship.flyIntoWorld(world);
+		 world.evolve(Double.NaN,null);
+	 }
+	 
+	 @Test (expected = IllegalArgumentException.class)
+	 public void testEvolve_Infinity(){
+		 World world = new World();
+		 SpaceObject ship = new Ship(60,60,0,10,5,Math.PI/2,5);
+		 SpaceObject asteroid1 = new Asteroid(10, 10,10,0,2);
+		 SpaceObject asteroid2 = new Asteroid(20, 10, 0,0, 2);
+		 asteroid2.flyIntoWorld(world);
+		 asteroid1.flyIntoWorld(world);
+		 ship.flyIntoWorld(world);
+		 world.evolve(Double.POSITIVE_INFINITY,null);
+	 }
+	 
+	 @Test (expected = IllegalArgumentException.class)
+	 public void testEvolve_NegativeAmount(){
+		 World world = new World();
+		 SpaceObject ship = new Ship(60,60,0,10,5,Math.PI/2,5);
+		 SpaceObject asteroid1 = new Asteroid(10, 10,10,0,2);
+		 SpaceObject asteroid2 = new Asteroid(20, 10, 0,0, 2);
+		 asteroid2.flyIntoWorld(world);
+		 asteroid1.flyIntoWorld(world);
+		 ship.flyIntoWorld(world);
+		 world.evolve(-50,null);
+	 }
+	 
+	 @Test (expected = IllegalArgumentException.class)
+	 public void testAddCollisions_ObjectIsNull(){
+		 World world = new World();
+		 world.addCollisions(null);
+	 }
+	 
+	 @Test 
+	 public void testRemoveCollisions_CollisionsNull(){
+		 World world = new World();
+		 SpaceObject ship = new Ship();
+		 world.removeCollisions(ship);
+		 assertTrue(world.getPossibleCollisions().isEmpty());
+	 }
+	 
+	 
 }

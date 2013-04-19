@@ -1,6 +1,9 @@
 package asteroids.model;
 
  
+import java.util.ArrayList;
+import java.util.List;
+
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -326,6 +329,10 @@ public class Collision {
 		getObject1().setVelocity(newVelocityThis);
 		getObject2().setVelocity(newVelocityOther);
 		
+		World world = this.getObject1().getWorld();
+		List<Collision> collisions = new ArrayList<Collision>(world.getPossibleCollisions());
+		collisions.remove(this);
+		world.setPossibleCollisions(collisions);
 	}
 	
 	public void execute() 
@@ -350,7 +357,7 @@ public class Collision {
 				else if(Util.fuzzyEquals(collision[0], 0) || Util.fuzzyEquals(collision[0], getObject1().getWorld().getWidth()))
 				{
 					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
-				}
+				} 
 				
 											
 			}

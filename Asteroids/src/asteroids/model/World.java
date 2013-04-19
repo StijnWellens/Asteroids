@@ -522,9 +522,9 @@ public class World {
 				
 		tc = collisionTime;
 		
-		if(tc < dt)
+		if(tc <= dt)
 		{
-			if(!Util.fuzzyLessThanOrEqualTo(tc,0) || Util.fuzzyEquals(tc,0))
+			if(!Util.fuzzyLessThanOrEqualTo(tc,0))
 		     {
 		           advanceObjects(tc);
 		     }
@@ -544,8 +544,8 @@ public class World {
 		     }
 			
 			 firstCollision.execute();
-		     
-		    	 
+			 List<Collision> collisions = new ArrayList<Collision>(this.getPossibleCollisions());
+			 collisions.remove(firstCollision);
 		}		
 		
 		return tc;
