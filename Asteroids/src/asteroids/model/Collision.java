@@ -8,7 +8,10 @@ import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
+ * The class representing a collision between two SpaceObjects or between a SpaceObject and the border of a world.
  * 
+ * @invar 	The first object, SpaceObject1, has always to be valid.
+ * 			| isValidObject(getObject1())
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -18,18 +21,75 @@ import be.kuleuven.cs.som.annotate.*;
 public class Collision {
 	
 	private static final double	PI	= Math.PI;
-	private int nmbOfCollisions;
-
+	
+	/**
+	 * Initializes a collision with two SpaceObjects.
+	 * 
+	 * @param so1
+	 * @param so2
+	 * @effect	...
+	 * 			| setObjects(so1,so2)
+	 * @effect	...
+	 * 			| setNmbOfCollisions(0)
+	 */
 	public Collision(SpaceObject so1, SpaceObject so2) throws IllegalArgumentException
 	{
 		this.setObjects(so1,so2);
 		this.nmbOfCollisions = 0;
 	}
 	
+	/**
+	 * Initializes a collision with a SpaceObject and the border of the world of this SpaceObject.
+	 * 
+	 * @param so1
+	 * @effect	...
+	 * 			| setObject(so1)
+	 * @effect	...
+	 * 			| setNmbOfCollisions(0)
+	 */
 	public Collision(SpaceObject so1) throws IllegalArgumentException
 	{
 		this.setObject(so1);
 		this.nmbOfCollisions = 0;
+	}
+	
+	private int nmbOfCollisions;
+	
+	/**
+	 * Returns the number of collisions of this collision.
+	 * 
+	 * @return 	...
+	 * 			| this.nmbOfCollisions
+	 */
+	@Basic 
+	public int getNmbOfCollisions()
+	{
+		return this.nmbOfCollisions;
+	}
+	
+	/**
+	 * 
+	 * @param nmb
+	 * @return	...
+	 * 			| result == (nmb>=0)
+	 */
+	public boolean isValidNmbOfCollisions(int nmb)
+	{
+		return (nmb>=0);
+	}
+	
+	/**
+	 * 
+	 * @param nmb
+	 * @post	...
+	 * 			| (new this).getNmbOfCollisions() == nmb
+	 * @throws	IllegalArgumentException
+	 * 			| !isValidNmbOfCollisions(nmb)
+	 */
+	public void setNmbOfCollisions(int nmb) throws IllegalArgumentException
+	{
+		if(!isValidNmbOfCollisions(nmb))
+			throw new IllegalArgumentException();
 	}
 	
 	@Basic
