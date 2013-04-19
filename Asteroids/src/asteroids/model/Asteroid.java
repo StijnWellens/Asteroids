@@ -57,11 +57,13 @@ public class Asteroid extends SpaceObject {
 		this.random = random;
 	}
 	
+	@Override
 	public boolean canHaveAsWorld(World world){
 		return (super.canHaveAsWorld(world))&& 
 				(!this.overlapWithWorldObject(world));	
 	}
 	
+	@Override
 	public void die(World world){
 		super.die(world);
 		

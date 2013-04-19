@@ -25,6 +25,10 @@ public class Thruster {
 		this.setPowerOutput(powerOutput);
 	}
 	
+	// isEnabled
+	
+	private boolean isEnabled;
+	
 	/**
 	 * Returns whether the thruster  is active or not.
 	 * @return	True if and only if the thruster is enabled.
@@ -46,7 +50,10 @@ public class Thruster {
 	{
 		this.isEnabled = state;		
 	}
-	private boolean isEnabled;
+	
+	// PowerOutput
+	
+	private double powerOutput; // in kN
 	
 	/**
 	 * Return the powerOutput of the thruster.
@@ -67,9 +74,7 @@ public class Thruster {
 			throw new IllegalArgumentException();
 		this.powerOutput = powerOutput;
 		
-	}
-	
-	private double powerOutput; // in kN
+	}	
 	
 	public Vector generateAcceleration (double direction, double mass) throws IllegalArgumentException {
 		if(this.isThrusterEnabled()) 

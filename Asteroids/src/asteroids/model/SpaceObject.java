@@ -585,6 +585,7 @@ public abstract class SpaceObject {
 	 * @author Julie Wouters & Stijn Wellens
 	 *
 	 */
+	@Value
 	protected enum State {
 		TERMINATED, CREATED, ACTIVE
 	};
@@ -649,7 +650,7 @@ public abstract class SpaceObject {
 	}
 	
 	/**
-	 * Checks whether this SpaceObject can have a given world as it's world.
+	 * Checks whether this SpaceObject can have a given world as its world.
 	 * 
 	 * @param 	world
 	 * 			The world to check.
