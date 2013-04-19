@@ -312,7 +312,7 @@ public class World {
 	 * @param 	collisions
 	 * @post	...
 	 * 			| if(collisions == null) 
-	 * 			|	then( (new this).possibleCollisions == new ArrayList<Collision>())
+	 * 			|   then( (new this).possibleCollisions == new ArrayList<Collision>())
 	 * @post	...
 	 * 			| (new this).possibleCollisions == collisions	
 	 */
@@ -324,7 +324,20 @@ public class World {
 			this.possibleCollisions = new ArrayList<Collision>(collisions);
 	}
 	
-	public void addCollisions(SpaceObject spaceObject)
+	/**
+	 * 
+	 * @param 	spaceObject
+	 * @effect	...
+	 * 			| if( this.getPossibleCollisions == null )
+	 * 				then ( List<Collision> collisions = new ArrayList<Collision>())
+	 * 			| 		else (List<Collision> collisions = new ArrayList<Collision>(this.getPossibleCollisions()))
+	 * 			|		 Collision collisionWithBorder = new Collision(spaceObject)
+	 * 			| 	 		collisions.add(collisionWithBorder)
+	 * 			|			 for each 
+	 * @throws	IllegalArgumentException
+	 * 			| spaceObject == null
+	 */
+	public void addCollisions(SpaceObject spaceObject) throws IllegalArgumentException
 	{
 		if(spaceObject == null)
 			throw new IllegalArgumentException();
@@ -353,6 +366,13 @@ public class World {
 		this.setPossibleCollisions(collisions);
 	}
 	
+	/**
+	 * 
+	 * @param 	spaceObject
+	 * @post	...
+	 * 			| for each collision in (new this).getPossibleCollisions():
+	 * 			|	!collision.contains(spaceObject)
+	 */
 	public void removeCollisions(SpaceObject spaceObject)
 	{
 		List<Collision> collisions;
@@ -373,6 +393,12 @@ public class World {
 		this.setPossibleCollisions(collisions);
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| for each collision in this.getPossibleCollisions():
+	 * 			|	collision.getTimeToCollision() >= result.getTimeToCollision()
+	 */
 	public Collision getFirstCollision()
 	{
 		List<Collision> collisions = this.getPossibleCollisions();
@@ -394,6 +420,16 @@ public class World {
 		
 	}
 	
+	/**
+	 * 
+	 * @param 	time
+	 * @effect	...
+	 * 			| for each spaceObject in this.getSpaceObjects():
+	 * 			|	if( spaceObject != null)
+	 * 			|	 then ( spaceObject.move(time)
+	 * 			|				if(Ship.class.isInstance(spaceObject))
+	 * 			|					then ( ((Ship)spaceObject).thrust(time)))
+	 */
 	public void advanceObjects(double time) throws IllegalArgumentException
 	{
 		for(SpaceObject spaceObject: this.getSpaceObjects())
@@ -409,6 +445,20 @@ public class World {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param 	dt
+	 * @return	...
+	 * 			| if( this.getFirstCollision() == null)
+	 * 			|	then (result == Double.POSITIVE_INFINITY)
+	 * 			...
+	 * 			| else
+	 * 			| 	double tc = this.getFirstCollision().getTimeToCollision()
+	 * 			|	 if (tc < dt)
+	 * 			|		then ( if(!Util.fuzzyLessThanOrEqualTo(tc,0) || Util.fuzzyEquals(tc,0))
+	 * 			|		 		then ( this.advanceObjects(tc) )
+	 * 			|				 firstCollision.execute
+	 */
 	public double evolveBeforeCollision(double dt) throws IllegalArgumentException
 	{
 		double tc = Double.POSITIVE_INFINITY;
@@ -438,6 +488,14 @@ public class World {
 		return tc;
 	}
 	
+	/**
+	 * 
+	 * @param 	dt
+	 * @effect	...
+	 * 			| 
+	 * @throws 	IllegalArgumentException
+	 * 			| (Double.isNaN(dt) || Double.isInfinite(dt) || dt < 0)
+	 */
 	public void evolve(double dt) throws IllegalArgumentException
 	{
 		if(Double.isNaN(dt) || Double.isInfinite(dt) || dt < 0)
