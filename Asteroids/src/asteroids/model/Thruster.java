@@ -69,12 +69,12 @@ public class Thruster {
 		
 	}
 	
-	private double powerOutput; // in kN/s
+	private double powerOutput; // in kN
 	
-	public Vector generateAcceleration (double direction, double mass, double time) throws IllegalArgumentException {
+	public Vector generateAcceleration (double direction, double mass) throws IllegalArgumentException {
 		if(this.isThrusterEnabled()) 
 		{
-			double a = Vector.multiplyComponents((this.getPowerOutput()*time),(1/mass));
+			double a = Vector.multiplyComponents((this.getPowerOutput()),(1/mass));
 			double x;
 			double y;
 			

@@ -147,7 +147,7 @@ public class Ship extends SpaceObject{
 	
 	public void setThruster(boolean enabled, double powerOutput) throws IllegalArgumentException
 	{
-		this.thruster = new Thruster(enabled, powerOutput);
+		this.thruster = new Thruster(enabled, powerOutput);		
 	}
 	
 	private Thruster thruster;	
@@ -157,7 +157,7 @@ public class Ship extends SpaceObject{
 		if( !Double.isNaN(time) && !Double.isInfinite(time) && time >=0)
 		{
 			Thruster thruster = this.getThruster();
-			Vector newAcceleration = thruster.generateAcceleration(this.getDirection(), this.getMass(), time);
+			Vector newAcceleration = thruster.generateAcceleration(this.getDirection(), this.getMass());
 									
 			double tempVx = this.getXVelocity() + newAcceleration.getXComp()* time;
 			double tempVy = this.getYVelocity() + newAcceleration.getYComp()* time;

@@ -12,11 +12,11 @@ package asteroids.model;
  */
 public class Bullet extends SpaceObject {
 
-	private static final double DENSITY = 7.8*1000000000000.0;
+	private static final double DENSITY = 7.8E12;  //in kg/km³
 	private static final double PI = Math.PI;
 	private final Ship ship;
-	private static final double RADIUS = 3;
-	private static final double INITIAL_SPEED = 250;
+	private static final double RADIUS = 3; // in km
+	private static final double INITIAL_SPEED = 250; // in km/s
 		
 	public Bullet(double x, double y, double xVelocity, double yVelocity)
 	{

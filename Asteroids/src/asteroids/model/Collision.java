@@ -328,6 +328,7 @@ public class Collision {
 				{
 					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
 				}
+				
 											
 			}
 			
@@ -340,15 +341,17 @@ public class Collision {
 				getObject1().die(getObject1().getWorld());
 				getObject2().die(getObject2().getWorld());
 			}
-			else if(getObject1().getClass() == getObject2().getClass())
-				bounceOff();
-			else if(Asteroid.class.isInstance(getObject1()))
+			else if(Asteroid.class.isInstance(getObject1()) && !Asteroid.class.isInstance(getObject2()))
 			{
 				getObject2().die(getObject2().getWorld());
 			}
-			else if(Asteroid.class.isInstance(getObject2()))
+			else if(Asteroid.class.isInstance(getObject2()) && !Asteroid.class.isInstance(getObject1()))
 			{
 				getObject1().die(getObject1().getWorld());
+			}
+			else
+			{
+				bounceOff();
 			}
 		}
 	}

@@ -337,10 +337,8 @@ public abstract class SpaceObject {
 	 * 
 	 * @param velocity
 	 *        The given velocity vector.
-	 * @effect If the given velocity components of the velocity vector are valid, then the new velocity
-	 *       vector will be the given velocity vector. 
-	 *       | if(isValidVelocity(velocity.getXComp(),velocity.getYComp()))
-	 *       |		then ((new this).getXVelocity() == velocity.getXComp()) && ((new this).getYVelocity() == velocity.getYComp())
+	 * @effect 	Set the velocity to the given velocity vector with the setVelocity with velocity components method.
+	 *       	| setVelocity(velocity.getXComp(), velocity.getYComp())
 	 */
 	public void setVelocity(Vector velocity) {
 		this.setVelocity(velocity.getXComp(), velocity.getYComp());
@@ -348,7 +346,7 @@ public abstract class SpaceObject {
 	
 	// Radius
 
-	private final double	radius;
+	private final double	radius; // in km
 	private static double	lowerBoundRadius = 0;
 
 	/**
@@ -413,9 +411,9 @@ public abstract class SpaceObject {
 	 *        The radius to check.
 	 * @return True if and only if the given radius is higher than the lowerBoundRadius of the spaceObjects and it is a number. 
 	 * 			| result == 
-	 * 			| ((!Double.isNaN(radius)) 
-	 * 			| && (!Double.isInfinite(radius))
-	 * 			| && (radius > lowerBoundRadius) )
+	 * 			| 	((!Double.isNaN(radius)) 
+	 * 			| 		&& (!Double.isInfinite(radius))
+	 * 			| 		&& (radius > lowerBoundRadius) )
 	 */
 	public boolean isValidRadius(double radius) {
 		return ((!Double.isNaN(radius)) && (!Double.isInfinite(radius)) && (radius > getLowerBoundRadius()));
@@ -427,8 +425,8 @@ public abstract class SpaceObject {
 	 * @param 	duration
 	 *       	The duration to check.
 	 * @return 	True if and only if the given duration is not below zero, is not infinite and if it is a number. 
-	 * 			|result == 
-	 * 			| (duration >= 0 && Double.isNaN(duration) && !Double.isInfinite(duration))
+	 * 			|	result == 
+	 * 			| 		(duration >= 0 && Double.isNaN(duration) && !Double.isInfinite(duration))
 	 */
 	public boolean isValidDuration(double duration) {
 		return ((Util.fuzzyEquals(duration,0) || !Util.fuzzyLessThanOrEqualTo(duration,0)) && (!Double.isNaN(duration)) && (!Double.isInfinite(duration)));
@@ -442,12 +440,12 @@ public abstract class SpaceObject {
 	 *         	How long the spaceObject needs to move.
 	 * @effect 	The new x-coordinate of this spaceObject is equal to the old x-coordinate
 	 *       	of this spaceObject incremented with the product of the x-velocity of the
-	 *       	spaceObject with the cosine of the direction of the spaceObject with the given time duration.  
-	 *       	|(new this).getX() == this.getX() + this.getXVelocity()*Math.cos(this.getDirection())*duration
+	 *       	spaceObject with the given time duration.  
+	 *       	|	(new this).getX() == this.getX() + this.getXVelocity()*duration
 	 * @effect 	The new y-coordinate of this spaceObject is equal to the old y-coordinate
 	 *       	of this spaceObject incremented with the product of the y-velocity of the
-	 *       	spaceObject with the sine of the direction of the spaceObject with the given time duration. 
-	 *       	|(new this).getY() == this.getY() + this.getYVelocity()*Math.sin(this.getDirection())*duration
+	 *       	spaceObject with the given time duration. 
+	 *       	|	(new this).getY() == this.getY() + this.getYVelocity()*duration
 	 * @throws 	IllegalArgumentException
 	 *          The given duration is not a valid duration. 
 	 *          |!isValidDuration(duration)
@@ -460,6 +458,8 @@ public abstract class SpaceObject {
 	}
 	
 	// Mass
+	
+	private double mass; // in kg
 	
 	/**
 	 * Return the mass of this ship.
@@ -502,8 +502,6 @@ public abstract class SpaceObject {
 		this.mass = mass;
 	}
 	
-	private double mass;
-	
 	/**
 	 * Calculate the distance between two spaceObjects.
 	 * 
@@ -512,7 +510,7 @@ public abstract class SpaceObject {
 	 * @param 	spaceObject2
 	 * 			The second spaceObject to compare with the other spaceObject.
 	 * @return	The distance between the two spaceObjects.
-	 * 			| Util.fuzzyEquals( Vector.getModulus(( spaceObject1.getX() - spaceObject2.getX() ), ( spaceObject1.getY() - spaceObject2.getY() ))
+	 * 			| Util.fuzzyEquals( result, Vector.getModulus(( spaceObject1.getX() - spaceObject2.getX() ), ( spaceObject1.getY() - spaceObject2.getY() ))
 	 * 			|		-	( spaceObject1.getRadius() + spaceObject2.getRadius() ) )
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given spaceObjects is null.
@@ -534,14 +532,14 @@ public abstract class SpaceObject {
 	}
 	
 	/**
-	 * Return a boolean reflecting whether the given spaceObject overlaps with the current spaceObject.	
+	 * Return a boolean reflecting whether the given spaceObject overlaps with the other given spaceObject.	
 	 * 
 	 * @param 	spaceObject1
 	 * 			The first spaceObject to compare with the other spaceObject.
 	 * @param 	spaceObject2
 	 * 			The second spaceObject to compare with the other spaceObject.
 	 * @return	True if and only if the given spaceObject overlaps with the current spaceObject.
-	 * 			| result == (this.getDistanceBetween(spaceObject1,spaceObject2) <= 0)
+	 * 			| result == (this.getDistanceBetween(spaceObject1,spaceObject2) < 0)
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given spaceObjects is null.
 	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
@@ -550,9 +548,22 @@ public abstract class SpaceObject {
 	{
 		if((spaceObject1 == null) || (spaceObject2 == null))
 			throw new IllegalArgumentException();
-		return (getDistanceBetween(spaceObject1,spaceObject2) <= 0);
+		return (getDistanceBetween(spaceObject1,spaceObject2) < 0);
 	}	
 	
+	/**
+	 * Return a boolean reflecting whether this spaceObject overlaps with a spaceObject in a given world.
+	 * 
+	 * @param 	world
+	 * 			The world to check. 
+	 * @return 	True if and only if this object overlaps with one of the spaceObjects in the given world excluding the object itself.
+	 * 			| for each spaceObject in world.getSpaceObjects()
+	 * 			|	if(SpaceObject.overlap(spaceObject,this))
+	 * 			|		then result == true
+	 * @return	False if the given world is null.
+	 * 			| 	if(world == null)
+	 * 			|		then result == false
+	 */
 	public boolean overlapWithWorldObject(World world){
 		if(world == null)
 			return false;
@@ -565,16 +576,39 @@ public abstract class SpaceObject {
 		return false;
 	}
 	
+	// State
+	
+	/**
+	 * A enumeration class to describe the state of a SpaceObject.
+	 * The possibilities are CREATED, ACTIVE or TERMINATED
+	 * 
+	 * @author Julie Wouters & Stijn Wellens
+	 *
+	 */
 	protected enum State {
 		TERMINATED, CREATED, ACTIVE
 	};
 
 	private State state;
 
+	/**
+	 * Returns the state of this SpaceObject.
+	 * 
+	 * @return 	state
+	 * 			the state of the spaceObject
+	 */
 	public State getState() {
 		return this.state;
 	}
 	
+	/**
+	 * Checks whether the given state is valid or not.
+	 * 
+	 * @param 	state
+	 * 			The state to check.
+	 * @return	True if and only if the given state is not null.
+	 * 			| result == (state != null)
+	 */
 	public boolean isValidState(State state) {
 		if(state == null)
 			return false;
@@ -582,19 +616,35 @@ public abstract class SpaceObject {
 			return true;
 	}
 	
+	/**
+	 * Set the state of this SpaceObject to the given state. 
+	 * 
+	 * @param 	state
+	 * 			The state to set.
+	 * @post	The new state will be the given state.
+	 * 			| (new this).getState() == state
+	 * @throws 	IllegalArgumentException
+	 * 			Throws an exception when the given state is not valid.
+	 * 			| !isValidState(state)
+	 */
 	public void setState(State state) throws IllegalArgumentException {
 		if(!isValidState(state))
 			throw new IllegalArgumentException();
 		this.state = state;
 	}
 
+	
 	@Raw
 	public boolean canHaveAsWorld(World world){
 		if(world == null)
 			return true;
-		if((this.getX()+this.getRadius())> world.getWidth())
+		if(!Util.fuzzyLessThanOrEqualTo(this.getX()+this.getRadius(),world.getWidth()))
 			return false;
-		if((this.getY()+this.getRadius())> world.getHeight())
+		if(Util.fuzzyLessThanOrEqualTo(this.getX()-this.getRadius(),0) && !Util.fuzzyEquals(this.getX()-this.getRadius(), 0))
+			return false;
+		if(!Util.fuzzyLessThanOrEqualTo(this.getY()+this.getRadius(),world.getHeight()))
+			return false;
+		if(Util.fuzzyLessThanOrEqualTo(this.getY()-this.getRadius(),0) && !Util.fuzzyEquals(this.getY()-this.getRadius(), 0))
 			return false;
 		return true;
 	}
