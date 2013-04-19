@@ -53,6 +53,8 @@ public class Collision {
 		this.nmbOfCollisions = 0;
 	}
 	
+	// NumberOfCollisions
+	
 	private int nmbOfCollisions;
 	
 	/**
@@ -65,7 +67,7 @@ public class Collision {
 	public int getNmbOfCollisions()
 	{
 		return this.nmbOfCollisions;
-	}
+	} 
 	
 	/**
 	 * 
@@ -92,18 +94,41 @@ public class Collision {
 			throw new IllegalArgumentException();
 	}
 	
+	// Objects
+	
+	private SpaceObject spaceObject1;
+	private SpaceObject spaceObject2;
+	
+	/**
+	 * Returns the first spaceObject of this collision.
+	 * 
+	 * @return	...
+	 * 			| this.spaceObject1
+	 */
 	@Basic
 	public SpaceObject getObject1()
 	{
 		return this.spaceObject1;
 	}
 	
+	/**
+	 * Returns the second spaceObject of this collision. This is null if this collision is a collision with a worlds border.
+	 * 
+	 * @return	...
+	 * 			| this.spaceObject2
+	 */
 	@Basic
 	public SpaceObject getObject2()
 	{
 		return this.spaceObject2;
 	}
 	
+	/**
+	 * 
+	 * @param object
+	 * @return	...
+	 * 			| result == (object != null) && (object.getWorld() != null)
+	 */
 	public boolean isValidObject(SpaceObject object)
 	{
 		if((object == null) || (object.getWorld() ==  null))
@@ -111,6 +136,16 @@ public class Collision {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param object
+	 * @return	...
+	 * 			| result == ( (isValidObject(object1) && isValidObject(object2))
+	 * 			|		&&	(object1 != object2)
+	 * 			|		&&	object1.getWorld() == object2.getWorld()
+	 * 			|		&&	(!Bullet.class.isInstance(object1) || ((Bullet)object1).getShip()!= object2)
+	 * 			|		&&	(!Bullet.class.isInstance(object2) || ((Bullet)object2).getShip()!= object1) )
+	 */
 	public boolean areValidObjects(SpaceObject object1, SpaceObject object2)
 	{
 		if(!isValidObject(object1) || !isValidObject(object2))
@@ -126,6 +161,16 @@ public class Collision {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param 	object
+	 * @post	...
+	 * 			| (new this).getObject1() == object
+	 * @post	...	
+	 * 			| (new this).getObject2() == null
+	 * @throws 	IllegalArgumentException
+	 * 			| !isValidObject(object)
+	 */
 	public void setObject(SpaceObject object) throws IllegalArgumentException
 	{
 		if(!isValidObject(object))
@@ -134,6 +179,16 @@ public class Collision {
 		this.spaceObject2 = null;
 	}	
 	
+	/**
+	 * 
+	 * @param 	object
+	 * @post	...
+	 * 			| (new this).getObject1() == object1
+	 * @post	...	
+	 * 			| (new this).getObject2() == object2
+	 * @throws 	IllegalArgumentException
+	 * 			| !areValidObjects(object1, object2)
+	 */
 	public void setObjects(SpaceObject object1, SpaceObject object2) throws IllegalArgumentException
 	{
 		if(!areValidObjects(object1,object2))
@@ -142,6 +197,12 @@ public class Collision {
 		this.spaceObject2 = object2;
 	}
 	
+	/**
+	 * 	
+	 * @param 	object
+	 * @return	...
+	 * 			| result == (object == this.getObject1()) || (object == this.getObject2())
+	 */
 	public boolean contains(SpaceObject object)
 	{
 		if(object == this.getObject1())
@@ -151,10 +212,16 @@ public class Collision {
 		return false;
 	}
 	
-	private SpaceObject spaceObject1;
-	private SpaceObject spaceObject2;
-	
-	
+	/**
+	 * 
+	 * @return	...
+	 * 			| dtx == getTimeToCollisionWithAxis(getObject1().getX(), getObject1().getXVelocity(), width)
+	 * 			| dty == getTimeToCollisionWithAxis(getObject1().getY(), getObject1().getYVelocity(), height)
+	 * 			| if (dtx <= dty)
+	 * 			|		then result == dtx
+	 * 			| if (dty < dtx)
+	 * 			|		then result == dty
+	 */
 	public double getTimeToCollisionWithBorder()
 	{
 		double width = getObject1().getWorld().getWidth();
@@ -174,9 +241,15 @@ public class Collision {
 	 * @param position
 	 * @param velocity
 	 * @param axisMax
-	 * @return
+	 * @return	...
+	 * 			| if(result < Double.POSITIVE_INFINITY) then
+	 * 			|	for each time in 0.0..Double.MAX_VALUE:
+	 * 			|		if(time > result) then
+	 * 			|			!this.canHaveAsWorld(this.getWorld())
+	 * @return	...
+	 * 			| if(result == Double.POSITIVE_INFINITY) then
+	 * 			|	velocity == 0		
 	 */
-	//TODO
 	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMax)
 	{
 		
@@ -199,15 +272,23 @@ public class Collision {
 	 * 			The first spaceObject to compare with the other.
 	 * @param 	spaceObject2
 	 * 			The second spaceObject to compare with the other.
-	 * @return	Return when two spaceObjects will collide. Positive infinity if they never collide. For the specific calculation see the code.
-	 * 			| dt
+	 * @return	Return when two spaceObjects will collide. 
+	 * 			| if(result < Double.POSITIVE_INFINITY) then
+	 * 			|	if(spaceObject1.move(result) && spaceObject2.move(result))
+	 * 			|		then Util.fuzzyEquals(SpaceObject.getDistanceBetween(spaceObject1,spaceObject2),0)
+	 * @return  Return positive infinity if they never collide. 
+	 * 			| if(result == Double.POSITIVE_INFINITY) then
+	 * 			| 	for each time in 0.0..Double.POSITIVE_INFINITY
+	 * 			|		if(!Double.isInfinite(time)) then
+	 * 			|			if(spaceObject1.move(time) && spaceObject2.move(time))
+	 * 			|				then !Util.fuzzyEquals(SpaceObject.getDistanceBetween(spaceObject1,spaceObject2),0)
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given spaceObjects is null.
 	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
 	 *
 	 // infinity, time could not be negative
-	  * if(result == Double.POSITIVE_INFINITY) then
-	  * 	(this == other) 
+	 * if(result == Double.POSITIVE_INFINITY) then
+	 * 	(this == other) 
 	 * 
 	 */
 	public double getTimeToCollisionWithObject()
@@ -235,6 +316,14 @@ public class Collision {
 		return dt;
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| if(getObject2() == null)
+	 * 			|	then result == getTimeToCollisionWithBorder()
+	 * 			| else
+	 * 			|	then result == getTimeToCollisionWithObject()
+	 */
 	public double getTimeToCollision() 
 	{
 		if(getObject2() == null)
@@ -357,9 +446,18 @@ public class Collision {
 		
 		return collision;
 	}
+	
+	/**
+	 * 
+	 * @return	...
+	 * 			| if(getObject2() == null)
+	 * 			|	then result == getCollisionPositionWithBorder()
+	 * 			| else
+	 * 			|	then result == getCollisionPositionWithObject()
+	 */
 	public double[] getCollisionPosition() 
 	{
-		if(getObject2() == null && getObject1() != null)
+		if(getObject2() == null)
 		{
 			return this.getCollisionPositionWithBorder();
 		}
@@ -399,7 +497,7 @@ public class Collision {
 	{
 		this.nmbOfCollisions ++;
 		
-		if(getObject2()== null  && getObject1() != null)
+		if(getObject2()== null )
 		{
 			if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
 			{
