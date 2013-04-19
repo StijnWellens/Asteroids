@@ -121,17 +121,42 @@ public class Asteroid extends SpaceObject {
 	// Random
 	
 	private Random random;
-		
+	
+	/**
+	 * Returns the randomGenerator of this Asteroid.
+	 * 
+	 * @return	the randomGenerator of this Asteroid
+	 * 			| this.random
+	 */
 	public Random getRandom()
 	{
 		return this.random;
 	}
 	
+	/**
+	 * Checks whether a given RandomGenerator is valid.
+	 * 
+	 * @param 	random
+	 * 			the randomGenerator to check
+	 * @return	True if and only if random isn't null.
+	 * 			| result == (random!=null)
+	 */
 	public boolean isValidRandom(Random random)
 	{
 		return (random != null);
 	}
 	
+	/**
+	 * Sets the randomGenerator of this asteroid to the given randomGenerator.
+	 * 
+	 * @param 	random
+	 * 			the new randomGenerator for this Asteroid
+	 * @post	The new randomGenerator of this Asteroid will be the given randomGenerator.
+	 * 			| (new this).getRandom() == random
+	 * @throws 	IllegalArgumentException
+	 * 			Throws an exception when the given randomGenerator isn't valid.
+	 * 			| !isValidRandom(random)
+	 */
 	public void setRandom(Random random)throws IllegalArgumentException
 	{
 		if(!isValidRandom(random))
@@ -139,12 +164,27 @@ public class Asteroid extends SpaceObject {
 		this.random = random;
 	}
 	
+	/**
+	 * Checks whether this Asteroid can have a given world as its world.
+	 * 
+	 * @param 	world
+	 * 			The world to check.
+	 * @return	Returns true if and only if this Asteroid as a SpaceObject can have this world
+	 * 			and if this Asteroid doesn't overlap with another object in this world.
+	 * 			| result ==  (super.canHaveAsWorld(world)) 
+	 * 			|				&& (!this.overlapWithWorldObject(world))
+	 * 
+	 */
 	@Override
 	public boolean canHaveAsWorld(World world){
 		return (super.canHaveAsWorld(world))&& 
 				(!this.overlapWithWorldObject(world));	
 	}
 	
+
+	/**
+	 * 
+	 */
 	@Override
 	public void die(World world){
 		super.die(world);
