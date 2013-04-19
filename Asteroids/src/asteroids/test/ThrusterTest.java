@@ -12,10 +12,10 @@ public class ThrusterTest {
 	@Test
 	public void testGenerateAcceleration(){
 		Thruster thruster = new Thruster(true, 1.1E18);
-		Vector acceleration = thruster.generateAcceleration((3*(Math.PI)/2), 1, 10);
+		Vector acceleration = thruster.generateAcceleration((3*(Math.PI)/2), 1);
 				
 		assertEquals(0,acceleration.getXComp(),Util.EPSILON);
-		assertEquals((-1.1E19),acceleration.getYComp(),Util.EPSILON);
+		assertEquals((-1.1E18),acceleration.getYComp(),Util.EPSILON);
 	}
 	
 

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import asteroids.Util;
 import asteroids.model.*;
+import asteroids.model.SpaceObject.State;
 
 public class ShipTest { 
 
@@ -43,6 +44,13 @@ public class ShipTest {
 	 }
 	
 	@Test
+	  public void testGetPosition() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI,10);
+	    assertEquals(100,ship.getPosition().getXComp(), Util.EPSILON);
+	    assertEquals(200,ship.getPosition().getYComp(), Util.EPSILON);
+	}
+	
+	@Test
 	  public void testSetCoordinate() {
 	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI,10);
 	    ship.setPosition(150,150);
@@ -69,6 +77,13 @@ public class ShipTest {
 	    assertEquals(-10,ship.getYVelocity(), Util.EPSILON);
 	}
 	
+	@Test
+	  public void testGetVelocityVector() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI,10);
+	    assertEquals(10,ship.getVelocity().getXComp(), Util.EPSILON);
+	    assertEquals(-10,ship.getVelocity().getYComp(), Util.EPSILON);
+	}
+		
 	@Test
 	  public void testGetVelocity_IllegalCase() {
 	    Ship ship = new Ship(100, 200, Double.NaN, Double.NaN, 20, -Math.PI,10);
@@ -113,6 +128,12 @@ public class ShipTest {
 	}
 	
 	@Test
+	public void testIsValidVelocityComponent_Infinity(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidVelocityComp(Double.POSITIVE_INFINITY));
+	}
+	
+	@Test
 	  public void testGetMaxVelocity() {
 	    Ship ship = new Ship();
 	    assertEquals(Ship.LIGHTSPEED,ship.getMaxVelocity(), Util.EPSILON);
@@ -154,6 +175,31 @@ public class ShipTest {
 	public void testIsValidMaxVelocity_ExceedsLightspeed(){
 		Ship ship = new Ship();
 		assertFalse(ship.isValidMaxVelocity(Ship.LIGHTSPEED + 20000));
+	}
+	
+	@Test
+	  public void testSetVelocity_ExceedsMaxV() {
+	    Ship ship = new Ship();
+	    ship.setVelocity(600000, 200000);
+	    assertEquals((ship.getMaxVelocity()/Math.sqrt(6E6*6E6+2E6*2E6))*6E6,ship.getXVelocity(), Util.EPSILON);
+	    assertEquals((ship.getMaxVelocity()/Math.sqrt(6E6*6E6+2E6*2E6))*2E6,ship.getYVelocity(), Util.EPSILON);
+	 }
+	
+	@Test
+	  public void testSetVelocity_NotValid() {
+	    Ship ship = new Ship();
+	    ship.setVelocity(Double.NaN, 20);
+	    assertEquals(0,ship.getXVelocity(), Util.EPSILON);
+	    assertEquals(0,ship.getYVelocity(), Util.EPSILON);
+	 }
+	
+	@Test
+	  public void testSetVelocity() {
+	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI,10);
+	    Vector velocity = new Vector(20,20);
+	    ship.setVelocity(velocity);
+	    assertEquals(20,ship.getXVelocity(), Util.EPSILON);
+	    assertEquals(20,ship.getYVelocity(), Util.EPSILON);
 	}
 	
 	@Test
@@ -419,7 +465,62 @@ public class ShipTest {
 		assertFalse(Ship.overlap(ship1, ship2));
 	}
 	
+	@Test
+	public void testOverlapWithWorldObject(){
+		Ship ship1 = new Ship(20,20,0,0,11,3.14/2,10);
+		World world = new World(100,100);
+		ship1.flyIntoWorld(world);
+		Ship ship2 = new Ship(30,30,0,0,11,3.14/2,10);
+		assertTrue(ship2.overlapWithWorldObject(world));
+	}
 	
+	@Test 
+	public void testOverlapWithWorldObject_WorldIsNull(){
+		World world = null;
+		Ship ship2 = new Ship(30,30,0,0,11,3.14/2,10);
+		assertFalse(ship2.overlapWithWorldObject(world));
+	}
+	
+	@Test 
+	public void testOverlapWithWorldObject_Itself(){
+		Ship ship1 = new Ship(20,20,0,0,11,3.14/2,10);
+		World world = new World(100,100);
+		ship1.flyIntoWorld(world);
+		assertFalse(ship1.overlapWithWorldObject(world));
+	}
+	
+	@Test
+	public void testOverlapWithWorldObject_Bullet(){
+		SpaceObject bullet = new Bullet(20,20,0,0);
+		World world = new World(100,100);
+		bullet.flyIntoWorld(world);
+		SpaceObject ship2 = new Ship(30,30,0,0,11,3.14/2,10);
+		assertFalse(ship2.overlapWithWorldObject(world));
+	}
+	
+	@Test
+	public void testGetState(){
+		Ship ship = new Ship();
+		assertEquals(State.CREATED, ship.getState());	
+	}
+	
+	@Test
+	public void testIsValidState(){
+		Ship ship = new Ship();
+		assertTrue(ship.isValidState(State.ACTIVE));	
+	}
+	
+	@Test
+	public void testIsValidState_IllegalCase(){
+		Ship ship = new Ship();
+		assertFalse(ship.isValidState(null));
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetState_IllegalCase(){
+		Ship ship = new Ship();
+		ship.setState(null);
+	}
 	
 	@Test
 	public void testGetWorld(){
@@ -429,15 +530,14 @@ public class ShipTest {
 	
 	@Test
 	public void testCanHaveAsWorld(){
-		Ship ship1 = new Ship(20, 0, 0, 20, 11, 0,10);
-		Bullet bullet = new Bullet(20, 0, 0, 20);
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		Bullet bullet = new Bullet(20, 20, 0, 20);
 		Ship ship2 = new Ship(80, 80, 0, 20, 11, 0, 10);
 		World world = new World(100,100);
 		bullet.flyIntoWorld(world);
 		ship2.flyIntoWorld(world);
 		assertTrue(ship1.canHaveAsWorld(world));	
 	}
-	
 	
 	@Test
 	public void testCanHaveAsWorld_OutBorderX(){
@@ -447,8 +547,22 @@ public class ShipTest {
 	}
 	
 	@Test
+	public void testCanHaveAsWorld_OutBorderX2(){
+		Ship ship = new Ship(-10, 0, 0, 20, 11, 0,10);
+		World world = new World(50,50);
+		assertFalse(ship.canHaveAsWorld(world));	
+	}
+	
+	@Test
 	public void testCanHaveAsWorld_OutBorderY(){
 		Ship ship = new Ship(20, 60, 0, 20, 11, 0,10);
+		World world = new World(50,50);
+		assertFalse(ship.canHaveAsWorld(world));	
+	}
+	
+	@Test
+	public void testCanHaveAsWorld_OutBorderY2(){
+		Ship ship = new Ship(30, -10, 0, 20, 11, 0,10);
 		World world = new World(50,50);
 		assertFalse(ship.canHaveAsWorld(world));	
 	}
@@ -463,12 +577,55 @@ public class ShipTest {
 	}
 	
 	@Test
+	public void testCanHaveAsWorld_WorldIsNull(){
+		Ship ship1 = new Ship(20, 40, 0, 20, 11, 0, 10);
+		World world = null;
+		assertTrue(ship1.canHaveAsWorld(world));	
+	}
+	
+	@Test
+	public void testHasProperWorld(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		Bullet bullet = new Bullet(20, 20, 0, 20);
+		Ship ship2 = new Ship(80, 80, 0, 20, 11, 0, 10);
+		World world = new World(100,100);
+		bullet.flyIntoWorld(world);
+		ship2.flyIntoWorld(world);
+		ship1.flyIntoWorld(world);
+		assertTrue(ship1.hasProperWorld());	
+	}
+	
+	@Test
+	public void testHasProperWorld_WorldIsNull(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		assertTrue(ship1.hasProperWorld());	
+	}
+	
+	@Test
+	public void testHasProperWorld_NotInWorld(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world = new World(100,100);
+		ship1.flyIntoWorld(world);
+		world.removeSpaceObject(ship1);
+		assertFalse(ship1.hasProperWorld());	
+	}
+	
+	@Test
+	public void testHasProperWorld_CantHaveAsWorld(){
+		Ship ship = new Ship(30, 30, 0, 20, 11, 0,10);
+		World world = new World(50,50);
+		ship.flyIntoWorld(world);
+		ship.setPosition(-10, 20);
+		assertFalse(ship.hasProperWorld());	
+	}
+	
+	@Test
 	public void testThrust(){
-		Ship ship = new Ship(0, 0, 10, 20, 10, -(Math.PI)/2, 1);
+		Ship ship = new Ship(0, 0, 10, 20, 10, (3*Math.PI)/2, 1);
 		ship.getThruster().setEnabled(true);
-		ship.thrust(10);
+		ship.thrust(1E-14);
 		assertEquals(10,ship.getXVelocity(),Util.EPSILON);
-		assertEquals(20*(-1.1E20),ship.getYVelocity(),Util.EPSILON);
+		assertEquals(20+(-1.1E4),ship.getYVelocity(),Util.EPSILON);
 	}
 	
 	@Test
@@ -489,18 +646,5 @@ public class ShipTest {
 		assertEquals(0,ship.getYVelocity(),Util.EPSILON);
 	}
 	
-	@Test
-	public void testThrust_ExceedsLightspeed(){
-		Ship ship = new Ship();
-		ship.setDirection(3.14/4);
-		ship.thrust(Ship.LIGHTSPEED);
-		double tempVx =Ship.LIGHTSPEED * Math.cos(3.14/4);
-		double tempVy =Ship.LIGHTSPEED * Math.sin(3.14/4);
-		double tempAmount = (ship.getMaxVelocity())
-				/ Math.sqrt(tempVx * tempVx + tempVy * tempVy);
-		assertEquals(tempVx*tempAmount,ship.getXVelocity(),Util.EPSILON);		
-		assertEquals(tempVy*tempAmount,ship.getYVelocity(),Util.EPSILON);	
-	}
 	
-
 }

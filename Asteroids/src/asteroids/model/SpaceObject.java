@@ -586,7 +586,7 @@ public abstract class SpaceObject {
 	 *
 	 */
 	@Value
-	protected enum State {
+	public enum State {
 		TERMINATED, CREATED, ACTIVE
 	};
 
@@ -734,7 +734,7 @@ public abstract class SpaceObject {
 	{
 		if((this.getState() != State.CREATED) || (this.getWorld()!= null))
 			throw new IllegalStateException();
-		if(world == null || !this.canHaveAsWorld(world) )
+		if(world == null || !(this.canHaveAsWorld(world)) )
 			throw new IllegalArgumentException();
 		
 		this.setWorld(world);
