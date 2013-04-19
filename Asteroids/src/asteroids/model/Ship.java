@@ -47,7 +47,7 @@ public class Ship extends SpaceObject{
 	 * 			| setMass(mass)
 	 * @effect	The thruster of this new ship will be set to a thruster 
 	 * 			which is not enabled and has a powerOutput of 1.1E18 kiloNewton.
-	 * 			| setThruster(false, 1.1E18)
+	 * 			| setThruster(false, 1.1E21)
 	 */
 	public Ship() throws IllegalArgumentException {
 		super();
@@ -83,14 +83,14 @@ public class Ship extends SpaceObject{
 	 * 			| setMass(mass)
 	 * @effect	The thruster of this new ship will be set to a thruster 
 	 * 			which is not enabled and has a powerOutput of 1.1E18 kiloNewton.
-	 * 			| setThruster(false, 1.1E18)
+	 * 			| setThruster(false, 1.1E21)
 	 */
 	public Ship(double x, double y, double xVelocity, double yVelocity,
 			double radius, double angle, double mass) throws IllegalArgumentException {
 		super(x, y , xVelocity, yVelocity,radius);
 		setDirection(makeAngleValid(angle));
 		setMass(mass);
-		setThruster(false, 1.1E18);
+		setThruster(false, 1.1E21);
 	}
 	
 	// direction: nominal programming
