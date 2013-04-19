@@ -41,14 +41,14 @@ public class Collision {
 		return this.spaceObject2;
 	}
 	
-	public static boolean isValidObject(SpaceObject object)
+	public boolean isValidObject(SpaceObject object)
 	{
 		if((object == null) || (object.getWorld() ==  null))
 			return false;
 		return true;
 	}
 	
-	public static boolean areValidObjects(SpaceObject object1, SpaceObject object2)
+	public boolean areValidObjects(SpaceObject object1, SpaceObject object2)
 	{
 		if(!isValidObject(object1) || !isValidObject(object2))
 			return false;
@@ -68,6 +68,7 @@ public class Collision {
 		if(!isValidObject(object))
 			throw new IllegalArgumentException();
 		this.spaceObject1 = object;
+		this.spaceObject2 = null;
 	}	
 	
 	public void setObjects(SpaceObject object1, SpaceObject object2) throws IllegalArgumentException
@@ -192,7 +193,7 @@ public class Collision {
 	 */
 	public double[] getCollisionPosition() 
 	{
-		if(getObject2() == null)
+		if(getObject2() == null && getObject1() != null)
 		{
 			double[] collision = new double[2];
 			
@@ -309,7 +310,7 @@ public class Collision {
 	{
 		this.nmbOfCollisions ++;
 		
-		if(getObject2()== null)
+		if(getObject2()== null  && getObject1() != null)
 		{
 			if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
 			{

@@ -355,10 +355,10 @@ public class World {
 	 * 			|		 Collision collisionWithBorder = new Collision(spaceObject)
 	 * 			| 	 		collisions.add(collisionWithBorder)
 	 * 			|			 for each object in this.getSpaceObjects():
-	 * 			|				if(Collision.areValidObjects(spaceObject, object))
-	 * 			|				 then (Collision collision = new Collision(spaceObject, object)
-				|						collisions.add(collision))
-				|						this.setPossibleCollisions(collisions)
+	 * 			|				(Collision collision = new Collision(spaceObject, object)
+	 * 			|							with collision.areValidObjects(spaceObject,object) == true
+	 *			|						collisions.add(collision))
+	 *			|						this.setPossibleCollisions(collisions)
 	 * @throws	IllegalArgumentException
 	 * 			| spaceObject == null
 	 */
@@ -375,17 +375,23 @@ public class World {
 		
 		List<SpaceObject> objects = new ArrayList<SpaceObject>(this.getSpaceObjects());
 		
-		Collision collisionWithBorder = new Collision(spaceObject);
-		collisions.add(collisionWithBorder);
-		
+		try{
+			Collision collisionWithBorder = new Collision(spaceObject);
+			collisions.add(collisionWithBorder);
+		}
+		catch(IllegalArgumentException iae) {}
+				
 		for(int i = 0; i < objects.size(); i++)
 		{
-			if(Collision.areValidObjects(spaceObject, objects.get(i)))
+			
+			try
 			{
 				Collision collision = new Collision(spaceObject, objects.get(i));
 				collisions.add(collision);
-			}			
-					
+			}
+			catch(IllegalArgumentException iae) // !collision.areValidObjects(spaceObject, objects.get(i))
+			{}
+				
 		}		
 		
 		this.setPossibleCollisions(collisions);
@@ -522,8 +528,8 @@ public class World {
 		     {
 		           advanceObjects(tc);
 		     }
-		     firstCollision.execute();
-		     if(collisionListener != null){
+		     
+			if(collisionListener != null){
 		    	 if(firstCollision.getObject2()==null){
 		    		 collisionListener.boundaryCollision(firstCollision.getObject1(), 
 		    				 firstCollision.getCollisionPosition()[0],
@@ -536,6 +542,9 @@ public class World {
 		    				 		firstCollision.getCollisionPosition()[1]);
 		    	 }
 		     }
+			
+			 firstCollision.execute();
+		     
 		    	 
 		}		
 		
