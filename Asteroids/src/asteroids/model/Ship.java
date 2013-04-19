@@ -53,7 +53,7 @@ public class Ship extends SpaceObject{
 		super();
 		setDirection(PI / 2);
 		setMass(1);
-		setThruster(false, 1.1E18);
+		setThruster(false, 1.1E21);
 	}
 	
 	/**
