@@ -23,7 +23,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidRadius(getRadius())
  * @invar	The mass of the spaceObject must always be a valid mass.
  * 			| isValidMass(getMass())
- * @invar	Each spaceObject must have a proper world.
+ * @invar	This spaceObject must always have a proper world.
  * 			| hasProperWorld()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 

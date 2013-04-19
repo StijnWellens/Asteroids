@@ -25,7 +25,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidMass(getMass())
  * @invar	The thruster of the ship must always be a valid thruster.
  * 			| isValidThruster(getThruster())
- * @invar	Each ship must have a proper world.
+ * @invar	This ship must always have a proper world.
  * 			| hasProperWorld()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
@@ -43,7 +43,7 @@ public class Ship extends SpaceObject{
 	 * 			| super()
 	 * @effect	The direction of this Ship is set to PI/2.
 	 * 			| setDirection(PI/2)
-	 *  @effect	The mass of this new ship will be set to 1 kg.
+	 * @effect	The mass of this new ship will be set to 1 kg.
 	 * 			| setMass(mass)
 	 * @effect	The thruster of this new ship will be set to a thruster 
 	 * 			which is not enabled and has a powerOutput of 1.1E18 kiloNewton.
@@ -78,7 +78,7 @@ public class Ship extends SpaceObject{
 	 * 			the given x and y velocity components and the given radius.
 	 * 			| super(x, y, xVelocity, yVelocity, radius)
 	 * @effect	The direction of this new ship will be set to valid multiple of the given angle.
-	 * 			| setDirection(makeAngleValdi(angle))
+	 * 			| setDirection(makeAngleValid(angle))
 	 * @effect	The mass of this new ship will be set to the given mass.
 	 * 			| setMass(mass)
 	 * @effect	The thruster of this new ship will be set to a thruster 
