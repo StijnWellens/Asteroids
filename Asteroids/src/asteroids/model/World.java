@@ -2,7 +2,7 @@ package asteroids.model;
 
 
 import java.util.*;
-
+import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -15,6 +15,9 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar 	The upper bound coordinate of the world must always be a 
  * 			valid upper bound coordinate.
  *        	| isValidUpperBoundCoordinate(getUpperBoundCoordinate())
+ * @invar   The upper bound coordinate of the world must always be a 
+ *       	valid upper bound coordinate.
+ *          | isValidUpperBoundCoordinate(getUpperBoundCoordinate())
  * @author 	Julie Wouters & Stijn Wellens
  */
 
@@ -177,6 +180,13 @@ public class World {
 		return new HashSet<SpaceObject>(this.spaceObjects);
 	}
 	
+	/**
+	 * 
+	 * @param 	objects
+	 * 
+	 * @post	...
+	 * 			| (new this).getSpaceObjects() == objects
+	 */
 	public void setSpaceObjects(Set<SpaceObject> objects)
 	{
 		this.spaceObjects = new HashSet<SpaceObject>(objects);
@@ -184,22 +194,11 @@ public class World {
 	
 	/**
 	 * 
-	 * @param spaceObjectClass
 	 * @return	...
-	 * 			| result == (setSpaceObjects == new HashSet<SpaceObject>())
-	 * 				&& for each spaceObject in setSpaceObjects: spaceObjectClass.isInstance(spaceObject)
+	 * 			| result == (setShips == new HashSet<Ship>())
+	 * 			|	&& for each spaceObject in setShips: 
+	 * 			|		Ship.Class.isInstance(spaceObject)
 	 */
-	/*public Set<? extends SpaceObject> getSpaceObjects(Class<?> spaceObjectClass)
-	{
-		Set<SpaceObject> setSpaceObjects = new HashSet<>();
-		for(SpaceObject spaceObject: getSpaceObjects())
-		{
-			if(spaceObjectClass.isInstance(spaceObject))
-				setSpaceObjects.add(spaceObject);
-		}
-		return setSpaceObjects;
-	}*/
-	
 	public Set<Ship> getShips() 
 	{
 		Set<Ship> setShips = new HashSet<Ship>();
@@ -211,6 +210,13 @@ public class World {
 		return setShips;
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| result == (setAsteroids == new HashSet<Asteroid>())
+	 * 			|	&& for each spaceObject in setAsteroids: 
+	 * 			|		Asteroid.Class.isInstance(spaceObject)
+	 */
 	public Set<Asteroid> getAsteroids() 
 	{
 		Set<Asteroid> setAsteroids = new HashSet<Asteroid>();
@@ -222,6 +228,13 @@ public class World {
 		return setAsteroids;
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| result == (setBullets == new HashSet<Bullet>())
+	 * 			|	&& for each spaceObject in setBullets: 
+	 * 			|		Bullet.Class.isInstance(spaceObject)
+	 */
 	public Set<Bullet> getBullets() 
 	{
 		Set<Bullet> setBullets = new HashSet<Bullet>();
@@ -242,14 +255,12 @@ public class World {
 	 * @pre		...
 	 * 			| (spaceObject != null) && (spaceObject.getWorld()==this) && this.containsSpaceObject(spaceObject)
 	 * @effect	...
-	 * 			| (new this).getPossibleCollisions() == 
-	 * @throws 	IllegalArgumentException
-	 * 			...
-	 * 			| (spaceObject != null) && (spaceObject.getWorld()==this) && this.containsSpaceObject(spaceObject)
+	 * 			| this.removeCollisions(spaceObject)
+	 * @effect	...
+	 * 			| (new this).getSpaceObjects() == this.getSpaceObjects().remove(spaceObject)
 	 */
-		// TODO
 	@Raw
-	public void removeSpaceObject(SpaceObject spaceObject) throws IllegalArgumentException{
+	public void removeSpaceObject(SpaceObject spaceObject) {
 		assert (spaceObject != null) && (spaceObject.getWorld() == this) && containsSpaceObject(spaceObject);
 		
 		Set<SpaceObject> objects = this.getSpaceObjects();
@@ -259,6 +270,14 @@ public class World {
 		
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| result ==
+	 * 			|	for each spaceObject in getSpaceObjects():
+	 * 			|		( spaceObject.canHaveAsWorld(this) 
+	 * 			|			&& spaceObject.getWorld()==this)
+	 */
 	public boolean hasProperSpaceObjects()
 	{
 		for(SpaceObject spaceObject: getSpaceObjects())
@@ -275,6 +294,11 @@ public class World {
 	
 	private ArrayList<Collision> possibleCollisions;
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| this.possibleCollisions
+	 */
 	@Basic
 	public ArrayList<Collision> getPossibleCollisions()
 	{
@@ -283,6 +307,15 @@ public class World {
 		return new ArrayList<Collision>(possibleCollisions);
 	}
 	
+	/**
+	 * 
+	 * @param 	collisions
+	 * @post	...
+	 * 			| if(collisions == null) 
+	 * 			|	then( (new this).possibleCollisions == new ArrayList<Collision>())
+	 * @post	...
+	 * 			| (new this).possibleCollisions == collisions	
+	 */
 	public void setPossibleCollisions(List<Collision> collisions)
 	{
 		if(collisions == null)
@@ -395,8 +428,11 @@ public class World {
 		
 		if(tc < dt)
 		{
-			advanceObjects(tc);
-			firstCollision.execute();
+			if(!Util.fuzzyLessThanOrEqualTo(tc,0) || Util.fuzzyEquals(tc,0))
+		     {
+		           advanceObjects(tc);
+		     }
+		     firstCollision.execute();
 		}		
 		
 		return tc;
