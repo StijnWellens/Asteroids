@@ -262,16 +262,16 @@ public class WorldTest {
 	 @Test
 	 public void testAdvanceObjects(){
 		 World world = new World(1000,1000);
-		 SpaceObject ship = new Ship(60,60,0,20,5,Math.PI/2,5);
-		 SpaceObject asteroid = new Asteroid(10, 10, 0,20,5);
+		 SpaceObject ship = new Ship(10,10,10,20,10,(3*Math.PI)/2,1);
+		 SpaceObject asteroid = new Asteroid(30, 30, 0,20,5);
 		 ship.flyIntoWorld(world);
 		 asteroid.flyIntoWorld(world);
 		 ((Ship) ship).getThruster().setEnabled(true);
-		 world.advanceObjects(1E-18);
-		 assertEquals(1E-18*20+10,asteroid.getY(),Util.EPSILON);
-		 assertEquals(1E-18*20+60,ship.getY(),Util.EPSILON);
-		 assertEquals(0,ship.getXVelocity(),Util.EPSILON);
-		 assertEquals(20+(1E-18)*(2.2E20*Math.sin(Math.PI/2)),ship.getYVelocity(),Util.EPSILON);
+		 world.advanceObjects(1E-14);
+		 assertEquals(1E-14*20+30,asteroid.getY(),Util.EPSILON);
+		 assertEquals(1E-14*10+10,ship.getX(),Util.EPSILON);
+		 assertEquals(1E-14*20+10,ship.getY(),Util.EPSILON);
+		 assertEquals(20+(-1.1E4),ship.getYVelocity(),Util.EPSILON);
 	 }
 	 
 	 @Test
