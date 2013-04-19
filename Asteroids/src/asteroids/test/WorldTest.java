@@ -7,7 +7,9 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import asteroids.CollisionListener;
 import asteroids.Util;
+import asteroids.WorldView;
 import asteroids.model.*;
 
 public class WorldTest {
@@ -127,7 +129,7 @@ public class WorldTest {
 	 @Test
 	 public void testContainsSpaceObject(){
 		 World world = new World();
-		 SpaceObject ship = new Ship();
+		 SpaceObject ship = new Ship(20, 20, 0, 20, 11, 0, 5);
 		 ship.flyIntoWorld(world);
 		 assertTrue(world.containsSpaceObject(ship));
 	 }
@@ -156,7 +158,7 @@ public class WorldTest {
 	 @Test
 	 public void testRemoveSpaceObject(){
 		 World world = new World();
-		 SpaceObject ship = new Ship();
+		 SpaceObject ship = new Ship(20, 20, 0, 20, 11, 0, 5);
 		 ship.flyIntoWorld(world);
 		 ship.die(world);
 		 assertFalse(world.getSpaceObjects().contains(ship));
@@ -247,14 +249,28 @@ public class WorldTest {
 	 @Test
 	 public void testAdvanceObjects(){
 		 World world = new World(1000,1000);
-		 SpaceObject ship = new Ship(60,60,0,20,5,0,5);
+		 SpaceObject ship = new Ship(60,60,0,20,5,Math.PI/2,5);
 		 SpaceObject asteroid = new Asteroid(10, 10, 0,20,5);
 		 ship.flyIntoWorld(world);
 		 asteroid.flyIntoWorld(world);
 		 ((Ship) ship).getThruster().setEnabled(true);
-		 world.advanceObjects(20);
-		 assertEquals(20*20+10,asteroid.getY(),Util.EPSILON);
-		 assertEquals(20*20+60,ship.getY(),Util.EPSILON);
-		 assertEquals(20,ship.getYVelocity(),Util.EPSILON);
+		 world.advanceObjects(1E-18);
+		 assertEquals(1E-18*20+10,asteroid.getY(),Util.EPSILON);
+		 assertEquals(1E-18*20+60,ship.getY(),Util.EPSILON);
+		 assertEquals(0,ship.getXVelocity(),Util.EPSILON);
+		 assertEquals(20+(1E-18)*(2.2E20*Math.sin(Math.PI/2)),ship.getYVelocity(),Util.EPSILON);
+	 }
+	 
+	 @Test
+	 public void testEvolve(){
+		 World world = new World();
+		 SpaceObject ship = new Ship(60,60,0,10,5,Math.PI/2,5);
+		 SpaceObject asteroid1 = new Asteroid(10, 10, 10,0,2);
+		 SpaceObject asteroid2 = new Asteroid(20, 10, 0,0, 2);
+		 asteroid2.flyIntoWorld(world);
+		 asteroid1.flyIntoWorld(world);
+		 ship.flyIntoWorld(world);
+		 world.evolve(7E-1, null);
+		 assertEquals(16,asteroid1.getX(),Util.EPSILON);
 	 }
 }
