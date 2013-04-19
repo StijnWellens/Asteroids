@@ -2,6 +2,8 @@ package asteroids.model;
 
 
 import java.util.*;
+
+import asteroids.CollisionListener;
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -15,20 +17,39 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar 	The upper bound coordinate of the world must always be a 
  * 			valid upper bound coordinate.
  *        	| isValidUpperBoundCoordinate(getUpperBoundCoordinate())
- * @invar   The upper bound coordinate of the world must always be a 
- *       	valid upper bound coordinate.
- *          | isValidUpperBoundCoordinate(getUpperBoundCoordinate())
+ * @invar   The space objects attached to each world must be proper
+ * 			space objects for that world.
+ * 			| hasProperSpaceObjects()
  * @author 	Julie Wouters & Stijn Wellens
  */
 
 public class World {
 	
+	/**
+	 * @post	...
+	 * 			| (new this).getHeight = 100
+	 * @post	...
+	 * 			| (new this).getWidth = 100
+	 */
 	public World() {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
 		this.height = 100;
 		this.width = 100;		
 	}
 	
+	/**
+	 * 
+	 * @param 	width
+	 * @param 	height
+	 * @throws 	IllegalArgumentException
+	 * 			| !isValidHeight(height)
+	 * @throws	IllegalArgumentException
+	 * 			| !isValidWidth(width)
+	 * @post	...
+	 * 			| (new this).getHeight = height
+	 * @post	...
+	 * 			| (new this).getWidth = width
+	 */
 	public World(double width, double height) throws IllegalArgumentException {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
 		
@@ -312,7 +333,7 @@ public class World {
 	 * @param 	collisions
 	 * @post	...
 	 * 			| if(collisions == null) 
-	 * 			|	then( (new this).possibleCollisions == new ArrayList<Collision>())
+	 * 			|   then( (new this).possibleCollisions == new ArrayList<Collision>())
 	 * @post	...
 	 * 			| (new this).possibleCollisions == collisions	
 	 */
@@ -324,7 +345,24 @@ public class World {
 			this.possibleCollisions = new ArrayList<Collision>(collisions);
 	}
 	
-	public void addCollisions(SpaceObject spaceObject)
+	/**
+	 * 
+	 * @param 	spaceObject
+	 * @effect	...
+	 * 			| if( this.getPossibleCollisions == null )
+	 * 				then ( List<Collision> collisions = new ArrayList<Collision>())
+	 * 			| 		else (List<Collision> collisions = new ArrayList<Collision>(this.getPossibleCollisions()))
+	 * 			|		 Collision collisionWithBorder = new Collision(spaceObject)
+	 * 			| 	 		collisions.add(collisionWithBorder)
+	 * 			|			 for each object in this.getSpaceObjects():
+	 * 			|				if(Collision.areValidObjects(spaceObject, object))
+	 * 			|				 then (Collision collision = new Collision(spaceObject, object)
+				|						collisions.add(collision))
+				|						this.setPossibleCollisions(collisions)
+	 * @throws	IllegalArgumentException
+	 * 			| spaceObject == null
+	 */
+	public void addCollisions(SpaceObject spaceObject) throws IllegalArgumentException
 	{
 		if(spaceObject == null)
 			throw new IllegalArgumentException();
@@ -353,6 +391,13 @@ public class World {
 		this.setPossibleCollisions(collisions);
 	}
 	
+	/**
+	 * 
+	 * @param 	spaceObject
+	 * @post	...
+	 * 			| for each collision in (new this).getPossibleCollisions():
+	 * 			|	!collision.contains(spaceObject)
+	 */
 	public void removeCollisions(SpaceObject spaceObject)
 	{
 		List<Collision> collisions;
@@ -373,6 +418,12 @@ public class World {
 		this.setPossibleCollisions(collisions);
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| for each collision in this.getPossibleCollisions():
+	 * 			|	collision.getTimeToCollision() >= result.getTimeToCollision()
+	 */
 	public Collision getFirstCollision()
 	{
 		List<Collision> collisions = this.getPossibleCollisions();
@@ -394,6 +445,16 @@ public class World {
 		
 	}
 	
+	/**
+	 * 
+	 * @param 	time
+	 * @effect	...
+	 * 			| for each spaceObject in this.getSpaceObjects():
+	 * 			|	if( spaceObject != null)
+	 * 			|	 then ( spaceObject.move(time)
+	 * 			|				if(Ship.class.isInstance(spaceObject))
+	 * 			|					then ( ((Ship)spaceObject).thrust(time)))
+	 */
 	public void advanceObjects(double time) throws IllegalArgumentException
 	{
 		for(SpaceObject spaceObject: this.getSpaceObjects())
@@ -409,7 +470,36 @@ public class World {
 		}
 	}
 	
-	public double evolveBeforeCollision(double dt) throws IllegalArgumentException
+	/**
+	 * 
+	 * @param 	dt
+	 * @param	collisionListener
+	 * @return	...
+	 * 			| if( result == Double.POSITIVE_INFINITY )
+	 * 			|	then ( this.getFirstCollision() == null)
+	 * @return	...
+	 * 			| if ( result != Double.POSITIVE_INFINITY )
+	 * 			|	then (result == this.getFirstCollision().getTimeToCollision() )
+	 * @effect	...
+	 * 			| if( this.getFirstCollision() != null)
+	 * 			|	then ( Collision firstCollision = this.getFirstCollision()
+	 * 			|			double tc = firstCollision.getTimeToCollision()
+	 * 			|	 if (tc < dt)
+	 * 			|		then (if(!Util.fuzzyLessThanOrEqualTo(tc,0) || Util.fuzzyEquals(tc,0))
+	 * 			|		      then ( this.advanceObjects(tc) )
+	 * 			|				firstCollision.execute()
+	 * 			|				if(collisionListener != null)
+	 *	    	| 				  then(if(firstCollision.getObject2()==null)
+	 *	    	|	 				   then( collisionListener.boundaryCollision(firstCollision.getObject1(), 
+	 *	    	|			 				firstCollision.getCollisionPosition()[0],
+	 *	    	|			 				firstCollision.getCollisionPosition()[1]))
+	 *	   		|						else 
+	 *	    	|	 						(collisionListener.objectCollision(firstCollision.getObject1(), 
+	 *	    	|			 				firstCollision.getObject2(), 
+	 *	    	|			 				firstCollision.getCollisionPosition()[0],
+	 *	    	|			 				firstCollision.getCollisionPosition()[1]))))
+	 */
+	public double evolveBeforeCollision(double dt, CollisionListener collisionListener) throws IllegalArgumentException
 	{
 		double tc = Double.POSITIVE_INFINITY;
 		double collisionTime;
@@ -433,23 +523,51 @@ public class World {
 		           advanceObjects(tc);
 		     }
 		     firstCollision.execute();
+		     if(collisionListener != null){
+		    	 if(firstCollision.getObject2()==null){
+		    		 collisionListener.boundaryCollision(firstCollision.getObject1(), 
+		    				 firstCollision.getCollisionPosition()[0],
+		    				 	firstCollision.getCollisionPosition()[1]);
+		    	 }
+		    	 else {
+		    		 collisionListener.objectCollision(firstCollision.getObject1(), 
+		    				 firstCollision.getObject2(), 
+		    				 	firstCollision.getCollisionPosition()[0],
+		    				 		firstCollision.getCollisionPosition()[1]);
+		    	 }
+		     }
+		    	 
 		}		
 		
 		return tc;
 	}
 	
-	public void evolve(double dt) throws IllegalArgumentException
+	/**
+	 * 
+	 * @param 	dt
+	 * @param   collisionListener
+	 * @effect	...
+	 * 			| double tc = this.evolveBeforeCollision(dt,collisionListener)
+	 *			| double newdt = dt;
+	 *			|	while(tc <= newdt)
+	 *			|		then (newdt = newdt - tc
+	 *			|				tc = this.evolveBeforeCollision(newdt,collisionListener))
+	 *			|	advanceObjects(newdt)
+	 * @throws 	IllegalArgumentException
+	 * 			| (Double.isNaN(dt) || Double.isInfinite(dt) || dt < 0)
+	 */
+	public void evolve(double dt, CollisionListener collisionListener) throws IllegalArgumentException
 	{
 		if(Double.isNaN(dt) || Double.isInfinite(dt) || dt < 0)
 			throw new IllegalArgumentException();
 		
-		double tc = evolveBeforeCollision(dt);
+		double tc = evolveBeforeCollision(dt,collisionListener);
 		double newdt = dt;
 		
 		while(tc <= newdt)
 		{
 			newdt = newdt - tc;
-			tc = evolveBeforeCollision(newdt);
+			tc = evolveBeforeCollision(newdt,collisionListener);
 		}
 		
 		advanceObjects(newdt);
