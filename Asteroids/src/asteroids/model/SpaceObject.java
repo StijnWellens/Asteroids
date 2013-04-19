@@ -580,7 +580,7 @@ public abstract class SpaceObject {
 	
 	/**
 	 * A enumeration class to describe the state of a SpaceObject.
-	 * The possibilities are CREATED, ACTIVE or TERMINATED
+	 * The possibilities are CREATED, ACTIVE and TERMINATED.
 	 * 
 	 * @author Julie Wouters & Stijn Wellens
 	 *
@@ -633,7 +633,35 @@ public abstract class SpaceObject {
 		this.state = state;
 	}
 
+	// World
 	
+	private World world;
+	
+	/**
+	 * Returns the world of this SpaceObject.
+	 * 
+	 * @return	world
+	 * 			the world of this SpaceObject
+	 */
+	@Basic
+	public World getWorld(){
+		return this.world;
+	}
+	
+	/**
+	 * Checks whether this SpaceObject can have a given world as it's world.
+	 * 
+	 * @param 	world
+	 * 			The world to check.
+	 * @return	Returns true if and only if this SpaceObject lies between the borders of the given world.
+	 * 			| if( 0 <= [this.getXPosition() - this.getRadius(), this.getXPosition() + this.getRadius()] <= world.getWidth()
+	 * 			|			&&   0 <= [this.getYPosition() - this.getRadius(), this.getYPosition() + this.getRadius()] <= world.getHeight() )
+	 * 			|	then result == true
+	 * @return	Returns true if the world is null.
+	 * 			| if(world == null)
+	 * 			| 	then result == true
+	 * 
+	 */
 	@Raw
 	public boolean canHaveAsWorld(World world){
 		if(world == null)
@@ -649,19 +677,17 @@ public abstract class SpaceObject {
 		return true;
 	}
 	
-	@Raw
-	public boolean hasProperWorld() {
-		return canHaveAsWorld(getWorld()) && ( (getWorld() == null) || (getWorld().containsSpaceObject(this)) );
-		
-	}
-	
-	private World world;
-	
-	@Basic
-	public World getWorld(){
-		return this.world;
-	}
-	
+	/**
+	 * Sets the world of this SpaceObject.
+	 * 
+	 * @param 	world
+	 * 			The world to set.
+	 * @post	The new world of this SpaceObject will be the given world.
+	 * 			| (new this).getWorld() == world	 
+	 * @throws 	IllegalArgumentException
+	 * 			Throws an exception when this object can't have the given world as its world.
+	 * 			| !canHaveAsWorld(world)
+	 */
 	@Raw
 	protected void setWorld(World world)throws IllegalArgumentException{
 		if(!this.canHaveAsWorld(world))
@@ -669,27 +695,77 @@ public abstract class SpaceObject {
 		this.world = world;
 		
 	}
+		
+	/**
+	 * Checks whether this SpaceObject has a proper world.
+	 * 
+	 * @return	True if and only if this SpaceObject can have its world as world, 
+	 * 			if this object has no world or if this object has a world that contains this object.
+	 * 			| result == canHaveAsWorld(getWorld()) 
+	 * 			|		&& ( (getWorld() == null) || (getWorld().containsSpaceObject(this)) )
+	 */
+	public boolean hasProperWorld() {
+		return canHaveAsWorld(getWorld()) && ( (getWorld() == null) || (getWorld().containsSpaceObject(this)) );
+		
+	}
 	
+	/**
+	 * Puts this SpaceObject into the given world.
+	 *  
+	 * @param 	world
+	 * 			The world where this SpaceObject has to get in.
+	 * @effect	The given world will be set as the world of this SpaceObject.
+	 * 			| setWorld(world)
+	 * @effect	This SpaceObject will be added to the SpaceObjects of the given world.
+	 * 			| world.addSpaceObject(this)
+	 * @effect	The state of this SpaceObject will be set to ACTIVE.
+	 * 			| setState(State.ACTIVE)	
+	 * @throws 	IllegalStateException
+	 * 			Throws illegal state exception when this object is already in a world 
+	 * 			or when its state is not CREATED.
+	 * 			| (this.getState() != State.CREATED) || (this.getWorld()!= null)
+	 * @throws 	IllegalArgumentException
+	 * 			Throws illegal argument exception when the given world is null 
+	 * 			or this object can't have the given world as world.
+	 * 			| world == null || !this.canHaveAsWorld(world)
+	 */
 	public void flyIntoWorld(World world) throws IllegalStateException, IllegalArgumentException
 	{
 		if((this.getState() != State.CREATED) || (this.getWorld()!= null))
 			throw new IllegalStateException();
-		if(world == null)
+		if(world == null || !this.canHaveAsWorld(world) )
 			throw new IllegalArgumentException();
-		if(! this.canHaveAsWorld(world))
-			throw new IllegalArgumentException();
+		
 		this.setWorld(world);
 		world.addSpaceObject(this);
 		this.setState(State.ACTIVE);
 	}
 	
+	/**
+	 * Removes this SpaceObject from the given world.
+	 * 
+	 * @param 	world
+	 * 			the world where the SpaceObject has to be removed
+	 * @effect  Removes this SpaceObject from the given world.
+	 * 			| world.removeSpaceObject(this)
+	 * @effect	Sets the world of this SpaceObject to null.
+	 * 			| setWorld(null)
+	 * @effect	Sets the state of this SpaceObject to TERMINATED.
+	 * 			| setState(State.TERMINATED)
+	 * @throws 	IllegalStateException
+	 * 			Throws illegal state exception when this SpaceObject is not ACTIVE or when its world is null.
+	 * 			| this.getState() != State.ACTIVE || this.getWorld() == null
+	 * @throws 	IllegalArgumentException
+	 * 			Throws illegal argument exception when the given world is not equal to the SpaceObject's world.
+	 * 			| world != this.getWorld()
+	 */
 	public void die(World world) throws IllegalStateException, IllegalArgumentException{
 		if(world != this.getWorld())
 			throw new IllegalArgumentException();
 		if(this.getState() != State.ACTIVE || this.getWorld() == null)
 			throw new IllegalStateException();
 		
-		this.getWorld().removeSpaceObject(this);
+		world.removeSpaceObject(this);
 		this.setWorld(null);
 		this.setState(State.TERMINATED);
 		
