@@ -294,6 +294,11 @@ public class World {
 	
 	private ArrayList<Collision> possibleCollisions;
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| this.possibleCollisions
+	 */
 	@Basic
 	public ArrayList<Collision> getPossibleCollisions()
 	{
@@ -302,6 +307,15 @@ public class World {
 		return new ArrayList<Collision>(possibleCollisions);
 	}
 	
+	/**
+	 * 
+	 * @param 	collisions
+	 * @post	...
+	 * 			| if(collisions == null) 
+	 * 			|	then( (new this).possibleCollisions == new ArrayList<Collision>())
+	 * @post	...
+	 * 			| (new this).possibleCollisions == collisions	
+	 */
 	public void setPossibleCollisions(List<Collision> collisions)
 	{
 		if(collisions == null)
