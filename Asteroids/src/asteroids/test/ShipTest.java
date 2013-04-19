@@ -240,10 +240,38 @@ public class ShipTest {
 	}
 	
 	@Test (expected=AssertionError.class)
-	public void testSetDirection_IllegalCase(){
+	public void testSetDirection_IllegalCase1(){
 		Ship ship = new Ship();
-		ship.setDirection(Double.NaN);
-		assertEquals(3.14/2,ship.getDirection(),Util.EPSILON);
+		ship.setDirection(Double.NaN);	
+		assertEquals(Double.NaN, ship.getDirection(), Util.EPSILON);
+	}
+	
+	@Test (expected=AssertionError.class)
+	public void testSetDirection_IllegalCase2(){
+		Ship ship = new Ship();
+		ship.setDirection((5*Math.PI/2));		
+	}
+	
+	@Test (expected=AssertionError.class)
+	public void testSetDirection_IllegalCase3(){
+		Ship ship = new Ship();
+		ship.setDirection((-Math.PI/2));		
+	}
+	
+	@Test
+	public void testMakeAngleValid_NaN(){
+		Ship ship = new Ship();
+		double angle = Ship.makeAngleValid(Double.NaN);
+		ship.setDirection(angle);
+		assertEquals(0,ship.getDirection(),Util.EPSILON);	
+	}
+	
+	@Test
+	public void testMakeAngleValid_Infinity(){
+		Ship ship = new Ship();
+		double angle = Ship.makeAngleValid(Double.POSITIVE_INFINITY);
+		ship.setDirection(angle);
+		assertEquals(0,ship.getDirection(),Util.EPSILON);	
 	}
 	
 	@Test
@@ -595,7 +623,7 @@ public class ShipTest {
 		assertTrue(ship1.hasProperWorld());	
 	}
 	
-	@Test
+	@Test 
 	public void testHasProperWorld_WorldIsNull(){
 		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
 		assertTrue(ship1.hasProperWorld());	
@@ -617,6 +645,85 @@ public class ShipTest {
 		ship.flyIntoWorld(world);
 		ship.setPosition(-10, 20);
 		assertFalse(ship.hasProperWorld());	
+	}
+		
+	@Test
+	public void testFlyIntoWorld(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world = new World(100,100);
+		ship1.flyIntoWorld(world);
+		assertEquals(world, ship1.getWorld());	
+		assertEquals(State.ACTIVE, ship1.getState());	
+		assertTrue(world.containsSpaceObject(ship1));	
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testFlyIntoWorld_WorldIsNull(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world = null;
+		ship1.flyIntoWorld(world);
+	}
+	
+
+	@Test (expected = IllegalStateException.class)
+	public void testFlyIntoWorld_AlreadyInAWorld(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world = new World(100,100);
+		World world1 = new World(100,100);
+		ship1.flyIntoWorld(world);
+		ship1.flyIntoWorld(world1);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testFlyIntoWorld_CantHaveAsWorld(){
+		Ship ship = new Ship(30, 60, 0, 20, 11, 0,10);
+		World world = new World(50,50);
+		ship.flyIntoWorld(world);
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void testFlyIntoWorld_WrongState(){
+		Ship ship = new Ship(30, 30, 0, 20, 11, 0,10);
+		ship.setState(State.TERMINATED);
+		World world = new World(100,100);
+		ship.flyIntoWorld(world);
+	}
+	
+	@Test
+	public void testDie(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world = new World(100,100);
+		ship1.flyIntoWorld(world);
+		ship1.die(world);
+		assertEquals(null, ship1.getWorld());	
+		assertEquals(State.TERMINATED, ship1.getState());	
+		assertFalse(world.containsSpaceObject(ship1));	
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void testDie_WorldIsWrong(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world1 = new World(100,100);
+		World world2 = new World(100,100);
+		ship1.flyIntoWorld(world1);
+		ship1.die(world2);
+	}
+	
+
+	@Test (expected = IllegalStateException.class)
+	public void testDie_WrongState(){
+		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
+		World world = new World(100,100);
+		ship1.flyIntoWorld(world);
+		ship1.setState(State.TERMINATED);
+		ship1.die(world);
+	}
+	
+	@Test
+	public void testIsValidThruster_IllegalCase(){
+		Ship ship = new Ship();
+		Thruster thruster = null;
+		assertFalse(ship.isValidThruster(thruster));
 	}
 	
 	@Test
@@ -645,6 +752,33 @@ public class ShipTest {
 		assertEquals(0,ship.getXVelocity(),Util.EPSILON);
 		assertEquals(0,ship.getYVelocity(),Util.EPSILON);
 	}
+	
+	@Test
+	public void testFireBullet(){
+		Ship ship = new Ship(50, 50, 10, 20, 10, (3*Math.PI)/2, 1);
+		World world = new World(100,100);
+		ship.flyIntoWorld(world);
+		ship.fireBullet();
+		assertFalse(world.getBullets().isEmpty());
+		}
+	
+	@Test (expected = IllegalStateException.class)
+	public void testFireBullet_IllegalCase(){
+		Ship ship = new Ship(50, 50, 10, 20, 10, (3*Math.PI)/2, 1);
+		World world = new World(100,100);
+		ship.flyIntoWorld(world);
+		ship.setState(State.TERMINATED);
+		ship.fireBullet();
+		
+	}
+	
+	@Test (expected = IllegalStateException.class)
+	public void testFireBullet_WorldIsNull(){
+		Ship ship = new Ship();
+		ship.setState(State.ACTIVE);
+		ship.fireBullet();
+	}
+	
 	
 	
 }
