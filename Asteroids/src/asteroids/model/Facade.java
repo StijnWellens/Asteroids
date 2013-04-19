@@ -154,7 +154,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 			CollisionListener collisionListener) throws ModelException {
 		// TODO 
 		try{
-			world.evolve(dt);
+			world.evolve(dt,collisionListener);
 		}
 		catch(Exception e)
 		{
