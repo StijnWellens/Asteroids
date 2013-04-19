@@ -91,63 +91,18 @@ public class Collision {
 	private SpaceObject spaceObject1;
 	private SpaceObject spaceObject2;
 	
-	/**
-	 * Return when two spaceObjects will collide.
-	 * 
-	 * @param 	spaceObject1
-	 * 			The first spaceObject to compare with the other.
-	 * @param 	spaceObject2
-	 * 			The second spaceObject to compare with the other.
-	 * @return	Return when two spaceObjects will collide. Positive infinity if they never collide. For the specific calculation see the code.
-	 * 			| dt
-	 * @throws	IllegalArgumentException
-	 * 			Throws exception when one of the given spaceObjects is null.
-	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
-	 *
-	 // infinity, time could not be negative
-	  * if(result == Double.POSITIVE_INFINITY) then
-	  * 	(this == other) 
-	 * 
-	 */
-	public double getTimeToCollision() 
+	
+	public double getTimeToCollisionWithBorder()
 	{
-		if(getObject2() == null)
-		{
-			double width = getObject1().getWorld().getWidth();
-			double height = getObject1().getWorld().getHeight();
-			double dtx = getTimeToCollisionWithAxis(getObject1().getX(), getObject1().getXVelocity(), width);
-			double dty = getTimeToCollisionWithAxis(getObject1().getY(), getObject1().getYVelocity(), height);
-							
-			if(dtx <= dty)
-				return dtx;
-			else
-				return dty;
-		}
-		else
-		{
-			double dt;
-			
-			Vector dv = Vector.subtraction(getObject1().getVelocity(), getObject2().getVelocity());
-			Vector dr = Vector.subtraction(getObject1().getPosition(), getObject2().getPosition());
-			double dvdr = Vector.dotProduct(dv, dr);
-			double dvdv = Vector.dotProduct(dv, dv);
-			double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
-			double sigma = Vector.sumOfComponents(getObject1().getRadius(),getObject2().getRadius());
-			double sigmaSquare = Vector.multiplyComponents(sigma, sigma);
-			double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -sigmaSquare) );
-			double d = Vector.sumOfComponents(d1, -d2);
+		double width = getObject1().getWorld().getWidth();
+		double height = getObject1().getWorld().getHeight();
+		double dtx = getTimeToCollisionWithAxis(getObject1().getX(), getObject1().getXVelocity(), width);
+		double dty = getTimeToCollisionWithAxis(getObject1().getY(), getObject1().getYVelocity(), height);
 						
-			if(dvdr >= 0 || d <= 0)
-			{
-				dt = Double.POSITIVE_INFINITY;
-			}		
-			else{
-				dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),(1d/(dvdv))));
-			}
-									
-			return dt;
-		}
-			
+		if(dtx <= dty)
+			return dtx;
+		else
+			return dty;
 	}
 	
 	/**
@@ -173,6 +128,64 @@ public class Collision {
 		return dt;
 	}
 	
+	
+	/**
+	 * Return when two spaceObjects will collide.
+	 * 
+	 * @param 	spaceObject1
+	 * 			The first spaceObject to compare with the other.
+	 * @param 	spaceObject2
+	 * 			The second spaceObject to compare with the other.
+	 * @return	Return when two spaceObjects will collide. Positive infinity if they never collide. For the specific calculation see the code.
+	 * 			| dt
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when one of the given spaceObjects is null.
+	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
+	 *
+	 // infinity, time could not be negative
+	  * if(result == Double.POSITIVE_INFINITY) then
+	  * 	(this == other) 
+	 * 
+	 */
+	public double getTimeToCollisionWithObject()
+	{
+		double dt;
+		
+		Vector dv = Vector.subtraction(getObject1().getVelocity(), getObject2().getVelocity());
+		Vector dr = Vector.subtraction(getObject1().getPosition(), getObject2().getPosition());
+		double dvdr = Vector.dotProduct(dv, dr);
+		double dvdv = Vector.dotProduct(dv, dv);
+		double d1 = Vector.multiplyComponents((dvdr),(dvdr)) ;
+		double sigma = Vector.sumOfComponents(getObject1().getRadius(),getObject2().getRadius());
+		double sigmaSquare = Vector.multiplyComponents(sigma, sigma);
+		double d2 = Vector.multiplyComponents(dvdv, Vector.sumOfComponents(Vector.dotProduct(dr, dr), -sigmaSquare) );
+		double d = Vector.sumOfComponents(d1, -d2);
+					
+		if(dvdr >= 0 || d <= 0)
+		{
+			dt = Double.POSITIVE_INFINITY;
+		}		
+		else{
+			dt = -(Vector.multiplyComponents(Vector.sumOfComponents(dvdr, Math.sqrt(d)),(1d/(dvdv))));
+		}
+								
+		return dt;
+	}
+	
+	public double getTimeToCollision() 
+	{
+		if(getObject2() == null)
+		{
+			return getTimeToCollisionWithBorder();
+		}
+		else
+		{
+			return getTimeToCollisionWithObject();
+		}
+			
+	}
+	
+	
 	/**
 	 * Return where two spaceObjects will collide.
 	 * 
@@ -191,96 +204,105 @@ public class Collision {
 	 * 			Throws exception when one of the given spaceObjects is null.
 	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
 	 */
+	public double[] getCollisionPositionWithObject()
+	{
+		double[] collision = new double[2];
+		
+		double time = getTimeToCollision();
+		if(time == Double.POSITIVE_INFINITY)
+		{
+			collision = null;
+		}
+		else{
+						
+			Vector newPositionspaceObject1 = new Vector(getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time, getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time);
+			Vector newPositionspaceObject2 = new Vector(getObject2().getPosition().getXComp() + getObject2().getXVelocity() * time, getObject2().getPosition().getYComp() + getObject2().getYVelocity() * time);
+			Vector directionCollision = Vector.subtraction(newPositionspaceObject1, newPositionspaceObject2);
+			
+			double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
+			
+			if(directionCollision.getYComp() == 0) {
+				if(Math.signum(directionCollision.getXComp()) < 0)
+					alpha = PI;
+				else
+					alpha = 0;
+			}
+			if(directionCollision.getXComp() == 0) {
+				if(Math.signum(directionCollision.getYComp()) < 0)
+					alpha = -PI/2;
+				else
+					alpha = PI/2;
+			}
+			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
+				alpha = PI - alpha;
+			if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
+				alpha = PI + alpha;
+			if(directionCollision.getXComp() > 0 && directionCollision.getYComp() < 0 )
+				alpha = - alpha;
+			
+			double collisionPositionX = getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time - Math.cos(alpha) * getObject1().getRadius() ;
+			double collisionPositionY = getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time - Math.sin(alpha) * getObject1().getRadius() ;
+			
+			collision[0] = collisionPositionX; 
+			collision[1] = collisionPositionY; 
+		}
+				
+		return collision;
+	}
+	
+	public double[] getCollisionPositionWithBorder()
+	{
+		double[] collision = new double[2];
+		
+		double time = getTimeToCollision();
+		if(time == Double.POSITIVE_INFINITY)
+		{
+			collision = null;
+		}
+		else
+		{
+			SpaceObject object = getObject1();
+			
+			double width = object.getWorld().getWidth();
+			double height = object.getWorld().getHeight();
+			double dtx = getTimeToCollisionWithAxis(object.getX(), object.getXVelocity(), width);
+			double dty = getTimeToCollisionWithAxis(object.getY(), object.getYVelocity(), height);
+							
+			if(dtx <= dty)
+			{
+				double sign;
+				if(object.getXVelocity() < 0)
+					sign = -1;
+				else
+					sign = 1;
+					
+				collision[0] = object.getX()+ object.getXVelocity()*dtx + sign * object.getRadius();
+				collision[1] = object.getY()+ object.getYVelocity()*dtx;
+			}
+			else
+			{
+				double sign;
+				if(object.getYVelocity() < 0)
+					sign = -1;
+				else
+					sign = 1;
+				
+				collision[0] = object.getX()+ object.getXVelocity()*dty;
+				collision[1] = object.getY()+ object.getYVelocity()*dty + sign * object.getRadius();
+			}					
+		}
+		
+		return collision;
+	}
 	public double[] getCollisionPosition() 
 	{
 		if(getObject2() == null && getObject1() != null)
 		{
-			double[] collision = new double[2];
-			
-			double time = getTimeToCollision();
-			if(time == Double.POSITIVE_INFINITY)
-			{
-				collision = null;
-			}
-			else
-			{
-				SpaceObject object = getObject1();
-				
-				double width = object.getWorld().getWidth();
-				double height = object.getWorld().getHeight();
-				double dtx = getTimeToCollisionWithAxis(object.getX(), object.getXVelocity(), width);
-				double dty = getTimeToCollisionWithAxis(object.getY(), object.getYVelocity(), height);
-								
-				if(dtx <= dty)
-				{
-					double sign;
-					if(object.getXVelocity() < 0)
-						sign = -1;
-					else
-						sign = 1;
-						
-					collision[0] = object.getX()+ object.getXVelocity()*dtx + sign * object.getRadius();
-					collision[1] = object.getY()+ object.getYVelocity()*dtx;
-				}
-				else
-				{
-					double sign;
-					if(object.getYVelocity() < 0)
-						sign = -1;
-					else
-						sign = 1;
-					
-					collision[0] = object.getX()+ object.getXVelocity()*dty;
-					collision[1] = object.getY()+ object.getYVelocity()*dty + sign * object.getRadius();
-				}					
-			}
-			
-			return collision;
+			return this.getCollisionPositionWithBorder();
 		}
 		else
 		{
-			double[] collision = new double[2];
-			
-			double time = getTimeToCollision();
-			if(time == Double.POSITIVE_INFINITY)
-			{
-				collision = null;
-			}
-			else{
-							
-				Vector newPositionspaceObject1 = new Vector(getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time, getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time);
-				Vector newPositionspaceObject2 = new Vector(getObject2().getPosition().getXComp() + getObject2().getXVelocity() * time, getObject2().getPosition().getYComp() + getObject2().getYVelocity() * time);
-				Vector directionCollision = Vector.subtraction(newPositionspaceObject1, newPositionspaceObject2);
-				
-				double alpha = (Math.atan(Math.abs(directionCollision.getYComp())/Math.abs(directionCollision.getXComp())));
-				
-				if(directionCollision.getYComp() == 0) {
-					if(Math.signum(directionCollision.getXComp()) < 0)
-						alpha = PI;
-					else
-						alpha = 0;
-				}
-				if(directionCollision.getXComp() == 0) {
-					if(Math.signum(directionCollision.getYComp()) < 0)
-						alpha = -PI/2;
-					else
-						alpha = PI/2;
-				}
-				if(directionCollision.getXComp() < 0 && directionCollision.getYComp() > 0 )
-					alpha = PI - alpha;
-				if(directionCollision.getXComp() < 0 && directionCollision.getYComp() < 0 )
-					alpha = PI + alpha;
-				if(directionCollision.getXComp() > 0 && directionCollision.getYComp() < 0 )
-					alpha = - alpha;
-				
-				double collisionPositionX = getObject1().getPosition().getXComp() + getObject1().getXVelocity() * time - Math.cos(alpha) * getObject1().getRadius() ;
-				double collisionPositionY = getObject1().getPosition().getYComp() + getObject1().getYVelocity() * time - Math.sin(alpha) * getObject1().getRadius() ;
-				
-				collision[0] = collisionPositionX; 
-				collision[1] = collisionPositionY; 
-			}
-					
-			return collision;
+			return this.getCollisionPositionWithObject();
 		}
 	}
 	
