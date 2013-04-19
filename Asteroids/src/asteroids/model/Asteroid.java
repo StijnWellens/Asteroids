@@ -2,6 +2,8 @@ package asteroids.model;
 
 import java.util.Random;
 
+import asteroids.Util;
+
 /**
  * A class representing an asteroid with a specified position, velocity and radius.
  * 
@@ -183,10 +185,37 @@ public class Asteroid extends SpaceObject {
 	
 
 	/**
+	 * Removes this Asteroid from the given world.
 	 * 
+	 * @param 	world
+	 * 			the world where the Asteroid has to be removed
+	 * @effect  Removes this SpaceObject from the given world.
+	 * 			| world.removeSpaceObject(this)
+	 * @effect	Sets the world of this SpaceObject to null.
+	 * 			| setWorld(null)
+	 * @effect	Sets the state of this SpaceObject to TERMINATED.
+	 * 			| setState(State.TERMINATED)
+	 * @post	If the radius of this asteroid is bigger than or equal to 30 and the randomGenerator isn't null,
+	 * 			then two new child asteroids will be created based on the parent asteroid.
+	 * 			| if(this.getRadius()>=30 && getRandom() != null) then
+	 * 			|	child1 = new Asteroid(..) 
+	 * 			|	child2 = new Asteroid(..)
+	 * 			|		with	SpaceObject.getDistanceBetween(child1, child2) == this.getRadius()
+	 * 			|				for each child 1..2:
+	 * 			|				(	SpaceObject.getDistanceBetween(this, child) == this.getRadius()/2
+	 * 			|					child.getVelocity().getModulus() == this.getVelocity().getModulus() * 1.5
+	 * 			|					child.getRadius() == (this.getRadius())/2
+	 * 			|					child.getRandom() == (this.getRandom())	
+	 * 			|				)
+	 * @throws 	IllegalStateException
+	 * 			Throws illegal state exception when this SpaceObject is not ACTIVE or when its world is null.
+	 * 			| this.getState() != State.ACTIVE || this.getWorld() == null
+	 * @throws 	IllegalArgumentException
+	 * 			Throws illegal argument exception when the given world is not equal to the SpaceObject's world.
+	 * 			| world != this.getWorld()
 	 */
 	@Override
-	public void die(World world){
+	public void die(World world) throws IllegalStateException, IllegalArgumentException{
 		super.die(world);
 		
 		if(this.getRadius()>=30 && getRandom() != null){
@@ -195,8 +224,21 @@ public class Asteroid extends SpaceObject {
 			double newVelocity = 1.5*speedParent;
 			double newXVelocity = newVelocity*Math.sqrt(randomDouble);
 			double newYVelocity = newVelocity*Math.sqrt(1-randomDouble);
-			double cos = newXVelocity/newVelocity;
-			double sin = newYVelocity/newVelocity;
+			
+			double cos;
+			double sin;
+			
+			if(Util.fuzzyEquals(newVelocity,0))
+			{
+				cos = 1;
+				sin = 0;
+			}
+			else
+			{
+				cos = newXVelocity/newVelocity;
+				sin = newYVelocity/newVelocity;
+			}
+			
 			SpaceObject child1 = new Asteroid(this.getX()+(this.getRadius()/2)*cos,this.getY()+(this.getRadius()/2)*sin,
 					newXVelocity,newYVelocity,this.getRadius()/2,this.getRandom());
 			SpaceObject child2 = new Asteroid(this.getX()-(this.getRadius()/2)*cos,this.getY()-(this.getRadius()/2)*sin,
