@@ -548,7 +548,7 @@ public abstract class SpaceObject {
 	{
 		if((spaceObject1 == null) || (spaceObject2 == null))
 			throw new IllegalArgumentException();
-		return (getDistanceBetween(spaceObject1,spaceObject2) < 0);
+		return (Util.fuzzyLessThanOrEqualTo(getDistanceBetween(spaceObject1,spaceObject2),0) && !Util.fuzzyEquals(getDistanceBetween(spaceObject1,spaceObject2), 0));
 	}	
 	
 	/**

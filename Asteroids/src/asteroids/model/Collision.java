@@ -1,9 +1,5 @@
 package asteroids.model;
-
  
-import java.util.ArrayList;
-import java.util.List;
-
 import asteroids.Util;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -341,20 +337,14 @@ public class Collision {
 	/**
 	 * Return where two spaceObjects will collide.
 	 * 
-	 * @param 	spaceObject1
-	 * 			The first spaceObject to compare with the other.
-	 * @param 	spaceObject2
-	 * 			The second spaceObject to compare with the other.
-	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spacespaceObjects when they collide.
-	 * 			| collision[0] = spaceObject1.getXPosition() + spaceObject1.getXVelocity() * getTimeToCollisiion() + cos(alpha)* spaceObject1.getRadius();
-	 *			| collision[1] = spaceObject1.getYPosition() + spaceObject1.getYVelocity() * getTimeToCollisiion() + sin(alpha)* spaceObject1.getRadius();
+	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spaceObjects when they collide.
+	 * 			| alpha == Math.acos(
+	 * 			| collision[0] = getObject1().getXPosition() + getObject1().getXVelocity() * getTimeToCollisiion() + cos(alpha)* getObject1().getRadius();
+	 *			| collision[1] = getObject1().getYPosition() + getObject1().getYVelocity() * getTimeToCollisiion() + sin(alpha)* getObject1().getRadius();
 	 *			| result == collision
 	 * @return	Null if the two spaceObjects never collide.
-	 * 			| if(getTimeToCollision(spaceObject1,spaceObject2) == Double.POSITIVE_INFINITY)
+	 * 			| if(getTimeToCollision() == Double.POSITIVE_INFINITY)
 	 * 			|	then collision == null
-	 * @throws	IllegalArgumentException
-	 * 			Throws exception when one of the given spaceObjects is null.
-	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
 	 */
 	public double[] getCollisionPositionWithObject()
 	{
@@ -402,6 +392,20 @@ public class Collision {
 		return collision;
 	}
 	
+	/**
+	 * Return where a SpaceObject will collide with the border.
+	 * 
+	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spacespaceObjects when they collide.
+	 * 			| collision[0] = spaceObject1.getXPosition() + spaceObject1.getXVelocity() * getTimeToCollisiion() + cos(alpha)* spaceObject1.getRadius();
+	 *			| collision[1] = spaceObject1.getYPosition() + spaceObject1.getYVelocity() * getTimeToCollisiion() + sin(alpha)* spaceObject1.getRadius();
+	 *			| result == collision
+	 * @return	Null if the two spaceObjects never collide.
+	 * 			| if(getTimeToCollision(spaceObject1,spaceObject2) == Double.POSITIVE_INFINITY)
+	 * 			|	then collision == null
+	 * @throws	IllegalArgumentException
+	 * 			Throws exception when one of the given spaceObjects is null.
+	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
+	 */
 	public double[] getCollisionPositionWithBorder()
 	{
 		double[] collision = new double[2];
