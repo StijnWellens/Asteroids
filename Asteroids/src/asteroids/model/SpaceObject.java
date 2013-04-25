@@ -771,5 +771,22 @@ public abstract class SpaceObject {
 		this.setState(State.TERMINATED);
 		
 	}
-		
+	
+	/**
+	 * Checks whether this SpaceObject kills the given other SpaceObject.
+	 * 
+	 * @param	other
+	 * 			The SpaceObject to be checked.
+	 * @return	...
+	 */
+	public abstract boolean killsOther(SpaceObject other);
+	
+	/**
+	 * Checks whether this SpaceObject will be killed by the given other SpaceObject.
+	 * 
+	 * @param	other
+	 * 			The SpaceObject to be checked.
+	 * @return	...
+	 */
+	public abstract boolean willBeKilledByOther (SpaceObject other);
 }

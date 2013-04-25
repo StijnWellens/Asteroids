@@ -254,6 +254,62 @@ public class Asteroid extends SpaceObject {
 		}
 		
 	}
+
+	/**
+	 * Checks whether this Asteroid kills the given other SpaceObject.
+	 * 
+	 * @param	other
+	 * 			The SpaceObject to be checked.
+	 * @return	False when the other SpaceObject is null.
+	 * 			| if(other == null)
+	 * 			|	then result == false
+	 * @return	False when the other SpaceObject is an asteroid.
+	 * 			| if(other instanceof Asteroid)
+	 * 			|	then result == false
+	 * @return	True when the other SpaceObject is a ship.
+	 * 			| if(other instanceof Ship)
+	 * 			|	then result == true
+	 * @return	Returns true if the other object will be killed by this.
+	 * 			| result == other.willBeKilledByOther(this)
+	 */
+	@Override
+	public boolean killsOther(SpaceObject other) {
+		if(other == null)
+			return false;
+		if(other instanceof Asteroid)
+			return false;
+		if(other instanceof Ship)
+			return true;
+		return other.willBeKilledByOther(this);
+	}
+
+	/**
+	 * Checks whether this Asteroid will be killed by the given other SpaceObject.
+	 * 
+	 * @param	other
+	 * 			The SpaceObject to be checked.
+	 * @return	False when the other SpaceObject is null.
+	 * 			| if(other == null)
+	 * 			|	then result == false
+	 * @return	False when the other SpaceObject is an asteroid.
+	 * 			| if(other instanceof Asteroid)
+	 * 			|	then result == false
+	 * @return	False when the other SpaceObject is a ship.
+	 * 			| if(other instanceof Ship)
+	 * 			|	then result == false
+	 * @return	Returns true if the other object kills this.
+	 * 			| result == other.killsOther(this)
+	 */
+	@Override
+	public boolean willBeKilledByOther(SpaceObject other) {
+		if(other == null)
+			return false;
+		if(other instanceof Asteroid)
+			return false;
+		if(other instanceof Ship)
+			return false;
+		return other.killsOther(this);
+	}
 	
 	
 }

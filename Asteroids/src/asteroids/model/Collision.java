@@ -469,8 +469,8 @@ public class Collision {
 	
 	public void bounceOff() 
 	{
-		Vector dv = Vector.subtraction(getObject1().getVelocity(), getObject2().getVelocity());
-		Vector dr = Vector.subtraction(getObject1().getPosition(), getObject2().getPosition());
+		Vector dv = Vector.subtraction(getObject2().getVelocity(), getObject1().getVelocity());
+		Vector dr = Vector.subtraction(getObject2().getPosition(), getObject1().getPosition());
 		double dvdr = Vector.dotProduct(dv, dr);
 		double sigma = Vector.sumOfComponents(getObject1().getRadius(),getObject2().getRadius());
 		
@@ -482,15 +482,55 @@ public class Collision {
 		double Jy = (J*dr.getYComp())/sigma;
 		
 		Vector newVelocityThis = new Vector(getObject1().getVelocity().getXComp() + (Jx/mi), getObject1().getVelocity().getYComp() + (Jy/mi));
-		Vector newVelocityOther = new Vector(getObject2().getVelocity().getXComp() + (Jx/mj), getObject2().getVelocity().getYComp() + (Jy/mj));
+		Vector newVelocityOther = new Vector(getObject2().getVelocity().getXComp() - (Jx/mj), getObject2().getVelocity().getYComp() - (Jy/mj));
 		
 		getObject1().setVelocity(newVelocityThis);
 		getObject2().setVelocity(newVelocityOther);
-		
-		World world = this.getObject1().getWorld();
-		List<Collision> collisions = new ArrayList<Collision>(world.getPossibleCollisions());
-		collisions.remove(this);
-		world.setPossibleCollisions(collisions);
+	}
+	
+	public void executeWithBorder()
+	{
+		if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
+		{
+			getObject1().die(getObject1().getWorld());
+		}
+		else {
+			Vector velocity = getObject1().getVelocity();
+			
+			double[] collision = getCollisionPosition();
+			
+			if(Util.fuzzyEquals(collision[1], 0) || Util.fuzzyEquals(collision[1], getObject1().getWorld().getHeight()))
+			{ 
+				getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
+			}
+			else if(Util.fuzzyEquals(collision[0], 0) || Util.fuzzyEquals(collision[0], getObject1().getWorld().getWidth()))
+			{
+				getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
+			} 										
+		}
+	}
+	
+	public void executeWithObject()
+	{
+		SpaceObject object1 = getObject1();
+		SpaceObject object2 = getObject2();
+		if(object1.killsOther(object2) && object2.killsOther(object1))
+		{
+			object1.die(object1.getWorld());
+			object2.die(object2.getWorld());
+		}
+		else if(object1.killsOther(object2))
+		{
+			object2.die(object2.getWorld());
+		}
+		else if(object2.killsOther(object1))
+		{
+			object1.die(object1.getWorld());
+		}
+		else
+		{
+			bounceOff();
+		}
 	}
 	
 	public void execute() 
@@ -499,48 +539,11 @@ public class Collision {
 		
 		if(getObject2()== null )
 		{
-			if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
-			{
-				getObject1().die(getObject1().getWorld());
-			}
-			else {
-				Vector velocity = getObject1().getVelocity();
-				
-				double[] collision = getCollisionPosition();
-				
-				if(Util.fuzzyEquals(collision[1], 0) || Util.fuzzyEquals(collision[1], getObject1().getWorld().getHeight()))
-				{ 
-					getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
-				}
-				else if(Util.fuzzyEquals(collision[0], 0) || Util.fuzzyEquals(collision[0], getObject1().getWorld().getWidth()))
-				{
-					getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
-				} 
-				
-											
-			}
-			
-			
+			executeWithBorder();						
 		}
 		else
 		{
-			if(Bullet.class.isInstance(getObject1()) || Bullet.class.isInstance(getObject2()))
-			{
-				getObject1().die(getObject1().getWorld());
-				getObject2().die(getObject2().getWorld());
-			}
-			else if(Asteroid.class.isInstance(getObject1()) && !Asteroid.class.isInstance(getObject2()))
-			{
-				getObject2().die(getObject2().getWorld());
-			}
-			else if(Asteroid.class.isInstance(getObject2()) && !Asteroid.class.isInstance(getObject1()))
-			{
-				getObject1().die(getObject1().getWorld());
-			}
-			else
-			{
-				bounceOff();
-			}
+			executeWithObject();
 		}
 	}
 }

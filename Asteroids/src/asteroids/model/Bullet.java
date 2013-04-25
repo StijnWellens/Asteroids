@@ -100,6 +100,70 @@ public class Bullet extends SpaceObject {
 	public final Ship getShip(){
 		return this.ship;
 	}
+
+	/**
+	 * Checks whether this Bullet kills the given other SpaceObject.
+	 * 
+	 * @param	other
+	 * 			The SpaceObject to be checked.
+	 * @return	False when the other SpaceObject is null.
+	 * 			| if(other == null)
+	 * 			|	then result == false
+	 * @return	True when the other SpaceObject is a bullet.
+	 * 			| if(other instanceof Bullet)
+	 * 			|	then result == true
+	 * @return	True when the other SpaceObject is an asteroid.
+	 * 			| if(other instanceof Asteroid)
+	 * 			|	then result == true
+	 * @return	True when the other SpaceObject is a ship 
+	 * 				and this bullet his source isn't the given ship.
+	 * 			| if(other instanceof Ship)
+	 * 			|	then result == (this.getShip() != ((Ship)other))
+	 * @return	Returns true if the other object will be killed by this.
+	 * 			| result == other.willBeKilledByOther(this)
+	 */
+	@Override
+	public boolean killsOther(SpaceObject other) {
+		if(other == null)
+			return false;
+		if(other instanceof Bullet)
+			return true;
+		if(other instanceof Asteroid)
+			return true;
+		if(other instanceof Ship)
+			return (this.getShip() != ((Ship)other));
+		return other.willBeKilledByOther(this);
+	}
+
+	/**
+	 * Checks whether this Bullet will be killed by the given other SpaceObject.
+	 * 
+	 * @param	other
+	 * 			The SpaceObject to be checked.
+	 * @return	False when the other SpaceObject is null.
+	 * 			| if(other == null)
+	 * 			|	then result == false
+	 * @return	False when the other SpaceObject is an asteroid.
+	 * 			| if(other instanceof Asteroid)
+	 * 			|	then result == false
+	 * @return	False when the other SpaceObject is a ship.
+	 * 			| if(other instanceof Ship)
+	 * 			|	then result == false
+	 * @return	Returns true if the other object kills this.
+	 * 			| result == other.killsOther(this)
+	 */
+	@Override
+	public boolean willBeKilledByOther(SpaceObject other) {
+		if(other == null)
+			return false;
+		if(other instanceof Bullet)
+			return true;
+		if(other instanceof Asteroid)
+			return true;
+		if(other instanceof Ship)
+			return (this.getShip() != ((Ship)other));
+		return other.killsOther(this);
+	}
 	
 	
 }
