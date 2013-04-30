@@ -38,6 +38,23 @@ public class Bullet extends SpaceObject {
 	private static final double RADIUS = 3; // in km
 	private static final double INITIAL_SPEED = 250; // in km/s
 	
+	/**
+	 * Initializes this new default bullet.
+	 * 
+	 * @effect	This new bullet is initialized as a SpaceObject with 10 and 10 as x and y position components,
+	 * 			0 and 0 as the x and y velocity components and the RADIUS of all bullets as its radius.
+	 * 			| super(x, y, xVelocity, yVelocity, Bullet.RADIUS)
+	 * @effect	The mass of this new Bullet will be set to (4PI/3)*(RADIUS)³*DENSITY.
+	 * 			| setMass((4PI/3)*(RADIUS)³*DENSITY)
+	 * @post	The source of this new bullet will be set to null.
+	 * 			| (new this).getShip() == null
+	 */
+	public Bullet() throws IllegalArgumentException
+	{
+		super(10, 10, 0, 0, RADIUS);
+		this.ship = null;
+		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
+	}
 	
 	/**
 	 * Initializes this new bullet with the given x and y position components and the given x and y velocity components.

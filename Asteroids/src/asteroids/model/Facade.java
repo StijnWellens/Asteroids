@@ -1,5 +1,6 @@
 package asteroids.model;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -93,18 +94,21 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 
 	@Override
 	public Set<Ship> getShips(World world) {
-		return new HashSet<Ship>(world.getShips());
+		Set<Ship> objects = (Set<Ship>) world.getObjects(new Ship());
+		return new HashSet<Ship>(objects);
 	}
 	
 
 	@Override
 	public Set<Asteroid> getAsteroids(World world) {
-		return new HashSet<Asteroid>(world.getAsteroids());
+		Set<Asteroid> objects = (Set<Asteroid>) world.getObjects(new Asteroid());
+		return new HashSet<Asteroid>(objects);
 	}
 
 	@Override
 	public Set<Bullet> getBullets(World world) {
-		return new HashSet<Bullet>(world.getBullets());
+		Set<Bullet> objects = (Set<Bullet>) world.getObjects(new Bullet());
+		return new HashSet<Bullet>(objects);
 	}
 
 	@Override

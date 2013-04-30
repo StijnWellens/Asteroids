@@ -235,7 +235,23 @@ public class Ship extends SpaceObject{
 			throw new IllegalArgumentException();
 		
 		this.thruster = thruster;
-	}		
+	}
+	
+	/**
+	 * Returns whether the thruster of this ship is enabled or not.
+	 * 
+	 * @return	True if and only if the thruster of this ship is enabled.
+	 * 			| result == this.getThruster().isThrusterEnabled()
+	 * @throws	IllegalStateException
+	 * 			Throws exception when the thruster of this ship is null.
+	 * 			| getThruster() == null
+	 */
+	public boolean isThrusterEnabled() throws IllegalStateException
+	{
+		if(getThruster() == null)
+			throw new IllegalStateException();
+		return this.getThruster().isThrusterEnabled();
+	}
 	
 	/**
 	 * Thrusts this ship during a given time.

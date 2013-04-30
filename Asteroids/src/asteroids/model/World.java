@@ -233,6 +233,26 @@ public class World {
 	
 	/**
 	 * 
+	 * @param	object
+	 * 			The spaceObject from which //TODO
+	 * @return	...
+	 * 			| result == (setShips == new HashSet<Ship>())
+	 * 			|	&& for each spaceObject in setShips: 
+	 * 			|		Ship.Class.isInstance(spaceObject)
+	 */
+	public Set<? extends SpaceObject> getObjects(SpaceObject object) 
+	{
+		Set<SpaceObject> setObjects = new HashSet<SpaceObject>();
+		for(SpaceObject spaceObject: getSpaceObjects())
+		{
+			if((object.getClass()).isInstance(spaceObject))
+				setObjects.add(spaceObject);
+		}
+		return setObjects;
+	}
+	
+	/**
+	 * 
 	 * @return	...
 	 * 			| result == (setAsteroids == new HashSet<Asteroid>())
 	 * 			|	&& for each spaceObject in setAsteroids: 
@@ -471,9 +491,9 @@ public class World {
 				if(Ship.class.isInstance(spaceObject))
 				{
 					((Ship)spaceObject).thrust(time);
-				}
+				}				
 			}
-		}
+		}		
 	}
 	
 	/**
@@ -528,7 +548,7 @@ public class World {
 		     {
 		           advanceObjects(tc);
 		     }
-		     
+			
 			if(collisionListener != null){
 		    	 if(firstCollision.getObject2()==null){
 		    		 collisionListener.boundaryCollision(firstCollision.getObject1(), 
@@ -544,8 +564,8 @@ public class World {
 		     }
 			
 			 firstCollision.execute();
-			 List<Collision> collisions = new ArrayList<Collision>(this.getPossibleCollisions());
-			 collisions.remove(firstCollision);
+			 
+		     
 		}		
 		
 		return tc;

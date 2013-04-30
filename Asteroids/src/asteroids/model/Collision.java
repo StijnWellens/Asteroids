@@ -27,11 +27,14 @@ public class Collision {
 	 * 			| setObjects(so1,so2)
 	 * @effect	...
 	 * 			| setNmbOfCollisions(0)
+	 * @effect	...
+	 * 			| calclateTimeToCollision()
 	 */
 	public Collision(SpaceObject so1, SpaceObject so2) throws IllegalArgumentException
 	{
 		this.setObjects(so1,so2);
 		this.nmbOfCollisions = 0;
+		this.calculateTimeToCollision();
 	}
 	
 	/**
@@ -42,11 +45,14 @@ public class Collision {
 	 * 			| setObject(so1)
 	 * @effect	...
 	 * 			| setNmbOfCollisions(0)
+	 * @effect	...
+	 * 			| calclateTimeToCollision()
 	 */
 	public Collision(SpaceObject so1) throws IllegalArgumentException
 	{
 		this.setObject(so1);
 		this.nmbOfCollisions = 0;
+		this.calculateTimeToCollision();
 	}
 	
 	// NumberOfCollisions
@@ -208,6 +214,8 @@ public class Collision {
 		return false;
 	}
 	
+	private double timeToCollision;
+		
 	/**
 	 * 
 	 * @return	...
@@ -322,17 +330,56 @@ public class Collision {
 	 */
 	public double getTimeToCollision() 
 	{
+		calculateTimeToCollision();
+		return this.timeToCollision;		
+	}
+	
+	public boolean isValidTimeToCollision(double time)
+	{
+		return (!Double.isNaN(time));
+	}
+	
+	public void setTimeToCollision(double time) throws IllegalArgumentException
+	{
+		if(!isValidTimeToCollision(time))
+			throw new IllegalArgumentException();
+		this.timeToCollision = time;
+	}
+	
+	public void calculateTimeToCollision()
+	{
 		if(getObject2() == null)
 		{
-			return getTimeToCollisionWithBorder();
+			this.setTimeToCollision(getTimeToCollisionWithBorder());
 		}
 		else
 		{
-			return getTimeToCollisionWithObject();
+			this.setTimeToCollision(getTimeToCollisionWithObject());
 		}
-			
 	}
 	
+	/*public void updateTimeToCollision(double dt)
+	{
+		double newTime = this.getTimeToCollision() - dt;
+		
+		if(Util.fuzzyLessThanOrEqualTo(newTime, 0))
+		{
+			this.calculateTimeToCollision();
+		}
+		else if(Ship.class.isInstance(getObject1()) && (((Ship)getObject1()).isThrusterEnabled()))
+		{
+			this.calculateTimeToCollision();
+		}
+		else if(Ship.class.isInstance(getObject2()) && (((Ship)getObject2()).isThrusterEnabled()))
+		{
+			this.calculateTimeToCollision();
+		}
+		else
+		{
+			this.setTimeToCollision(newTime);
+		}
+			
+	}*/
 	
 	/**
 	 * Return where two spaceObjects will collide.
@@ -510,7 +557,7 @@ public class Collision {
 			else if(Util.fuzzyEquals(collision[0], 0) || Util.fuzzyEquals(collision[0], getObject1().getWorld().getWidth()))
 			{
 				getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
-			} 										
+			} 
 		}
 	}
 	
@@ -540,7 +587,7 @@ public class Collision {
 	public void execute() 
 	{
 		this.nmbOfCollisions ++;
-		
+				
 		if(getObject2()== null )
 		{
 			executeWithBorder();						
@@ -548,6 +595,6 @@ public class Collision {
 		else
 		{
 			executeWithObject();
-		}
+		}				
 	}
 }
