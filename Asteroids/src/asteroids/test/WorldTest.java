@@ -7,9 +7,7 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import asteroids.CollisionListener;
 import asteroids.Util;
-import asteroids.WorldView;
 import asteroids.model.*;
 
 public class WorldTest {
@@ -141,14 +139,14 @@ public class WorldTest {
 		 assertFalse(world.containsSpaceObject(ship));
 	 }
 	 
-	 @Test (expected = AssertionError.class)
+	 @Test (expected = IllegalArgumentException.class)
 	 public void testAddSpaceObject_IllegalCase(){
 		 World world = new World();
 		 SpaceObject ship = null;
 		 world.addSpaceObject(ship);
 	 }
 	 
-	 @Test (expected = AssertionError.class)
+	 @Test 
 	 public void testAddSpaceObject_NotInWorld(){
 		 World world = new World();
 		 SpaceObject ship = new Ship();
@@ -164,13 +162,13 @@ public class WorldTest {
 		 assertFalse(world.getSpaceObjects().contains(ship));
 	 }
 	 
-	 @Test (expected = AssertionError.class)
+	 @Test
 	 public void testRemoveSpaceObject_ObjectIsNull(){
 		 World world = new World();
 		 world.removeSpaceObject(null);
 	 }
 	 
-	 @Test (expected = AssertionError.class)
+	 @Test 
 	 public void testRemoveSpaceObject_NotThisWorld(){
 		 World world = new World();
 		 SpaceObject ship = new Ship();
@@ -183,15 +181,15 @@ public class WorldTest {
 		 SpaceObject ship1 = new Ship(20, 20, 0, 20, 11, 0, 5);
 		 SpaceObject ship2 = new Ship(40, 40, 0, 20, 11, 0, 5);
 		 SpaceObject asteroid = new Asteroid(60,60,0,20,5);
-		 assertTrue(world.getShips().isEmpty());
+		 assertTrue(world.getObjects(Ship.class).isEmpty());
 		 ship1.flyIntoWorld(world);
-		 assertTrue(world.getShips().contains(ship1));
+		 assertTrue(world.getObjects(Ship.class).contains(ship1));
 		 ship2.flyIntoWorld(world);
 		 asteroid.flyIntoWorld(world);
-		 assertTrue(world.getShips().contains(ship2));
-		 assertTrue(world.getShips().contains(ship1));
-		 assertFalse(world.getShips().contains(asteroid));
-		 assertEquals(2,world.getShips().size());
+		 assertTrue(world.getObjects(Ship.class).contains(ship2));
+		 assertTrue(world.getObjects(Ship.class).contains(ship1));
+		 assertFalse(world.getObjects(Ship.class).contains(asteroid));
+		 assertEquals(2,world.getObjects(Ship.class).size());
 	 }
 	 
 	 @Test
@@ -200,15 +198,15 @@ public class WorldTest {
 		 SpaceObject asteroid1 = new Asteroid(20, 20, 0, 20,5);
 		 SpaceObject asteroid2 = new Asteroid(40, 40, 0, 20, 5);
 		 SpaceObject ship = new Ship(60,60,0,20,11,0,5);
-		 assertTrue(world.getAsteroids().isEmpty());
+		 assertTrue(world.getObjects(Asteroid.class).isEmpty());
 		 asteroid1.flyIntoWorld(world);
-		 assertTrue(world.getAsteroids().contains(asteroid1));
+		 assertTrue(world.getObjects(Asteroid.class).contains(asteroid1));
 		 asteroid2.flyIntoWorld(world);
 		 ship.flyIntoWorld(world);
-		 assertTrue(world.getAsteroids().contains(asteroid2));
-		 assertTrue(world.getAsteroids().contains(asteroid1));
-		 assertFalse(world.getAsteroids().contains(ship));
-		 assertEquals(2,world.getAsteroids().size());
+		 assertTrue(world.getObjects(Asteroid.class).contains(asteroid2));
+		 assertTrue(world.getObjects(Asteroid.class).contains(asteroid1));
+		 assertFalse(world.getObjects(Asteroid.class).contains(ship));
+		 assertEquals(2,world.getObjects(Asteroid.class).size());
 	 }
 	 
 	 @Test
@@ -217,15 +215,15 @@ public class WorldTest {
 		 SpaceObject bullet1 = new Bullet(20, 20, 0, 20);
 		 SpaceObject bullet2 = new Bullet(40, 40, 0, 20);
 		 SpaceObject ship = new Ship(60,60,0,20,11,0,5);
-		 assertTrue(world.getBullets().isEmpty());
+		 assertTrue(world.getObjects(Bullet.class).isEmpty());
 		 bullet1.flyIntoWorld(world);
-		 assertTrue(world.getBullets().contains(bullet1));
+		 assertTrue(world.getObjects(Bullet.class).contains(bullet1));
 		 bullet2.flyIntoWorld(world);
 		 ship.flyIntoWorld(world);
-		 assertTrue(world.getBullets().contains(bullet2));
-		 assertTrue(world.getBullets().contains(bullet1));
-		 assertFalse(world.getBullets().contains(ship));
-		 assertEquals(2,world.getBullets().size());
+		 assertTrue(world.getObjects(Bullet.class).contains(bullet2));
+		 assertTrue(world.getObjects(Bullet.class).contains(bullet1));
+		 assertFalse(world.getObjects(Bullet.class).contains(ship));
+		 assertEquals(2,world.getObjects(Bullet.class).size());
 	 }
 	 
 	 @Test

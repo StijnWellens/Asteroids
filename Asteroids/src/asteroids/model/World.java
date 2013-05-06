@@ -213,78 +213,26 @@ public class World {
 		this.spaceObjects = new HashSet<SpaceObject>(objects);
 	}
 	
-	/**
-	 * 
-	 * @return	...
-	 * 			| result == (setShips == new HashSet<Ship>())
-	 * 			|	&& for each spaceObject in setShips: 
-	 * 			|		Ship.Class.isInstance(spaceObject)
-	 */
-	public Set<Ship> getShips() 
-	{
-		Set<Ship> setShips = new HashSet<Ship>();
-		for(SpaceObject spaceObject: getSpaceObjects())
-		{
-			if(Ship.class.isInstance(spaceObject))
-				setShips.add((Ship)spaceObject);
-		}
-		return setShips;
-	}
+	
 	
 	/**
 	 * 
-	 * @param	object
-	 * 			The spaceObject from which //TODO
+	 * @param	clazz
+	 * 			The subclass from SpaceObject from which a set must be returned.
 	 * @return	...
-	 * 			| result == (setShips == new HashSet<Ship>())
-	 * 			|	&& for each spaceObject in setShips: 
-	 * 			|		Ship.Class.isInstance(spaceObject)
+	 * 			| result == (setObjects == new HashSet<(clazz.getClass())>())
+	 * 			|	&& for each spaceObject in setObjects: 
+	 * 			|		(clazz.getClass()).isInstance(spaceObject)
 	 */
-	public Set<? extends SpaceObject> getObjects(SpaceObject object) 
+	public Set<? extends SpaceObject> getObjects(Class<? extends SpaceObject> clazz) 
 	{
 		Set<SpaceObject> setObjects = new HashSet<SpaceObject>();
 		for(SpaceObject spaceObject: getSpaceObjects())
 		{
-			if((object.getClass()).isInstance(spaceObject))
+			if(((clazz)).isInstance(spaceObject))
 				setObjects.add(spaceObject);
 		}
 		return setObjects;
-	}
-	
-	/**
-	 * 
-	 * @return	...
-	 * 			| result == (setAsteroids == new HashSet<Asteroid>())
-	 * 			|	&& for each spaceObject in setAsteroids: 
-	 * 			|		Asteroid.Class.isInstance(spaceObject)
-	 */
-	public Set<Asteroid> getAsteroids() 
-	{
-		Set<Asteroid> setAsteroids = new HashSet<Asteroid>();
-		for(SpaceObject spaceObject: getSpaceObjects())
-		{
-			if(Asteroid.class.isInstance(spaceObject))
-				setAsteroids.add((Asteroid)spaceObject);
-		}
-		return setAsteroids;
-	}
-	
-	/**
-	 * 
-	 * @return	...
-	 * 			| result == (setBullets == new HashSet<Bullet>())
-	 * 			|	&& for each spaceObject in setBullets: 
-	 * 			|		Bullet.Class.isInstance(spaceObject)
-	 */
-	public Set<Bullet> getBullets() 
-	{
-		Set<Bullet> setBullets = new HashSet<Bullet>();
-		for(SpaceObject spaceObject: getSpaceObjects())
-		{
-			if(Bullet.class.isInstance(spaceObject))
-				setBullets.add((Bullet)spaceObject);
-		}
-		return setBullets;
 	}
 	
 	private Set<SpaceObject> spaceObjects = new HashSet<SpaceObject>();
@@ -488,12 +436,15 @@ public class World {
 			if(spaceObject != null)
 			{
 				spaceObject.move(time);
+				
 				if(Ship.class.isInstance(spaceObject))
 				{
 					((Ship)spaceObject).thrust(time);
+					
 				}				
 			}
-		}		
+		}	
+		
 	}
 	
 	/**
@@ -564,8 +515,7 @@ public class World {
 		     }
 			
 			 firstCollision.execute();
-			 
-		     
+			
 		}		
 		
 		return tc;

@@ -312,6 +312,45 @@ public class Ship extends SpaceObject{
 		
 			
 	}
+	
+	/**
+	 * Returns the amount of bullets of this ship.
+	 * 
+	 */
+	@Basic
+	public int getAmountOfBullets()
+	{
+		return this.amountOfBullets;
+	}
+	
+	/**
+	 * Returns whether a given amount of bullets is valid.
+	 * 
+	 * @param 	amount
+	 * 			The given amount to check.
+	 * @return	True if and only if the given amount is bigger than or equal to zero.
+	 * 			| result == (amount >= 0)
+	 */
+	public boolean isValidAmountOfBullets(int amount)
+	{
+		return (amount >= 0);
+	}
+	
+	/**
+	 * Sets the amount of bullets of this ship
+	 * 
+	 * @param amount
+	 * @throws IllegalArgumentException
+	 */
+	public void setAmountOfBullets(int amount) throws IllegalArgumentException
+	{
+		if(!isValidAmountOfBullets(amount))
+			throw new IllegalArgumentException();
+		
+		this.amountOfBullets = amount;
+	}
+	
+	private int amountOfBullets;
 
 	/**
 	 * Checks whether this Ship kills the given other SpaceObject.

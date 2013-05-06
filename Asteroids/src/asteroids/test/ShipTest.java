@@ -759,7 +759,7 @@ public class ShipTest {
 		World world = new World(100,100);
 		ship.flyIntoWorld(world);
 		ship.fireBullet();
-		assertFalse(world.getBullets().isEmpty());
+		assertFalse(world.getObjects(Bullet.class).isEmpty());
 		}
 	
 	@Test (expected = IllegalStateException.class)

@@ -1,6 +1,5 @@
 package asteroids.model;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -92,23 +91,44 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 		return world.getHeight();
 	}
 
+	@SuppressWarnings("unchecked") // This is not a problem in this case, we want all the objects from the Ship class so we will also only get these.
 	@Override
 	public Set<Ship> getShips(World world) {
-		Set<Ship> objects = (Set<Ship>) world.getObjects(new Ship());
-		return new HashSet<Ship>(objects);
+		try{
+			Set<Ship> objects = (Set<Ship>) world.getObjects(Ship.class);
+			return new HashSet<Ship>(objects);
+		}
+		catch(Exception e)
+		{
+			throw new ModelException(e);
+		}
 	}
 	
 
+	@SuppressWarnings("unchecked") // This is not a problem in this case, we want all the objects from the Asteroid class so we will also only get these.
 	@Override
 	public Set<Asteroid> getAsteroids(World world) {
-		Set<Asteroid> objects = (Set<Asteroid>) world.getObjects(new Asteroid());
-		return new HashSet<Asteroid>(objects);
+		try{
+			Set<Asteroid> objects = (Set<Asteroid>) world.getObjects(Asteroid.class);
+			return new HashSet<Asteroid>(objects);
+		}
+		catch(Exception e)
+		{
+			throw new ModelException(e);
+		}
 	}
 
+	@SuppressWarnings("unchecked") // This is not a problem in this case, we want all the objects from the Bullet class so we will also only get these.
 	@Override
 	public Set<Bullet> getBullets(World world) {
-		Set<Bullet> objects = (Set<Bullet>) world.getObjects(new Bullet());
-		return new HashSet<Bullet>(objects);
+		try{
+			Set<Bullet> objects = (Set<Bullet>) world.getObjects(Bullet.class);
+			return new HashSet<Bullet>(objects);
+		}
+		catch(Exception e)
+		{
+			throw new ModelException(e);
+		}
 	}
 
 	@Override
@@ -156,7 +176,6 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public void evolve(World world, double dt,
 			CollisionListener collisionListener) throws ModelException {
-		// TODO 
 		try{
 			world.evolve(dt,collisionListener);
 		}
