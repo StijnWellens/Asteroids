@@ -1,5 +1,8 @@
 package asteroids.model;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -7,8 +10,9 @@ import java.util.Set;
 import asteroids.CollisionListener;
 import asteroids.IFacade;
 import asteroids.ModelException;
+import asteroids.model.programs.*;
 
-public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
+public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 	
 	public Facade() {
 		
@@ -348,6 +352,44 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet> {
 	@Override
 	public Ship getBulletSource(Bullet bullet) {
 		return bullet.getSource();
+	}
+
+	@Override
+	public asteroids.IFacade.ParseOutcome<Program> parseProgram(String text) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public asteroids.IFacade.ParseOutcome<Program> loadProgramFromStream(
+			InputStream stream) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public asteroids.IFacade.ParseOutcome<Program> loadProgramFromUrl(URL url)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isTypeCheckingSupported() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public asteroids.IFacade.TypeCheckOutcome typeCheckProgram(Program program) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setShipProgram(Ship ship, Program program) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
