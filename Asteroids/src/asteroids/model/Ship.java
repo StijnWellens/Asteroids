@@ -1,5 +1,7 @@
 package asteroids.model;
 
+import java.util.*;
+
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -297,8 +299,10 @@ public class Ship extends SpaceObject{
 	/**
 	 * Let this ship fires a bullet.
 	 * 
-	 * @effect	Create a new bullet based on this ship and let it go into the world of this ship.
-	 * 			| (new Bullet(this)).flyIntoWorld(this.getWorld())
+	 * @effect	If this ship has less than 3 bullets in his world, then create a new bullet based on this ship and let it go into the world of this ship.
+	 * 			| if(this.getAmountOfBullets() < 3)
+	 * 			|	then (new Bullet(this)).flyIntoWorld(this.getWorld())
+	 * 			|		
 	 * @throws 	IllegalStateException
 	 * 			Throws an exception when the state of this ship isn't ACTIVE or when its world is null.
 	 * 			| (this.getState() != State.ACTIVE) || (this.getWorld() == null)
@@ -307,10 +311,12 @@ public class Ship extends SpaceObject{
 		if(this.getState() != State.ACTIVE || this.getWorld() == null)
 			throw new IllegalStateException();
 		
-		SpaceObject bullet = new Bullet(this);
-		bullet.flyIntoWorld(this.getWorld());
+		if(this.getAmountOfBullets() < 3)
+		{
+			SpaceObject bullet = new Bullet(this);
+			bullet.flyIntoWorld(this.getWorld());			
+		}
 		
-			
 	}
 	
 	/**
@@ -337,10 +343,15 @@ public class Ship extends SpaceObject{
 	}
 	
 	/**
-	 * Sets the amount of bullets of this ship
+	 * Sets the amount of bullets of this ship to the given amount.
 	 * 
-	 * @param amount
-	 * @throws IllegalArgumentException
+	 * @param 	amount
+	 * 			The given amount of bullets.
+	 * @post	The new amount of bullets will be set to the given amount of bullets.
+	 * 			| (new this).getAmountOfBullets() == amount
+	 * @throws 	IllegalArgumentException
+	 * 			Throws exception when the given amount is not valid.
+	 * 			| !isValidAmountOfBullets(amount)
 	 */
 	public void setAmountOfBullets(int amount) throws IllegalArgumentException
 	{
@@ -351,6 +362,8 @@ public class Ship extends SpaceObject{
 	}
 	
 	private int amountOfBullets;
+
+	private Set<Bullet> activeBullets = new HashSet<Bullet>(); 
 
 	/**
 	 * Checks whether this Ship kills the given other SpaceObject.

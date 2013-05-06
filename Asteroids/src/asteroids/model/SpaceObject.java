@@ -745,10 +745,8 @@ public abstract class SpaceObject {
 	/**
 	 * Removes this SpaceObject from the given world.
 	 * 
-	 * @param 	world
-	 * 			the world where the SpaceObject has to be removed
-	 * @effect  Removes this SpaceObject from the given world.
-	 * 			| world.removeSpaceObject(this)
+	 * @effect  Removes this SpaceObject from his world.
+	 * 			| this.getWorld().removeSpaceObject(this)
 	 * @effect	Sets the world of this SpaceObject to null.
 	 * 			| setWorld(null)
 	 * @effect	Sets the state of this SpaceObject to TERMINATED.
@@ -756,17 +754,13 @@ public abstract class SpaceObject {
 	 * @throws 	IllegalStateException
 	 * 			Throws illegal state exception when this SpaceObject is not ACTIVE or when its world is null.
 	 * 			| this.getState() != State.ACTIVE || this.getWorld() == null
-	 * @throws 	IllegalArgumentException
-	 * 			Throws illegal argument exception when the given world is not equal to the SpaceObject's world.
-	 * 			| world != this.getWorld()
 	 */
-	public void die(World world) throws IllegalStateException, IllegalArgumentException{
-		if(world != this.getWorld())
-			throw new IllegalArgumentException();
+	public void die() throws IllegalStateException{
 		if(this.getState() != State.ACTIVE || this.getWorld() == null)
 			throw new IllegalStateException();
 		
-		world.removeSpaceObject(this);
+		World currentWorld = this.getWorld();
+		currentWorld.removeSpaceObject(this);
 		this.setWorld(null);
 		this.setState(State.TERMINATED);
 		

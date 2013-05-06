@@ -291,7 +291,7 @@ public class World {
 	@Basic
 	public ArrayList<Collision> getPossibleCollisions()
 	{
-		if(this.possibleCollisions== null)
+		if(this.possibleCollisions == null)
 			return null;
 		return new ArrayList<Collision>(possibleCollisions);
 	}

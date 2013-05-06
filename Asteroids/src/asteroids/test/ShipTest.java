@@ -694,29 +694,19 @@ public class ShipTest {
 		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
 		World world = new World(100,100);
 		ship1.flyIntoWorld(world);
-		ship1.die(world);
+		ship1.die();
 		assertEquals(null, ship1.getWorld());	
 		assertEquals(State.TERMINATED, ship1.getState());	
 		assertFalse(world.containsSpaceObject(ship1));	
 	}
 	
-	@Test (expected = IllegalArgumentException.class)
-	public void testDie_WorldIsWrong(){
-		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
-		World world1 = new World(100,100);
-		World world2 = new World(100,100);
-		ship1.flyIntoWorld(world1);
-		ship1.die(world2);
-	}
-	
-
 	@Test (expected = IllegalStateException.class)
 	public void testDie_WrongState(){
 		Ship ship1 = new Ship(20, 20, 0, 20, 11, 0,10);
 		World world = new World(100,100);
 		ship1.flyIntoWorld(world);
 		ship1.setState(State.TERMINATED);
-		ship1.die(world);
+		ship1.die();
 	}
 	
 	@Test

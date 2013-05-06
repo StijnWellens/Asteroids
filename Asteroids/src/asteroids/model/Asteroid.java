@@ -187,10 +187,8 @@ public class Asteroid extends SpaceObject {
 	/**
 	 * Removes this Asteroid from the given world.
 	 * 
-	 * @param 	world
-	 * 			the world where the Asteroid has to be removed
-	 * @effect  Removes this SpaceObject from the given world.
-	 * 			| world.removeSpaceObject(this)
+	 * @effect  Removes this SpaceObject from his world.
+	 * 			| this.getWorld().removeSpaceObject(this)
 	 * @effect	Sets the world of this SpaceObject to null.
 	 * 			| setWorld(null)
 	 * @effect	Sets the state of this SpaceObject to TERMINATED.
@@ -206,17 +204,16 @@ public class Asteroid extends SpaceObject {
 	 * 			|					child.getVelocity().getModulus() == this.getVelocity().getModulus() * 1.5
 	 * 			|					child.getRadius() == (this.getRadius())/2
 	 * 			|					child.getRandom() == (this.getRandom())	
+	 * 			|					child.getWorld() == (this.getWorld())
 	 * 			|				)
 	 * @throws 	IllegalStateException
 	 * 			Throws illegal state exception when this SpaceObject is not ACTIVE or when its world is null.
 	 * 			| this.getState() != State.ACTIVE || this.getWorld() == null
-	 * @throws 	IllegalArgumentException
-	 * 			Throws illegal argument exception when the given world is not equal to the SpaceObject's world.
-	 * 			| world != this.getWorld()
 	 */
 	@Override
-	public void die(World world) throws IllegalStateException, IllegalArgumentException{
-		super.die(world);
+	public void die() throws IllegalStateException{
+		World currentWorld = this.getWorld();
+		super.die();
 		
 		if(this.getRadius()>=30 && getRandom() != null){
 			double randomDouble = getRandom().nextDouble();
@@ -244,8 +241,8 @@ public class Asteroid extends SpaceObject {
 			SpaceObject child2 = new Asteroid(this.getX()-(this.getRadius()/2)*cos,this.getY()-(this.getRadius()/2)*sin,
 					-1*newXVelocity,-1*newYVelocity,this.getRadius()/2,this.getRandom());
 			try{
-				child1.flyIntoWorld(world);
-				child2.flyIntoWorld(world);
+				child1.flyIntoWorld(currentWorld);
+				child2.flyIntoWorld(currentWorld);
 			}
 			catch(IllegalArgumentException iae){
 				

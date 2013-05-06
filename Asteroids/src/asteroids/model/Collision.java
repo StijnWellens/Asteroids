@@ -156,9 +156,9 @@ public class Collision {
 			return false;
 		if(object1.getWorld() != object2.getWorld())
 			return false;
-		if(Bullet.class.isInstance(object1) && ((Bullet)object1).getShip()== object2)
+		if(Bullet.class.isInstance(object1) && ((Bullet)object1).getSource()== object2)
 			return false;
-		if(Bullet.class.isInstance(object2) && ((Bullet)object2).getShip()== object1)
+		if(Bullet.class.isInstance(object2) && ((Bullet)object2).getSource()== object1)
 			return false;
 		return true;
 	}
@@ -543,7 +543,7 @@ public class Collision {
 	{
 		if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
 		{
-			getObject1().die(getObject1().getWorld());
+			getObject1().die();
 		}
 		else {
 			Vector velocity = getObject1().getVelocity();
@@ -567,16 +567,16 @@ public class Collision {
 		SpaceObject object2 = getObject2();
 		if(object1.killsOther(object2) && object2.killsOther(object1))
 		{
-			object1.die(object1.getWorld());
-			object2.die(object2.getWorld());
+			object1.die();
+			object2.die();
 		}
 		else if(object1.killsOther(object2))
 		{
-			object2.die(object2.getWorld());
+			object2.die();
 		}
 		else if(object2.killsOther(object1))
 		{
-			object1.die(object1.getWorld());
+			object1.die();
 		}
 		else
 		{

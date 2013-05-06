@@ -34,7 +34,7 @@ public class Bullet extends SpaceObject {
 
 	private static final double DENSITY = 7.8E12;  //in kg/km³
 	private static final double PI = Math.PI;
-	private final Ship ship;
+	private final Ship source;
 	private static final double RADIUS = 3; // in km
 	private static final double INITIAL_SPEED = 250; // in km/s
 	
@@ -47,12 +47,12 @@ public class Bullet extends SpaceObject {
 	 * @effect	The mass of this new Bullet will be set to (4PI/3)*(RADIUS)³*DENSITY.
 	 * 			| setMass((4PI/3)*(RADIUS)³*DENSITY)
 	 * @post	The source of this new bullet will be set to null.
-	 * 			| (new this).getShip() == null
+	 * 			| (new this).getSource() == null
 	 */
 	public Bullet() throws IllegalArgumentException
 	{
 		super(10, 10, 0, 0, RADIUS);
-		this.ship = null;
+		this.source = null;
 		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
 	}
 	
@@ -73,12 +73,12 @@ public class Bullet extends SpaceObject {
 	 * @effect	The mass of this new Bullet will be set to (4PI/3)*(RADIUS)³*DENSITY.
 	 * 			| setMass((4PI/3)*(RADIUS)³*DENSITY)
 	 * @post	The source of this new bullet will be set to null.
-	 * 			| (new this).getShip() == null
+	 * 			| (new this).getSource() == null
 	 */
 	public Bullet(double x, double y, double xVelocity, double yVelocity) throws IllegalArgumentException
 	{
 		super(x, y, xVelocity, yVelocity, RADIUS);
-		this.ship = null;
+		this.source = null;
 		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
 	}
 	
@@ -102,7 +102,7 @@ public class Bullet extends SpaceObject {
 	{
 		super(ship.getX()+(ship.getRadius()+RADIUS)*Math.cos(ship.getDirection()), ship.getY()+(ship.getRadius()+RADIUS)*Math.sin(ship.getDirection()) , 
 				INITIAL_SPEED*Math.cos(ship.getDirection()), INITIAL_SPEED*Math.sin(ship.getDirection()),RADIUS);
-		this.ship = ship;
+		this.source = ship;
 		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
 	}
 	
@@ -114,8 +114,8 @@ public class Bullet extends SpaceObject {
 	 */
 	@Basic
 	@Immutable
-	public final Ship getShip(){
-		return this.ship;
+	public final Ship getSource(){
+		return this.source;
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class Bullet extends SpaceObject {
 		if(other instanceof Asteroid)
 			return true;
 		if(other instanceof Ship)
-			return (this.getShip() != ((Ship)other));
+			return (this.getSource() != ((Ship)other));
 		return other.willBeKilledByOther(this);
 	}
 
@@ -178,9 +178,23 @@ public class Bullet extends SpaceObject {
 		if(other instanceof Asteroid)
 			return true;
 		if(other instanceof Ship)
-			return (this.getShip() != ((Ship)other));
+			return (this.getSource() != ((Ship)other));
 		return other.killsOther(this);
 	}
 	
+	@Override
+	public void die()
+	{
+		super.die();
+		
+		
+	}
+	
+	@Override
+	public void flyIntoWorld(World world)
+	{
+		super.flyIntoWorld(world);
+		
+	}
 	
 }
