@@ -33,6 +33,8 @@ public class World {
 	 */
 	public World() {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
+		
+		this.leftSubCorner = new Vector(0,0);		
 		this.height = 100;
 		this.width = 100;		
 	}
@@ -53,13 +55,18 @@ public class World {
 	public World(double width, double height) throws IllegalArgumentException {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
 		
+		Vector leftSubCorner = new Vector(0,0);
+		
 		if(!isValidHeight(height))
 			throw new IllegalArgumentException();
 		if(!isValidWidth(width))
 			throw new IllegalArgumentException();
-		
+		if(!isValidLeftSubCorner(leftSubCorner))
+			throw new IllegalArgumentException();
+				
 		this.height = height;
 		this.width = width;
+		this.leftSubCorner = leftSubCorner;
 	}
 	
 	/**
@@ -107,11 +114,20 @@ public class World {
 	public boolean isValidWidth(double width) {
 		return((!Double.isNaN(width)) && (width >= 0) && (width <= upperBoundCoordinate) );
 	}
-		
+	
+	public Vector getLeftSubCorner()
+	{
+		return this.leftSubCorner;
+	}
+	
+	public boolean isValidLeftSubCorner(Vector leftSubCorner)
+	{
+		return (leftSubCorner != null);
+	}
+	
+	private final Vector leftSubCorner;
 	private final double height;
 	private final double width;
-
-	private static double	upperBoundCoordinate;
 
 	/**
 	 * 
@@ -153,6 +169,31 @@ public class World {
 			throw new IllegalArgumentException();
 		World.upperBoundCoordinate = upperBoundCoordinate;
 
+	}
+	
+	private static double	upperBoundCoordinate;
+	
+	/**
+	 * Checks whether a given point lies between this world borders.
+	 * 
+	 * @param 	point
+	 * 			The vector to check if it lies between the borders of this world.
+	 * @return	True if and only if the given point lies between the borders of this world.
+	 * 			| if( (getLeftSubCorner().getXComp() <= point.getXComp() <= getLeftSubCorner().getXComp() + getWidth())
+	 * 			|		&&	(getLeftSubCorner().getYComp() <= point.getYComp() <= getLeftSubCorner().getYComp() + getHeigth()) )
+	 * 			|	then result == true
+	 */
+	public boolean pointInWorld(Vector point)
+	{
+		if(!Util.fuzzyLessThanOrEqualTo(point.getXComp(),this.getLeftSubCorner().getXComp()+this.getWidth()))
+			return false;
+		if(Util.fuzzyLessThanOrEqualTo(point.getXComp(),this.getLeftSubCorner().getXComp()) && !Util.fuzzyEquals(point.getXComp(), this.getLeftSubCorner().getXComp()))
+			return false;
+		if(!Util.fuzzyLessThanOrEqualTo(point.getYComp(),this.getLeftSubCorner().getYComp()+this.getHeight()))
+			return false;
+		if(Util.fuzzyLessThanOrEqualTo(point.getYComp(),this.getLeftSubCorner().getYComp()) && !Util.fuzzyEquals(point.getYComp(), this.getLeftSubCorner().getYComp()))
+			return false;
+		return true;
 	}
 	
 	/**

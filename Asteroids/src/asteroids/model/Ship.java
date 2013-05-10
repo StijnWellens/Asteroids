@@ -29,6 +29,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidThruster(getThruster())
  * @invar	This ship must always have a proper world.
  * 			| hasProperWorld()
+ * @invar	This ship must always have proper active bullets.
+ * 			| hasProperActiveBullets()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -362,6 +364,47 @@ public class Ship extends SpaceObject{
 	}
 	
 	private int amountOfBullets;
+	
+	/**
+	 * Check if this ship has the given bullet as active bullet.
+	 * 
+	 * @param 	bullet
+	 * 			The bullet to check.
+	 * @return	True if and only if the bullet isn't null 
+	 * 			and the activeBullets of this ship contains the given bullet.
+	 * 			| result == ( (bullet != null) && activeBullets.contains(bullet) )
+	 */
+	@Basic
+	public boolean containsActiveBullet(Bullet bullet) {
+		return ( (bullet != null) && activeBullets.contains(bullet) );
+	}
+	
+	
+	public boolean canHaveAsActiveBullet(@Raw Bullet bullet) {
+		if(bullet ==  null)
+			return false;
+		if(bullet.getState() == State.TERMINATED)
+			return false;
+		return true;
+	}	
+	
+	@Raw
+	public void addActiveBullet(@Raw Bullet bullet)
+	{
+		
+	}
+	
+	public void removeActiveBullet(Bullet bullet) {
+		
+	}
+	
+	public boolean hasProperActiveBullets() {
+		
+	}	
+	
+	public Set<Bullet> getActiveBulletsInWorld(World world){
+		
+	}
 
 	private Set<Bullet> activeBullets = new HashSet<Bullet>(); 
 

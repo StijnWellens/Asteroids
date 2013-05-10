@@ -667,13 +667,13 @@ public abstract class SpaceObject {
 	public boolean canHaveAsWorld(World world){
 		if(world == null)
 			return true;
-		if(!Util.fuzzyLessThanOrEqualTo(this.getX()+this.getRadius(),world.getWidth()))
+		if(!world.pointInWorld(new Vector(this.getX() + this.getRadius(), this.getY())))
 			return false;
-		if(Util.fuzzyLessThanOrEqualTo(this.getX()-this.getRadius(),0) && !Util.fuzzyEquals(this.getX()-this.getRadius(), 0))
+		if(!world.pointInWorld(new Vector(this.getX() - this.getRadius(), this.getY())))
 			return false;
-		if(!Util.fuzzyLessThanOrEqualTo(this.getY()+this.getRadius(),world.getHeight()))
+		if(!world.pointInWorld(new Vector(this.getX(), this.getY() + this.getRadius())))
 			return false;
-		if(Util.fuzzyLessThanOrEqualTo(this.getY()-this.getRadius(),0) && !Util.fuzzyEquals(this.getY()-this.getRadius(), 0))
+		if(!world.pointInWorld(new Vector(this.getX(), this.getY() - this.getRadius())))
 			return false;
 		return true;
 	}

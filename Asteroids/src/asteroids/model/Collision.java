@@ -230,8 +230,9 @@ public class Collision {
 	{
 		double width = getObject1().getWorld().getWidth();
 		double height = getObject1().getWorld().getHeight();
-		double dtx = getTimeToCollisionWithAxis(getObject1().getX(), getObject1().getXVelocity(), width);
-		double dty = getTimeToCollisionWithAxis(getObject1().getY(), getObject1().getYVelocity(), height);
+		Vector leftSubCorner = getObject1().getWorld().getLeftSubCorner();
+		double dtx = getTimeToCollisionWithAxis(getObject1().getX(), getObject1().getXVelocity(), leftSubCorner.getXComp(), leftSubCorner.getXComp() + width);
+		double dty = getTimeToCollisionWithAxis(getObject1().getY(), getObject1().getYVelocity(), leftSubCorner.getYComp(), leftSubCorner.getYComp() + height);
 						
 		if(dtx <= dty)
 			return dtx;
@@ -254,13 +255,13 @@ public class Collision {
 	 * 			| if(result == Double.POSITIVE_INFINITY) then
 	 * 			|	velocity == 0		
 	 */
-	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMax)
+	private double getTimeToCollisionWithAxis(double position, double velocity, double axisMin, double axisMax)
 	{
 		
 		double dt;
 		
 		if(velocity>0)
-			dt = Vector.multiplyComponents(axisMax-getObject1().getRadius()-position, 1/velocity);
+			dt = Vector.multiplyComponents(axisMax-getObject1().getRadius()-position-axisMin, 1/velocity);
 		else if(velocity<0)
 			dt = Vector.multiplyComponents(getObject1().getRadius()-position, 1/velocity);
 		else
@@ -439,6 +440,7 @@ public class Collision {
 		return collision;
 	}
 	
+	//TODO
 	/**
 	 * Return where a SpaceObject will collide with the border.
 	 * 
@@ -468,8 +470,9 @@ public class Collision {
 			
 			double width = object.getWorld().getWidth();
 			double height = object.getWorld().getHeight();
-			double dtx = getTimeToCollisionWithAxis(object.getX(), object.getXVelocity(), width);
-			double dty = getTimeToCollisionWithAxis(object.getY(), object.getYVelocity(), height);
+			Vector leftSubCorner = getObject1().getWorld().getLeftSubCorner();
+			double dtx = getTimeToCollisionWithAxis(object.getX(), object.getXVelocity(), leftSubCorner.getXComp(), leftSubCorner.getXComp() + width);
+			double dty = getTimeToCollisionWithAxis(object.getY(), object.getYVelocity(), leftSubCorner.getYComp(), leftSubCorner.getYComp() + height);
 							
 			if(dtx <= dty)
 			{

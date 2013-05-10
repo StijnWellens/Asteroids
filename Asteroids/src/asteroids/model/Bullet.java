@@ -23,6 +23,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidMass(getMass())
  * @invar	This bullet must always have a proper world.
  * 			| hasProperWorld()
+ * @invar	This bullet must always hava a proper source.
+ * 			| hasProperSource()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -102,6 +104,8 @@ public class Bullet extends SpaceObject {
 	{
 		super(ship.getX()+(ship.getRadius()+RADIUS)*Math.cos(ship.getDirection()), ship.getY()+(ship.getRadius()+RADIUS)*Math.sin(ship.getDirection()) , 
 				INITIAL_SPEED*Math.cos(ship.getDirection()), INITIAL_SPEED*Math.sin(ship.getDirection()),RADIUS);
+		if(!canHaveAsSource(ship))
+			throw new IllegalArgumentException();
 		this.source = ship;
 		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
 	}
@@ -116,6 +120,50 @@ public class Bullet extends SpaceObject {
 	@Immutable
 	public final Ship getSource(){
 		return this.source;
+	}
+	
+	/**
+	 * Check whether this bullet can have a given ship as its source.
+	 * 
+	 * @param 	ship
+	 * 			The ship to check.
+	 * @return	True if the ship is null.
+	 * 			| result == true
+	 * @return	True if the given ship can have this bullet as active bullet.
+	 * 			|
+	 */
+	public boolean canHaveAsSource(Ship ship) {
+		if(ship == null)
+			return true;
+		return ship.canHaveAsActiveBullet(this);
+	}
+	
+	/**
+	 * Check whether this Bullet has a proper source.
+	 * 
+	 * @return	False if this bullet can't have its source as its source.
+	 * 			| if(!canHaveAsSource(this.getSource()))
+	 * 			|	then result == false 
+	 * @return	True if the state of this bullet is not ACTIVE.
+	 * 			| if(this.getState() != State.ACTIVE)
+	 * 			|	then result == true
+	 * @return	True if the source of this bullet is null.
+	 * 			| if(source == null)
+	 * 			|	then result == true
+	 * @return	True if the source of this bullet contains this bullet as an active bullet.
+	 * 			| if(this.getSource().containsActiveBullet(this))
+	 * 			|	then result == true
+	 */
+	public boolean hasProperSource() {
+		if(!canHaveAsSource(this.getSource()))
+			return false;
+		if(this.getState() != State.ACTIVE)
+			return true;
+		if(source == null)
+			return true;
+		if(this.getSource().containsActiveBullet(this))
+			return true;
+		return false;
 	}
 
 	/**
@@ -186,15 +234,17 @@ public class Bullet extends SpaceObject {
 	public void die()
 	{
 		super.die();
-		
-		
+		this.getSource().removeActiveBullet(this);		
 	}
 	
 	@Override
 	public void flyIntoWorld(World world)
 	{
-		super.flyIntoWorld(world);
-		
+		if(this.getSource().getActiveBulletsInWorld(world).size() < 3)
+		{
+			super.flyIntoWorld(world);
+			this.getSource().addActiveBullet(this);
+		}		
 	}
 	
 }
