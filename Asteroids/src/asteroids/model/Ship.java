@@ -379,7 +379,14 @@ public class Ship extends SpaceObject{
 		return ( (bullet != null) && activeBullets.contains(bullet) );
 	}
 	
-	
+	/**
+	 * Check whether this ship can have a given bullet as active bullet.
+	 * 
+	 * @param 	bullet
+	 * 			The bullet to check.
+	 * @return	True if and only if the given bullet is not null and the given state is not TERMINATED.
+	 * 			| result == (bullet !=  null) && (bullet.getState() == State.TERMINATED)
+	 */
 	public boolean canHaveAsActiveBullet(@Raw Bullet bullet) {
 		if(bullet ==  null)
 			return false;

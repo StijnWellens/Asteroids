@@ -155,10 +155,10 @@ public class Bullet extends SpaceObject {
 	 * 			|	then result == true
 	 */
 	public boolean hasProperSource() {
-		if(!canHaveAsSource(this.getSource()))
-			return false;
 		if(this.getState() != State.ACTIVE)
 			return true;
+		if(!canHaveAsSource(this.getSource()))
+			return false;
 		if(source == null)
 			return true;
 		if(this.getSource().containsActiveBullet(this))
