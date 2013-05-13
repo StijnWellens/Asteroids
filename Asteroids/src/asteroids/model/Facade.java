@@ -356,8 +356,19 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 
 	@Override
 	public asteroids.IFacade.ParseOutcome<Program> parseProgram(String text) {
-		// TODO Auto-generated method stub
-		return null;
+		ProgramFactoryImpl factory = new ProgramFactoryImpl();
+	    ProgramParser<Expression, Statement, Type> parser = new ProgramParser<>(factory);
+	    try {
+	        parser.parse(text);
+	        List<String> errors = parser.getErrors();
+	        if(! errors.isEmpty()) {
+	          return ParseOutcome.failure(errors.get(0));
+	        } else {
+	          return ParseOutcome.success(new Program(parser.getGlobals(), parser.getStatement())); 
+	        }
+	    } catch(RecognitionException e) {
+	      return ParseOutcome.failure(e.getMessage());
+	    }
 	}
 
 	@Override
