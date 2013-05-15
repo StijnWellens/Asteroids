@@ -4,7 +4,7 @@ import asteroids.model.programs.Type;
 
 public class DoubleLiteral extends StandardExpression {
 
-	protected DoubleLiteral(int line, int column, double value) {
+	public DoubleLiteral(int line, int column, double value) {
 		super(line, column);
 		this.value = value;
 	}

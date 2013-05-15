@@ -10,7 +10,7 @@ public class GetVxOperator extends GetExpression {
 
 	@Override
 	public Double getValue() {
-		return ((SpaceObject)(this.getPart().getValue())).getXVelocity();
+		return (((SpaceObject) this.getPart().getValue())).getXVelocity();
 	}
 
 }
