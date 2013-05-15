@@ -302,7 +302,7 @@ public class Ship extends SpaceObject{
 	 * Let this ship fires a bullet.
 	 * 
 	 * @effect	If this ship has less than 3 bullets in his world, then create a new bullet based on this ship and let it go into the world of this ship.
-	 * 			| if(this.getAmountOfBullets() < 3)
+	 * 			| if(this.getActiveBulletsInWorld(this.getWorld()).size() < 3)
 	 * 			|	then (new Bullet(this)).flyIntoWorld(this.getWorld())
 	 * 			|		
 	 * @throws 	IllegalStateException
@@ -313,57 +313,13 @@ public class Ship extends SpaceObject{
 		if(this.getState() != State.ACTIVE || this.getWorld() == null)
 			throw new IllegalStateException();
 		
-		if(this.getAmountOfBullets() < 3)
+		if(this.getActiveBulletsInWorld(this.getWorld()).size() < 3)
 		{
 			SpaceObject bullet = new Bullet(this);
 			bullet.flyIntoWorld(this.getWorld());			
 		}
 		
 	}
-	
-	/**
-	 * Returns the amount of bullets of this ship.
-	 * 
-	 */
-	@Basic
-	public int getAmountOfBullets()
-	{
-		return this.amountOfBullets;
-	}
-	
-	/**
-	 * Returns whether a given amount of bullets is valid.
-	 * 
-	 * @param 	amount
-	 * 			The given amount to check.
-	 * @return	True if and only if the given amount is bigger than or equal to zero.
-	 * 			| result == (amount >= 0)
-	 */
-	public boolean isValidAmountOfBullets(int amount)
-	{
-		return (amount >= 0);
-	}
-	
-	/**
-	 * Sets the amount of bullets of this ship to the given amount.
-	 * 
-	 * @param 	amount
-	 * 			The given amount of bullets.
-	 * @post	The new amount of bullets will be set to the given amount of bullets.
-	 * 			| (new this).getAmountOfBullets() == amount
-	 * @throws 	IllegalArgumentException
-	 * 			Throws exception when the given amount is not valid.
-	 * 			| !isValidAmountOfBullets(amount)
-	 */
-	public void setAmountOfBullets(int amount) throws IllegalArgumentException
-	{
-		if(!isValidAmountOfBullets(amount))
-			throw new IllegalArgumentException();
-		
-		this.amountOfBullets = amount;
-	}
-	
-	private int amountOfBullets;
 	
 	/**
 	 * Check if this ship has the given bullet as active bullet.
@@ -384,32 +340,93 @@ public class Ship extends SpaceObject{
 	 * 
 	 * @param 	bullet
 	 * 			The bullet to check.
-	 * @return	True if and only if the given bullet is not null and the given state is not TERMINATED.
-	 * 			| result == (bullet !=  null) && (bullet.getState() == State.TERMINATED)
+	 * @return	True if and only if the given bullet and its source are not null 
+	 * 			and the given bullet his state is not TERMINATED and the bullet its source is this ship.
+	 * 			| result == (bullet !=  null && bullet.getSource() != null) 
+	 * 			|	&& (bullet.getState() != State.TERMINATED) 
+	 * 			|	&& (bullet.getSource().equals(this))
 	 */
 	public boolean canHaveAsActiveBullet(@Raw Bullet bullet) {
-		if(bullet ==  null)
+		if(bullet == null || bullet.getSource() == null)
 			return false;
 		if(bullet.getState() == State.TERMINATED)
 			return false;
 		return bullet.getSource().equals(this);
 	}	
 	
-	public void addActiveBullet(@Raw Bullet bullet)
+	/**
+	 * Add a given bullet to the activeBullet list of this ship.
+	 * 
+	 * @param 	bullet
+	 * 			the bullet to add
+	 * @post	The activeBullets list of this ship will contain the given bullet.
+	 * 			| (new this).activeBullets.contains(bullet) == true
+	 * @throws	IllegalArgumentException
+	 * 			Throw exception when this ship can't have the given bullet as an active bullet.
+	 * 			| !canHaveAsActiveBullet(bullet)
+	 */
+	public void addActiveBullet(@Raw Bullet bullet) throws IllegalArgumentException
 	{
 		if(!canHaveAsActiveBullet(bullet))
+			throw new IllegalArgumentException();
+		activeBullets.add(bullet);
 	}
 	
+	/**
+	 * Remove a given bullet from the activeBullet list of this ship.
+	 * 
+	 * @param	bullet
+	 * 			The bullet to remove.
+	 * @post	The activeBullets list of this ship will not contain the given bullet.
+	 * 			| (new this).activeBullets.contains(bullet) == false
+	 */
 	public void removeActiveBullet(Bullet bullet) {
-		
+		activeBullets.remove(bullet);
 	}
 	
+	/**
+	 * Checks if the set of active bullets of this ship is valid.
+	 * 
+	 * @return	True if this ship can have each bullet in the set as an active bullet.
+	 * 			| if( result == true)
+	 * 			|	then for each bullet in (this.activeBullets):
+	 * 			|		this.canHaveAsActiveBullet(bullet)
+	 * @return	True if the set of active bullet is empty.
+	 * 			| result == this.activeBullets.isEmpty()
+	 */
 	public boolean hasProperActiveBullets() {
 		
+		if(this.activeBullets.isEmpty()) {
+			return true;
+		}			
+		
+		for(Bullet bullet: this.activeBullets)
+		{
+			if(!canHaveAsActiveBullet(bullet)) {
+				return false;
+			}
+				
+		}
+		return true;
 	}	
 	
+	/**
+	 * Return a set of bullets of this ship who are active in a given world.
+	 * 
+	 * @param 	world
+	 * 			The world were the active bullets are in.
+	 * @return	A set of active bullets of this ship in the given world.
+	 * 			| for each bullet in result:
+	 * 			|		bullet.getWorld().equals(world)
+	 * 			|		this.activeBullets.contains(bullet) 
+	 */
 	public Set<Bullet> getActiveBulletsInWorld(World world){
-		
+		Set<Bullet> activeBulletsInWorld = new HashSet<Bullet>();
+		for(Bullet bullet: activeBullets) {
+			if(bullet.getWorld().equals(world))
+				activeBulletsInWorld.add(bullet);
+		}
+		return activeBulletsInWorld;
 	}
 
 	private Set<Bullet> activeBullets = new HashSet<Bullet>(); 

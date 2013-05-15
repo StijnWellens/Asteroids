@@ -104,8 +104,6 @@ public class Bullet extends SpaceObject {
 	{
 		super(ship.getX()+(ship.getRadius()+RADIUS)*Math.cos(ship.getDirection()), ship.getY()+(ship.getRadius()+RADIUS)*Math.sin(ship.getDirection()) , 
 				INITIAL_SPEED*Math.cos(ship.getDirection()), INITIAL_SPEED*Math.sin(ship.getDirection()),RADIUS);
-		if(!canHaveAsSource(ship))
-			throw new IllegalArgumentException();
 		this.source = ship;
 		setMass((4/3)*PI*(RADIUS*RADIUS*RADIUS)*DENSITY);
 	}
@@ -118,24 +116,9 @@ public class Bullet extends SpaceObject {
 	 */
 	@Basic
 	@Immutable
+	@Raw
 	public final Ship getSource(){
 		return this.source;
-	}
-	
-	/**
-	 * Check whether this bullet can have a given ship as its source.
-	 * 
-	 * @param 	ship
-	 * 			The ship to check.
-	 * @return	True if the ship is null.
-	 * 			| result == true
-	 * @return	True if the given ship can have this bullet as active bullet.
-	 * 			|
-	 */
-	public boolean canHaveAsSource(Ship ship) {
-		if(ship == null)
-			return true;
-		return ship.canHaveAsActiveBullet(this);
 	}
 	
 	/**
@@ -157,8 +140,6 @@ public class Bullet extends SpaceObject {
 	public boolean hasProperSource() {
 		if(this.getState() != State.ACTIVE)
 			return true;
-		if(!canHaveAsSource(this.getSource()))
-			return false;
 		if(source == null)
 			return true;
 		if(this.getSource().containsActiveBullet(this))
@@ -240,11 +221,8 @@ public class Bullet extends SpaceObject {
 	@Override
 	public void flyIntoWorld(World world)
 	{
-		if(this.getSource().getActiveBulletsInWorld(world).size() < 3)
-		{
-			super.flyIntoWorld(world);
-			this.getSource().addActiveBullet(this);
-		}		
+		super.flyIntoWorld(world);
+		this.getSource().addActiveBullet(this);				
 	}
 	
 }
