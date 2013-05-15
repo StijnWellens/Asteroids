@@ -4,8 +4,8 @@ import asteroids.model.SpaceObject;
 
 public class GetVyOperator extends GetExpression {
 
-	public GetVyOperator(Expression e) throws IllegalArgumentException {
-		super(e);
+	public GetVyOperator(int line, int column, Expression e) throws IllegalArgumentException {
+		super(line, column, e);
 	}
 
 	@Override

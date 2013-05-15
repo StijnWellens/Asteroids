@@ -2,9 +2,9 @@ package asteroids.model.programs.expressions;
 
 public class NotEqualTo extends ComparisonExpression {
 
-	public NotEqualTo(Expression left, Expression right)
+	public NotEqualTo(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
-		super(left, right);
+		super(line, column, left, right);
 	}
 
 	@Override

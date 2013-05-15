@@ -2,9 +2,9 @@ package asteroids.model.programs.expressions;
 
 public class LessThan extends ComparisonExpression {
 
-	public LessThan(Expression left, Expression right)
+	public LessThan(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
-		super(left, right);
+		super(line, column, left, right);
 	}
 
 	@Override

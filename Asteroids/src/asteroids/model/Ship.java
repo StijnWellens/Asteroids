@@ -2,6 +2,7 @@ package asteroids.model;
 
 import java.util.*;
 
+import asteroids.model.programs.Program;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -476,5 +477,25 @@ public class Ship extends SpaceObject{
 			return false;
 		return other.killsOther(this);
 	}
-		
+	
+	/**
+	 * Get the program of this ship.
+	 */
+	public Program getProgram() {
+		return this.program;
+	}
+	
+	/**
+	 * Set the program of this ship.
+	 * 
+	 * @param	program
+	 * 			The program to set.
+	 * @post	The program of this ship will be set to the given program.
+	 * 			| (new this).getProgram().equals(program)
+	 */
+	public void setProgram(Program program) {
+		this.program = program;
+	}
+	
+	private Program program;
 }

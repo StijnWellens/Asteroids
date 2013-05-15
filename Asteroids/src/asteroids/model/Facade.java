@@ -5,10 +5,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
+import org.antlr.v4.runtime.RecognitionException;
+
 import asteroids.CollisionListener;
 import asteroids.IFacade;
 import asteroids.ModelException;
 import asteroids.model.programs.*;
+import asteroids.model.programs.expressions.*;
+import asteroids.model.programs.parsing.*;
+import asteroids.model.programs.statements.*;
 
 public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 	
@@ -397,8 +402,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 
 	@Override
 	public void setShipProgram(Ship ship, Program program) {
-		// TODO Auto-generated method stub
-		
+		ship.setProgram(program);		
 	}
 
 }

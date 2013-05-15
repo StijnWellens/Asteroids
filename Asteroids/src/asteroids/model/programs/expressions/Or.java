@@ -2,9 +2,9 @@ package asteroids.model.programs.expressions;
 
 public class Or extends LogicalExpression {
 
-	public Or(Expression left, Expression right)
+	public Or(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
-		super(left, right);
+		super(line, column, left, right);
 	}
 
 	@Override

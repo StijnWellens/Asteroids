@@ -2,9 +2,9 @@ package asteroids.model.programs.expressions;
 
 public class Addition extends MathBinaryExpression {
 
-	public Addition(Expression left, Expression right)
+	public Addition(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
-		super(left, right);		
+		super(line, column, left, right);		
 	}
 
 	@Override

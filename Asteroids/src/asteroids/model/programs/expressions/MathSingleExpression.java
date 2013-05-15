@@ -1,10 +1,12 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.programs.Type;
+
 public abstract class MathSingleExpression extends SingleExpression {
 
-	protected MathSingleExpression(Expression e)
+	protected MathSingleExpression(int line, int column, Expression e)
 			throws IllegalArgumentException {
-		super(e);
+		super(line, column, e);
 		if(e.getType() != Type.DOUBLE)
 			throw new IllegalArgumentException();
 	}

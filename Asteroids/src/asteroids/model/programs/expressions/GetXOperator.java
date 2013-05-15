@@ -4,8 +4,8 @@ import asteroids.model.*;
 
 public class GetXOperator extends GetExpression {
 
-	public GetXOperator(Expression e) throws IllegalArgumentException {
-		super(e);
+	public GetXOperator(int line, int column, Expression e) throws IllegalArgumentException {
+		super(line, column, e);
 	}
 
 	@Override

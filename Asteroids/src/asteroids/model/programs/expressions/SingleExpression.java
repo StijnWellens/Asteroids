@@ -10,7 +10,8 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class SingleExpression extends ComplexExpression {
 
-	protected SingleExpression(Expression e) throws IllegalArgumentException{
+	protected SingleExpression(int line, int column, Expression e) throws IllegalArgumentException{
+		super(line, column);
 		if(!canHaveAsPartAt(1,e))
 			throw new IllegalArgumentException();
 		setPartAt(1,e);

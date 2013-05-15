@@ -2,9 +2,9 @@ package asteroids.model.programs.expressions;
 
 public class And extends LogicalExpression {
 
-	public And(Expression left, Expression right)
+	public And(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
-		super(left, right);
+		super(line, column, left, right);
 	}
 
 	@Override

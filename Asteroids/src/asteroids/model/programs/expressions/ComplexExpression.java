@@ -8,6 +8,10 @@ package asteroids.model.programs.expressions;
  */
 public abstract class ComplexExpression extends Expression {
 
+	protected ComplexExpression(int line, int column) {
+		super(line, column);
+	}
+
 	public abstract Expression getPartAt(int i) throws IndexOutOfBoundsException;
 	
 	public boolean canHaveAsPartAt(int i, Expression expression) {

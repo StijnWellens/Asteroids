@@ -2,9 +2,9 @@ package asteroids.model.programs.expressions;
 
 public class LargerThanOrEqualTo extends ComparisonExpression {
 
-	public LargerThanOrEqualTo(Expression left, Expression right)
+	public LargerThanOrEqualTo(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
-		super(left, right);
+		super(line, column, left, right);
 	}
 
 	@Override

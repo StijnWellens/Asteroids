@@ -2,8 +2,8 @@ package asteroids.model.programs.expressions;
 
 public class Sine extends MathSingleExpression {
 
-	public Sine(Expression e) throws IllegalArgumentException {
-		super(e);
+	public Sine(int line, int column, Expression e) throws IllegalArgumentException {
+		super(line, column, e);
 	}
 
 	@Override

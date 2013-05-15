@@ -4,8 +4,8 @@ import asteroids.Util;
 
 public class SquareRoot extends MathSingleExpression {
 
-	public SquareRoot(Expression e) throws IllegalArgumentException {
-		super(e);
+	public SquareRoot(int line, int column, Expression e) throws IllegalArgumentException {
+		super(line, column, e);
 		if(Util.fuzzyLessThanOrEqualTo((Double)e.getValue(),0) && !Util.fuzzyEquals((Double)e.getValue(),0) )
 			throw new IllegalArgumentException();
 	}

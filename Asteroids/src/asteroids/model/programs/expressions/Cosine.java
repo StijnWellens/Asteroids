@@ -2,8 +2,8 @@ package asteroids.model.programs.expressions;
 
 public class Cosine extends MathSingleExpression {
 
-	public Cosine(Expression e) throws IllegalArgumentException {
-		super(e);
+	public Cosine(int line, int column, Expression e) throws IllegalArgumentException {
+		super(line, column, e);
 	}
 
 	@Override

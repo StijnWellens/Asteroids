@@ -15,7 +15,8 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class BinaryExpression extends ComplexExpression {
 
-	protected BinaryExpression(Expression left, Expression right) throws IllegalArgumentException {
+	protected BinaryExpression(int line, int column, Expression left, Expression right) throws IllegalArgumentException {
+		super(line, column);
 		if(!canHaveAsPartAt(1,left))
 			throw new IllegalArgumentException();
 		if(!canHaveAsPartAt(2,right))
