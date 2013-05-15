@@ -7,7 +7,7 @@ public class Cosine extends MathSingleExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Double getValue() {
 		return Math.cos((Double)this.getPart().getValue());
 	}
 

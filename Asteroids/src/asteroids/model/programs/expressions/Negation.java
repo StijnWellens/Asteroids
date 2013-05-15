@@ -16,7 +16,7 @@ public class Negation extends SingleExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Boolean getValue() {
 		return !(Boolean)(this.getPart().getValue());
 	}
 

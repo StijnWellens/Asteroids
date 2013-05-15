@@ -8,7 +8,7 @@ public class LargerThan extends ComparisonExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Boolean getValue() {
 		return (Double)(this.getLeftPart().getValue()) > (Double)(this.getRightPart().getValue());
 	}
 

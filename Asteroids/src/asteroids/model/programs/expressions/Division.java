@@ -12,7 +12,7 @@ public class Division extends MathBinaryExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Double getValue() {
 		return (Double)(this.getLeftPart().getValue()) / (Double)(this.getRightPart().getValue());
 	}
 

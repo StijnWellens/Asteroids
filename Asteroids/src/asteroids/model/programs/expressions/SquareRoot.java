@@ -11,7 +11,7 @@ public class SquareRoot extends MathSingleExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Double getValue() {
 		return Math.sqrt((Double)this.getPart().getValue());
 	}
 

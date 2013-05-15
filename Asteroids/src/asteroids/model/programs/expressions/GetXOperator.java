@@ -9,7 +9,7 @@ public class GetXOperator extends GetExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Double getValue() {
 		return ((SpaceObject)(this.getPart().getValue())).getX();
 	}
 

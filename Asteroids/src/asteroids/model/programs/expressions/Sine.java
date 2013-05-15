@@ -7,7 +7,7 @@ public class Sine extends MathSingleExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Double getValue() {
 		return Math.sin((Double)this.getPart().getValue());
 	}
 

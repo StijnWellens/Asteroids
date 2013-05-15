@@ -8,7 +8,7 @@ public class Or extends LogicalExpression {
 	}
 
 	@Override
-	public Object getValue() {
+	public Boolean getValue() {
 		return (Boolean)(this.getLeftPart().getValue()) || (Boolean)(this.getRightPart().getValue());
 	}
 

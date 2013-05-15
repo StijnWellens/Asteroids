@@ -1,6 +1,6 @@
 package asteroids.model.programs;
 
-import java.util.Map;
+import java.util.*;
 
 import asteroids.model.programs.expressions.*;
 import asteroids.model.programs.statements.*;
@@ -11,4 +11,10 @@ public class Program {
 		// TODO Auto-generated constructor stub
 	}
 
+	private Set<Variables>
+	private int amountOfDoneExecutions;
+	
+	public void execute(int nmbOfExecutions) {
+		
+	}
 }
