@@ -392,13 +392,12 @@ public class Ship extends SpaceObject{
 			return false;
 		if(bullet.getState() == State.TERMINATED)
 			return false;
-		return true;
+		return bullet.getSource().equals(this);
 	}	
 	
-	@Raw
 	public void addActiveBullet(@Raw Bullet bullet)
 	{
-		
+		if(!canHaveAsActiveBullet(bullet))
 	}
 	
 	public void removeActiveBullet(Bullet bullet) {
