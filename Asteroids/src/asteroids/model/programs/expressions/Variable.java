@@ -46,4 +46,9 @@ public class Variable extends StandardExpression {
 			return false;
 		return this.getValue().equals(((Variable)other).getValue());
 	}
+	
+	@Override
+	public String toString(){
+		return "" + this.getName();
+	}
 }

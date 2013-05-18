@@ -26,12 +26,5 @@ public class DoubleLiteral extends StandardExpression {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	@Override
-	public int toString() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 	
 }

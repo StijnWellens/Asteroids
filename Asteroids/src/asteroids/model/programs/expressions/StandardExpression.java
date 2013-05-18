@@ -18,4 +18,9 @@ public abstract class StandardExpression extends Expression {
 		return expression == this;
 	}
 	
+	@Override
+	public String toString() {
+		return "" + this.getValue();
+	}
+	
 }

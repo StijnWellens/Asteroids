@@ -21,5 +21,9 @@ public class Self extends StandardExpression {
 	public SpaceObject getValue() {
 		return controller.getProgram().getShipRunningProgram();
 	}
-
+	
+	@Override
+	public String toString(){
+		return "self";
+	}
 }

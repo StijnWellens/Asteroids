@@ -27,10 +27,4 @@ public class BooleanLiteral extends StandardExpression {
 		return 0;
 	}
 
-	@Override
-	public int toString() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }
