@@ -87,5 +87,22 @@ public abstract class BinaryExpression extends ComplexExpression {
 		return 2;
 	}
 
-
+	@Override
+	public String toString(){
+		String result;
+		if(this.getLeftPart() instanceof StandardExpression)
+			result = this.getLeftPart().toString();
+		else if(this.getLeftPart() instanceof ComplexExpression)
+			result = "(" + this.getLeftPart().toString() + ")";
+		else
+			throw new Error("Unknown expression type!");
+		result += getSymbol();
+		if (this.getRightPart() instanceof StandardExpression)
+			result += this.getRightPart().toString();
+		else if (this.getRightPart() instanceof ComplexExpression)
+			result += "(" + this.getRightPart().toString() + ")";
+		else
+			throw new Error("Unknown expression type!");
+		return result;
+	}
 }

@@ -50,4 +50,16 @@ public abstract class SingleExpression extends ComplexExpression {
 	public boolean hasProperParts() {
 		return canHaveAsPartAt(1,getPart());
 	}
+	
+	@Override
+	public String toString(){
+		String result = getSymbol() + " ";
+		if(this.getPart() instanceof StandardExpression)
+			result += this.getPart().toString();
+		else if (this.getPart() instanceof ComplexExpression)
+			result += "(" + this.getPart().toString() + ")";
+		else 
+			throw new Error("Unknown expression type!");
+		return result;
+	}
 }

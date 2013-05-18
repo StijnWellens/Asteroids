@@ -33,7 +33,7 @@ public abstract class Expression {
 	public abstract int hashCode();
 	
 	@Override
-	public abstract int toString();	
+	public abstract String toString();	
 	
 	
 }

@@ -15,5 +15,11 @@ public abstract class MathSingleExpression extends SingleExpression {
 	public Type getType() {
 		return Type.DOUBLE;
 	}
+	
+	@Override
+	public String toString(){
+		String result = getSymbol() + "(" + this.getPart().toString() + ")";
+		return result;
+	}
 
 }
