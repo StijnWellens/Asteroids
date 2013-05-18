@@ -37,11 +37,24 @@ public class Program {
 		this.controller.initializeProgramController(this);
 	}
 
+	@Basic @Immutable
+	public ProgramController getController() {
+		return this.controller;
+	}
+	
+	@Basic @Immutable
+	public Set<Variable> getGlobals() {
+		return this.globals;
+	}
+	
+	@Basic @Immutable
+	public Statement getStatement() {
+		return this.statement;
+	}
+	
 	private final ProgramController controller;
 	private final Set<Variable> globals;
 	private final Statement statement;
-	
-	private Ship shipRunningProgram;
 	
 	@Basic
 	public Ship getShipRunningProgram() {
@@ -64,6 +77,8 @@ public class Program {
 			return true;
 		return this.getShipRunningProgram().getProgram().equals(this);		
 	}
+	
+	private Ship shipRunningProgram;
 	
 	private int amountOfDoneExecutions;
 	

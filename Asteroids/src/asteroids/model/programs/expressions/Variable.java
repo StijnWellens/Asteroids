@@ -8,6 +8,7 @@ public class Variable extends StandardExpression {
 		super(line, column);
 		this.name = name;
 		this.type = type;
+		this.value = null;
 	}
 
 	private String name;
@@ -39,6 +40,10 @@ public class Variable extends StandardExpression {
 	public boolean equals(Object other) {
 		if(!(other instanceof Variable))
 				return false;
+		if(this.getValue() == null && other != null)
+			return false;
+		if(this.getValue() == null && other == null)
+			return false;
 		return this.getValue().equals(((Variable)other).getValue());
 	}
 }
