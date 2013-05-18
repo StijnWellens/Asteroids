@@ -1,17 +1,20 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.programs.ProgramController;
+
 public class GetDirectionOperator extends GetExpression {
 
-	protected GetDirectionOperator(int line, int column)
+	protected GetDirectionOperator(int line, int column, ProgramController controller)
 			throws IllegalArgumentException {
 		super(line, column);
-		// TODO Auto-generated constructor stub
+		this.controller = controller;
 	}
 
+	private ProgramController controller;
+	
 	@Override
-	public Object getValue() {
-		// TODO Auto-generated method stub
-		return null;
+	public Double getValue() {
+		return controller.getProgram().getShipRunningProgram().getDirection();
 	}
 
 }

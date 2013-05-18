@@ -1,23 +1,25 @@
 package asteroids.model.programs.expressions;
 
-import asteroids.model.programs.Type;
+import asteroids.model.*;
+import asteroids.model.programs.*;
 
 public class Self extends StandardExpression {
 
-	protected Self(int line, int column) {
+	protected Self(int line, int column, ProgramController controller) {
 		super(line, column);
-		// TODO Auto-generated constructor stub
+		this.controller = controller;
 	}
 
+	private ProgramController controller;
+	
 	@Override
 	public Type getType() {
 		return Type.ENTITY;
 	}
 
 	@Override
-	public Object getValue() {
-		// TODO Auto-generated method stub
-		return null;
+	public SpaceObject getValue() {
+		return controller.getProgram().getShipRunningProgram();
 	}
 
 }
