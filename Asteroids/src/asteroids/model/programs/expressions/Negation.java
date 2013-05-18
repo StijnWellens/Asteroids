@@ -20,4 +20,8 @@ public class Negation extends SingleExpression {
 		return !(Boolean)(this.getPart().getValue());
 	}
 
+	@Override
+	public String getSymbol() {
+		return "!";
+	}
 }

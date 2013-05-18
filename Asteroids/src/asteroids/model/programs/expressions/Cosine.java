@@ -11,4 +11,8 @@ public class Cosine extends MathSingleExpression {
 		return Math.cos((Double)this.getPart().getValue());
 	}
 
+	@Override
+	public String getSymbol() {
+		return "cos";
+	}
 }

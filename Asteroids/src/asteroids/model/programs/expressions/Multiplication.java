@@ -12,4 +12,8 @@ public class Multiplication extends MathBinaryExpression {
 		return (Double)(this.getLeftPart().getValue()) * (Double)(this.getRightPart().getValue());
 	}
 
+	@Override
+	public String getSymbol() {
+		return "*";
+	}
 }

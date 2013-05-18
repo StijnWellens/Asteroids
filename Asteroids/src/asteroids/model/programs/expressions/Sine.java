@@ -11,4 +11,8 @@ public class Sine extends MathSingleExpression {
 		return Math.sin((Double)this.getPart().getValue());
 	}
 
+	@Override
+	public String getSymbol() {
+		return "sin";
+	}
 }

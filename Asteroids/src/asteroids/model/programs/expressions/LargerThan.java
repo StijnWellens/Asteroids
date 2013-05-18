@@ -11,5 +11,10 @@ public class LargerThan extends ComparisonExpression {
 	public Boolean getValue() {
 		return (Double)(this.getLeftPart().getValue()) > (Double)(this.getRightPart().getValue());
 	}
+	
+	@Override
+	public String getSymbol() {
+		return ">";
+	}
 
 }

@@ -13,4 +13,8 @@ public class GetVyOperator extends GetExpression {
 		return ((SpaceObject)(this.getPart().getValue())).getYVelocity();
 	}
 
+	@Override
+	public String getSymbol() {
+		return "getvy";
+	}
 }

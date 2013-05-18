@@ -6,7 +6,12 @@ public abstract class StandardExpression extends Expression {
 		super(line, column);
 	}
 
-	public abstract boolean equals(Object other);
+	@Override
+	public boolean equals(Object other){
+		return (this.getClass() == other.getClass())
+				&& (getValue() == ((StandardExpression) other).getValue());
+	}
+
 	
 	@Override
 	public boolean containsExpression(Expression expression) {

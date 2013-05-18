@@ -12,5 +12,10 @@ public class GetRadiusOperator extends GetExpression {
 	public Double getValue() {
 		return ((SpaceObject)(this.getPart().getValue())).getRadius();
 	}
+	
+	@Override
+	public String getSymbol() {
+		return "getradius";
+	}
 
 }

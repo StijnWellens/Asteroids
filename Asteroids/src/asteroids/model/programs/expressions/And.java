@@ -12,4 +12,8 @@ public class And extends LogicalExpression {
 		return (Boolean)(this.getLeftPart().getValue()) && (Boolean)(this.getRightPart().getValue());
 	}
 
+	@Override
+	public String getSymbol() {
+		return "&&";
+	}
 }

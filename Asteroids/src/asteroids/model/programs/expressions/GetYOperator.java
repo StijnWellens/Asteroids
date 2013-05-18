@@ -13,4 +13,8 @@ public class GetYOperator extends GetExpression {
 		return ((SpaceObject)(this.getPart().getValue())).getY();
 	}
 
+	@Override
+	public String getSymbol() {
+		return "gety";
+	}
 }

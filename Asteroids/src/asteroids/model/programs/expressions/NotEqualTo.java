@@ -12,4 +12,8 @@ public class NotEqualTo extends EqualityExpression {
 		return !(this.getLeftPart().getValue()).equals(this.getRightPart().getValue());
 	}
 
+	@Override
+	public String getSymbol() {
+		return "!=";
+	}
 }

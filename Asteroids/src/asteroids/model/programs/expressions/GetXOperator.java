@@ -13,4 +13,8 @@ public class GetXOperator extends GetExpression {
 		return ((SpaceObject)(this.getPart().getValue())).getX();
 	}
 
+	@Override
+	public String getSymbol() {
+		return "getx";
+	}
 }

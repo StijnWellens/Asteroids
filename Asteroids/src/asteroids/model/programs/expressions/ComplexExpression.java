@@ -24,6 +24,8 @@ public abstract class ComplexExpression extends Expression {
 	
 	public abstract boolean hasProperParts();
 	
+	public abstract String getSymbol();
+	
 	@Override
 	public boolean containsExpression(Expression expression) {
 		if(expression == this)
@@ -36,4 +38,17 @@ public abstract class ComplexExpression extends Expression {
 		return false;
 		
 	}	
+	
+	@Override
+	public boolean equals(Object other){
+		if ((other == null) || (this.getClass() != other.getClass()))
+			return false;
+		ComplexExpression otherEx = (ComplexExpression) other;
+		if (this.getNmbOfParts() != otherEx.getNmbOfParts())
+			return false;
+		for (int pos = 1; pos <= this.getNmbOfParts(); pos++)
+			if (!getPartAt(pos).equals(otherEx.getPartAt(pos)))
+				return false;
+		return true;
+	}
 }

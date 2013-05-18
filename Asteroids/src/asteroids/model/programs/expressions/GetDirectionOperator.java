@@ -16,5 +16,10 @@ public class GetDirectionOperator extends GetExpression {
 	public Double getValue() {
 		return controller.getProgram().getShipRunningProgram().getDirection();
 	}
+	
+	@Override
+	public String getSymbol() {
+		return "getdir";
+	}
 
 }

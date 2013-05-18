@@ -14,5 +14,10 @@ public class SquareRoot extends MathSingleExpression {
 	public Double getValue() {
 		return Math.sqrt((Double)this.getPart().getValue());
 	}
+	
+	@Override
+	public String getSymbol() {
+		return "sqrt";
+	}
 
 }

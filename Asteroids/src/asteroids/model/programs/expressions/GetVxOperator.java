@@ -13,4 +13,8 @@ public class GetVxOperator extends GetExpression {
 		return (((SpaceObject) this.getPart().getValue())).getXVelocity();
 	}
 
+	@Override
+	public String getSymbol() {
+		return "getvx";
+	}
 }

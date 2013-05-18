@@ -21,4 +21,16 @@ public class BooleanLiteral extends StandardExpression {
 		return value;
 	}
 
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int toString() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
