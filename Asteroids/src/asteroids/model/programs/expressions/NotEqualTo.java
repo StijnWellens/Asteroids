@@ -1,6 +1,6 @@
 package asteroids.model.programs.expressions;
 
-public class NotEqualTo extends ComparisonExpression {
+public class NotEqualTo extends EqualityExpression {
 
 	public NotEqualTo(int line, int column, Expression left, Expression right)
 			throws IllegalArgumentException {
@@ -9,7 +9,7 @@ public class NotEqualTo extends ComparisonExpression {
 
 	@Override
 	public Boolean getValue() {
-		return (Double)(this.getLeftPart().getValue()) != (Double)(this.getRightPart().getValue());
+		return !(this.getLeftPart().getValue()).equals(this.getRightPart().getValue());
 	}
 
 }

@@ -25,4 +25,15 @@ public abstract class Expression {
 	public int getColumn() {
 		return this.column;
 	}
+	
+	@Override
+	public abstract boolean equals(Object other);
+	
+	@Override
+	public abstract int hashCode();
+	
+	@Override
+	public abstract int toString();	
+	
+	
 }

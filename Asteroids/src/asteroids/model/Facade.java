@@ -367,7 +367,7 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 	        if(! errors.isEmpty()) {
 	          return ParseOutcome.failure(errors.get(0));
 	        } else {
-	          return ParseOutcome.success(new Program(parser.getGlobals(), parser.getStatement())); 
+	          return ParseOutcome.success(new Program(parser.getGlobals(), parser.getStatement(), factory.getProgramController())); 
 	        }
 	    } catch(RecognitionException e) {
 	      return ParseOutcome.failure(e.getMessage());

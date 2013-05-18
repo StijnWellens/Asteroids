@@ -6,6 +6,8 @@ public abstract class StandardExpression extends Expression {
 		super(line, column);
 	}
 
+	public abstract boolean equals(Object other);
+	
 	@Override
 	public boolean containsExpression(Expression expression) {
 		return expression == this;

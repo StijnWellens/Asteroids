@@ -32,6 +32,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| hasProperWorld()
  * @invar	This ship must always have proper active bullets.
  * 			| hasProperActiveBullets()
+ * @invar	This ship must always have a proper program.
+ * 			| hasProperProgram()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -495,6 +497,23 @@ public class Ship extends SpaceObject{
 	 */
 	public void setProgram(Program program) {
 		this.program = program;
+		if(program != null)
+			program.setShipRunningProgram(this);
+	}
+	
+	/**
+	 * Check whether this ship has a valid program.
+	 * 
+	 * @return 	True if the program of this ship has this ship as ship running the program.
+	 * 			| result == (this.getProgram()).getShipRunningProgram().equals(this)
+	 * @return	True if the program of this ship is null.
+	 * 			| if(this.getProgram()) == null)
+	 * 			|	then result == true
+	 */
+	public boolean hasProperProgram() {
+		if(this.getProgram() == null)
+			return true;
+		return this.getProgram().getShipRunningProgram().equals(this);
 	}
 	
 	private Program program;

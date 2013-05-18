@@ -2,12 +2,26 @@ package asteroids.model.programs;
 
 import java.util.List;
 
+import be.kuleuven.cs.som.annotate.*;
+
 import asteroids.model.programs.expressions.*;
 import asteroids.model.programs.parsing.ProgramFactory;
 import asteroids.model.programs.statements.*;
 
 public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement, Type> {
 
+	public ProgramFactoryImpl() {
+		this.programController = new ProgramController();
+	}
+	
+	@Basic @Immutable
+	public ProgramController getProgramController()
+	{
+		return this.programController;
+	}
+	
+	private final ProgramController programController;
+	
 	@Override
 	public Expression createDoubleLiteral(int line, int column, double d) {
 		// TODO Auto-generated method stub 

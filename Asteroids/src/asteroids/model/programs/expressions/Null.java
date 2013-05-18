@@ -19,4 +19,9 @@ public class Null extends StandardExpression {
 		return null;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		return other == null;
+	}
+
 }
