@@ -4,9 +4,9 @@ import asteroids.model.programs.ProgramController;
 
 public class GetDirectionOperator extends GetExpression {
 
-	protected GetDirectionOperator(int line, int column, ProgramController controller)
+	protected GetDirectionOperator(int line, int column, Expression e,ProgramController controller)
 			throws IllegalArgumentException {
-		super(line, column);
+		super(line, column, e);
 		this.controller = controller;
 	}
 

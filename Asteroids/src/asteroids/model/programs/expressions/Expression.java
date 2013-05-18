@@ -30,7 +30,10 @@ public abstract class Expression {
 	public abstract boolean equals(Object other);
 	
 	@Override
-	public abstract int hashCode();
+	public int hashCode(){
+		//TO-DO
+		return 0;
+	}
 	
 	@Override
 	public abstract String toString();	
