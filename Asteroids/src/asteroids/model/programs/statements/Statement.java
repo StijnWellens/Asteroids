@@ -1,7 +1,13 @@
 package asteroids.model.programs.statements;
 
+
 public abstract class Statement {
 
+	protected Statement(int line, int column) {
+		this.line = line;
+		this.column = column;
+	}
+	
 	public abstract void execute();
 	
 	private int line;

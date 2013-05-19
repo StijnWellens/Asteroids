@@ -1,11 +1,25 @@
 package asteroids.model.programs.statements;
 
+import be.kuleuven.cs.som.annotate.*;
+import asteroids.model.programs.expressions.*;
+
 public class PrintStatement extends Statement {
+	
+	private Expression e;
+	
+	public PrintStatement(int line, int column, Expression e){
+		super(line,column);
+		this.e = e;
+	}
+	
+	@Basic
+	public Expression getExpression(){
+		return this.e;
+	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-
+		System.out.println(e.getValue());
 	}
 
 }
