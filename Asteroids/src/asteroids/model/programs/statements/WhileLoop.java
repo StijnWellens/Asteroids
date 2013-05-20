@@ -1,5 +1,6 @@
 package asteroids.model.programs.statements;
 import be.kuleuven.cs.som.annotate.*;
+import asteroids.model.programs.Type;
 import asteroids.model.programs.expressions.*;
 
 public class WhileLoop extends Statement {
@@ -7,8 +8,10 @@ public class WhileLoop extends Statement {
 	private Expression condition;
 	private Statement body;
 	
-	public WhileLoop(int line, int column, Expression condition,Statement body){
+	public WhileLoop(int line, int column, Expression condition,Statement body) throws IllegalArgumentException{
 		super(line,column);
+		if(condition.getType() != Type.BOOL)
+			throw new IllegalArgumentException();
 		this.condition = condition;
 		this.body = body;
 	}
@@ -25,8 +28,9 @@ public class WhileLoop extends Statement {
 	
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-
+		while((Boolean) this.getCondition().getValue()){
+			this.getBody().execute();
+		}
 	}
 
 }
