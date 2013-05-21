@@ -8,6 +8,7 @@ import org.junit.Test;
 import asteroids.Util;
 import asteroids.model.*;
 import asteroids.model.SpaceObject.State;
+import asteroids.model.programs.expressions.*;
 
 public class ShipTest { 
 
@@ -15,6 +16,13 @@ public class ShipTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	@Test
+	public void testEquals(){
+		Expression left = new DoubleLiteral(1, 1, 2);
+		Expression right = new DoubleLiteral(1, 3, 2);
+		Expression addition = new Addition(1, 1, left, right);
+	}
+	
 	@Test
 	  public void testConstructorShip() {
 	    Ship ship = new Ship(100, 200, 10, -10, 20, -Math.PI, 10);

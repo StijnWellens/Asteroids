@@ -24,8 +24,7 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 	
 	@Override
 	public Expression createDoubleLiteral(int line, int column, double d) {
-		// TODO Auto-generated method stub 
-		return null;
+		return new DoubleLiteral(line,column,d);
 	}
 
 	@Override
