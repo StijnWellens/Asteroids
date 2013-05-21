@@ -473,6 +473,7 @@ public class World {
 	public void advanceObjects(double time) throws IllegalArgumentException
 	{
 		int nmbOfExecutions = (int)( time/0.2);
+		System.out.println(nmbOfExecutions);
 		for(SpaceObject spaceObject: this.getSpaceObjects())
 		{
 			if(spaceObject != null)

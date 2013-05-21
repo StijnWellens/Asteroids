@@ -8,7 +8,7 @@ public class Skip extends ActionStatement {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		this.setFinished(true);
 		
 	}
 }

@@ -5,7 +5,7 @@ import asteroids.model.programs.*;
 
 public class Self extends StandardExpression {
 
-	protected Self(int line, int column, ProgramController controller) {
+	public Self(int line, int column, ProgramController controller) {
 		super(line, column);
 		this.controller = controller;
 	}

@@ -91,6 +91,7 @@ public class Program {
 	private Ship shipRunningProgram;
 	
 	public void execute(int nmbOfExecutions) {
+		System.out.println("execute "+nmbOfExecutions);
 		int i = 0;
 		while(i<nmbOfExecutions && !this.getStatement().isFinished()){
 			this.getStatement().execute();

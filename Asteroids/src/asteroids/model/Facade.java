@@ -379,11 +379,13 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 	public asteroids.IFacade.ParseOutcome<Program> loadProgramFromStream(
 			InputStream stream) throws IOException {
 		Scanner scanner = new Scanner(stream);
+		Scanner scanner2 = scanner.useDelimiter("\\A");
 		String string = "";
 		while(scanner.hasNext()){
 			string = string + scanner.next();
 		}
 		scanner.close();
+		scanner2.close();
 		return this.parseProgram(string);
 	}
 
