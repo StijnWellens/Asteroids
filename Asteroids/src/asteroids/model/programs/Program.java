@@ -44,7 +44,17 @@ public class Program {
 	
 	@Basic @Immutable
 	public Set<Variable> getGlobals() {
-		return this.globals;
+		return new HashSet<Variable>(this.globals);
+	}
+	
+	@Basic
+	public Variable getGlobal(String name){
+		for(Variable global: this.getGlobals()) {
+			if(global.getName().equals(name)) {
+				return global;
+			}
+		}
+		return null;
 	}
 	
 	@Basic @Immutable
@@ -80,10 +90,11 @@ public class Program {
 	
 	private Ship shipRunningProgram;
 	
-	private int amountOfDoneExecutions;
-	
 	public void execute(int nmbOfExecutions) {
-		
+		int i = 0;
+		while(i<nmbOfExecutions && !this.getStatement().isFinished()){
+			this.getStatement().execute();
+		}
 	}
 	
 }

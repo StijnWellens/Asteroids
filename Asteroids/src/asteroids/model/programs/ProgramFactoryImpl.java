@@ -97,8 +97,7 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 
 	@Override
 	public Expression createVariable(int line, int column, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Variable(line, column, name);
 	}
 
 	@Override
@@ -222,8 +221,7 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 	@Override
 	public Statement createAssignment(int line, int column, String variable,
 			Expression rhs) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Assignment(line,column,variable,rhs,this.getProgramController());
 	}
 
 	@Override
@@ -263,8 +261,7 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 
 	@Override
 	public Statement createPrint(int line, int column, Expression e) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PrintStatement(line,column,e);
 	}
 
 	@Override

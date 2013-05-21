@@ -3,7 +3,7 @@ package asteroids.model.programs.statements;
 import be.kuleuven.cs.som.annotate.*;
 import asteroids.model.programs.parsing.ProgramFactory.*;
 
-public class ForEachLoop extends Statement {
+public class ForEachLoop extends ComplexStatement {
 
 	private ForeachType type;
 	private String variableName;

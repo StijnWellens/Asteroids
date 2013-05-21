@@ -1,9 +1,17 @@
 package asteroids.model.programs.expressions;
 
+import be.kuleuven.cs.som.annotate.Basic;
 import asteroids.model.programs.Type;
 
 public class Variable extends StandardExpression {
 
+	public Variable(int line, int column, String name) {
+		super(line, column);
+		this.name = name;
+		this.type = null;
+		this.value = null;
+	}
+	
 	public Variable(int line, int column, String name, Type type) {
 		super(line, column);
 		this.name = name;
@@ -13,20 +21,25 @@ public class Variable extends StandardExpression {
 
 	private String name;
 	
+	@Basic
 	public String getName() {
 		return this.name;
 	}
 	
-	private final Type type;
+	private Type type;
 	
-	@Override
+	@Override @Basic
 	public Type getType() {
 		return this.type;
 	}
 	
+	public void setType(Type type){
+		this.type = type;
+	}
+	
 	private Object value;
 	
-	@Override
+	@Override @Basic
 	public Object getValue() {
 		return this.value;
 	}
@@ -34,17 +47,6 @@ public class Variable extends StandardExpression {
 	public void setValue(Expression value) {
 		if(value.getType() == this.getType())
 			this.value = value;
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if(!(other instanceof Variable))
-				return false;
-		if(this.getValue() == null && other != null)
-			return false;
-		if(this.getValue() == null && other == null)
-			return false;
-		return this.getValue().equals(((Variable)other).getValue());
 	}
 	
 	@Override

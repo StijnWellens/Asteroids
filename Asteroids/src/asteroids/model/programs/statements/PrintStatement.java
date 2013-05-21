@@ -3,7 +3,7 @@ package asteroids.model.programs.statements;
 import be.kuleuven.cs.som.annotate.*;
 import asteroids.model.programs.expressions.*;
 
-public class PrintStatement extends Statement {
+public class PrintStatement extends StandardStatement {
 	
 	private Expression e;
 	
@@ -20,6 +20,7 @@ public class PrintStatement extends Statement {
 	@Override
 	public void execute() {
 		System.out.println(e.getValue());
+		setFinished(true);
 	}
 
 }

@@ -4,13 +4,15 @@ import java.util.*;
 
 import be.kuleuven.cs.som.annotate.*;
 
-public class Sequence extends Statement {
+public class Sequence extends ComplexStatement {
 
 	private List<Statement> statements;
+	private int nmbOfDoneExecutions;
 	
 	public Sequence(int line, int column, List<Statement> statements){
 		super(line,column);
 		this.statements = statements;
+		this.nmbOfDoneExecutions = 0;
 	}
 	
 	@Basic
@@ -20,8 +22,18 @@ public class Sequence extends Statement {
 	
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-
+		boolean actionEncountered = false;
+		while(!actionEncountered && !isFinished()){
+			if(this.nmbOfDoneExecutions < this.getStatements().size()){
+				Statement statement = this.getStatements().get(this.nmbOfDoneExecutions);
+				statement.execute();
+				if(statement instanceof ActionStatement){
+					actionEncountered = true;
+				}
+			}
+			else
+				setFinished(true);
+		}
 	}
 
 }

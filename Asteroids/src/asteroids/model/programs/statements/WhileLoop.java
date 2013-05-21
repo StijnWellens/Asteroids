@@ -3,7 +3,7 @@ import be.kuleuven.cs.som.annotate.*;
 import asteroids.model.programs.Type;
 import asteroids.model.programs.expressions.*;
 
-public class WhileLoop extends Statement {
+public class WhileLoop extends ComplexStatement {
 
 	private Expression condition;
 	private Statement body;

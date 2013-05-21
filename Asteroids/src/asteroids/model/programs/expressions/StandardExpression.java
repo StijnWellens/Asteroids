@@ -9,7 +9,7 @@ public abstract class StandardExpression extends Expression {
 	@Override
 	public boolean equals(Object other){
 		return (this.getClass() == other.getClass())
-				&& (getValue() == ((StandardExpression) other).getValue());
+				&& (getValue().equals(((StandardExpression) other).getValue()));
 	}
 
 	

@@ -4,7 +4,7 @@ import be.kuleuven.cs.som.annotate.*;
 import asteroids.model.programs.Type;
 import asteroids.model.programs.expressions.*;
 
-public class IfThenElse extends Statement {
+public class IfThenElse extends ComplexStatement {
 
 	private Expression condition;
 	private Statement then;

@@ -2,6 +2,7 @@ package asteroids.model;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.*;
 
@@ -377,15 +378,20 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 	@Override
 	public asteroids.IFacade.ParseOutcome<Program> loadProgramFromStream(
 			InputStream stream) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		Scanner scanner = new Scanner(stream);
+		String string = "";
+		while(scanner.hasNext()){
+			string = string + scanner.next();
+		}
+		scanner.close();
+		return this.parseProgram(string);
 	}
 
 	@Override
 	public asteroids.IFacade.ParseOutcome<Program> loadProgramFromUrl(URL url)
 			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		InputStream stream = url.openStream();
+		return this.loadProgramFromStream(stream);
 	}
 
 	@Override
