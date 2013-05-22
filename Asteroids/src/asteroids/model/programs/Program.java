@@ -27,7 +27,7 @@ public class Program {
 		
 		int i = 0;
 		for(Entry<String, Type> entry: globals.entrySet() ) {
-			inputGlobals.add(new Variable(0,i,entry.getKey(),entry.getValue()));
+			inputGlobals.add(new Variable(0,i,entry.getKey(),entry.getValue(), controller));
 			i++;
 		}
 		

@@ -86,7 +86,7 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 
 	@Override
 	public Expression createVariable(int line, int column, String name) {
-		return new Variable(line, column, name);
+		return new Variable(line, column, name, this.getProgramController());
 	}
 
 	@Override
