@@ -23,4 +23,13 @@ public class PrintStatement extends StandardStatement {
 		setFinished(true);
 	}
 
+	@Override
+	public boolean containsActionStatement() {
+		return false;
+	}
+
+	@Override
+	public boolean typeCheck() {
+		return this.getExpression().typeCheck();
+	}
 }

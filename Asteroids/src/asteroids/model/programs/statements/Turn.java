@@ -27,4 +27,9 @@ public class Turn extends ActionStatement {
 		}
 		this.setFinished(true);
 	}
+	
+	@Override
+	public boolean typeCheck() {
+		return (this.getAngle().typeCheck() && this.getAngle().getType().equals(Type.DOUBLE));
+	}
 }

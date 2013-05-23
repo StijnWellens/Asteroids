@@ -98,7 +98,12 @@ public class Program {
 	public boolean isFinished() {
 		return this.isFinished;
 	}
+	
 	private boolean isFinished;
+	
+	public boolean typeCheck() {
+		return this.getStatement().typeCheck();
+	}
 	
 	public void execute(double nmbOfExecutions) {
 		double executions = nmbOfExecutions + this.nmbOfExecutionsNotYetExecuted;

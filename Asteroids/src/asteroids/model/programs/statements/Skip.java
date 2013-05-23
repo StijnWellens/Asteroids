@@ -13,4 +13,9 @@ public class Skip extends ActionStatement {
 		this.setFinished(true);
 		
 	}
+
+	@Override
+	public boolean typeCheck() {
+		return true;
+	}
 }

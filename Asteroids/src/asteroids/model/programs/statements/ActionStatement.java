@@ -14,4 +14,9 @@ public abstract class ActionStatement extends StandardStatement {
 	protected ProgramController getController(){
 		return this.controller;
 	}	
+	
+	@Override
+	public boolean containsActionStatement() {
+		return true;
+	}
 }

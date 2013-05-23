@@ -14,6 +14,10 @@ public abstract class Statement {
 	
 	public abstract void execute();
 	
+	public void reset() {
+		this.setFinished(false);
+	}
+	
 	private int line;
 	private int column;
 	
@@ -35,4 +39,8 @@ public abstract class Statement {
 	public void setFinished(boolean finished){
 		this.isFinished = finished;
 	}
+	
+	public abstract boolean typeCheck();
+	
+	public abstract boolean containsActionStatement();
 }

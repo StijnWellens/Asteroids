@@ -13,4 +13,9 @@ public class ThrusterEnabler extends ActionStatement {
 		this.getController().getProgram().getShipRunningProgram().getThruster().setEnabled(true);
 		this.setFinished(true);
 	}
+	
+	@Override
+	public boolean typeCheck() {
+		return true;
+	}
 }

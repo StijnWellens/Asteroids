@@ -360,7 +360,7 @@ public interface IFacade<World, Ship, Asteroid, Bullet, Program> {
     private final boolean success;
     private final String message;
     
-    private TypeCheckOutcome(boolean success, String message) {
+    public TypeCheckOutcome(boolean success, String message) {
       this.success = success;
       this.message = message;
     }

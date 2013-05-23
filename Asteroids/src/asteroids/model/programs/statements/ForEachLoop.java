@@ -43,7 +43,7 @@ public class ForEachLoop extends ComplexStatement {
 	@Override
 	public void execute() { //TODO actionstatement check
 		Variable global = this.controller.getProgram().getGlobal(getVariableName());
-		if(global != null && this.getType() != null && body != null) {
+		if(body != null) {
 			World world = controller.getProgram().getShipRunningProgram().getWorld();
 			Set<SpaceObject> objects;
 			
@@ -61,6 +61,30 @@ public class ForEachLoop extends ComplexStatement {
 				this.getBody().execute();
 			}
 		}
+		setFinished(true);
+	}
+
+	@Override
+	public boolean typeCheck() {
+		if(this.getBody().containsActionStatement())
+			return false;
+		Variable global = this.controller.getProgram().getGlobal(getVariableName());
+		if(global == null || !global.getType().equals(Type.ENTITY))
+			return false;
+		if(!this.getBody().typeCheck())
+			return false;
+		return true;
+	}
+	
+	@Override
+	public boolean containsActionStatement() {
+		return this.getBody().containsActionStatement();
+	}
+	
+	@Override
+	public void reset() {
+		super.reset();
+		this.getBody().reset();
 	}
 
 }

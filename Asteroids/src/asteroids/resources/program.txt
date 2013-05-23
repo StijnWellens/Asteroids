@@ -1,3 +1,5 @@
+// Ship that prints the distance to the nearest asteroid, turns and fires a bullet.
+
 double angle;
 entity nearestAsteroid;
 double distanceToNearestAsteroid;
@@ -10,12 +12,12 @@ double ar;
 double distance;
 entity a;
 
-x := getx self;
+while(true) do {
+  x := getx self;
   y := gety self;
   r := getradius self;
   nearestAsteroid := null;
-  print nearestAsteroid;
-foreach(asteroid, a) do {
+  foreach(asteroid, a) do {
     ax := getx a;
     ay := gety a;
     ar := getradius a;
@@ -35,3 +37,4 @@ foreach(asteroid, a) do {
   }
   turn 0.2;
   fire;
+}

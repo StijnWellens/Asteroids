@@ -3,6 +3,7 @@ package asteroids.model.programs.expressions;
 import be.kuleuven.cs.som.annotate.Basic;
 import asteroids.model.SpaceObject;
 import asteroids.model.programs.*;
+import asteroids.model.programs.exceptions.IllegalProgramException;
 
 public class Variable extends StandardExpression {
 
@@ -63,12 +64,12 @@ public class Variable extends StandardExpression {
 			if(global != null && global.isValueSet())
 				return global.getValue();
 			else
-				return null;
+				throw new IllegalProgramException("Variable not declared or assigned.");
 		}
 	}
 
 	public void setValue(Expression value) {
-		if(isTypeSet() && value.getType() == this.getType()) {
+		if(isTypeSet() && value.getType().equals(this.getType())) {
 			this.value = value.getValue();
 			this.isValueSet = true;
 		}
@@ -92,15 +93,12 @@ public class Variable extends StandardExpression {
 	}
 	
 	@Override
-	public boolean typeCheck(){
-		if(!super.typeCheck())
-			return false;
-		if(this.getValue() instanceof Boolean)
-			return (this.getType().equals(Type.BOOL));
-		if(this.getValue() instanceof Double)
-			return (this.getType().equals(Type.DOUBLE));
-		if(this.getValue() instanceof SpaceObject)
-			return (this.getType().equals(Type.ENTITY));
-		return false;
+	public boolean typeCheck() {
+		if(!isValueSet()) {
+			Variable global = this.controller.getProgram().getGlobal(this.getName());
+			if(global == null)
+				return false;
+		}
+		return super.typeCheck(); 
 	}
 }

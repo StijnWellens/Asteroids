@@ -36,20 +36,39 @@ public class IfThenElse extends ComplexStatement {
 
 	@Override
 	public void execute() {
-		if(this.getCondition().getType().equals(Type.BOOL)) {
-			if((Boolean)this.getCondition().getValue()) {
-				this.getThenStatement().execute();
-				if(this.getThenStatement().isFinished())
-					this.setFinished(true);
-			}				
-			else {
-				this.getOtherwiseStatement().execute();
-				if(this.getOtherwiseStatement().isFinished())
-					this.setFinished(true);
-			}
-				
+		if((Boolean)this.getCondition().getValue()) {
+			this.getThenStatement().execute();
+			if(this.getThenStatement().isFinished())
+				this.setFinished(true);
+		}				
+		else {
+			this.getOtherwiseStatement().execute();
+			if(this.getOtherwiseStatement().isFinished())
+				this.setFinished(true);
 		}
-		
+	}
+
+	@Override
+	public boolean typeCheck() {
+		if(!this.getCondition().typeCheck())
+			return false;
+		if(!this.getCondition().getType().equals(Type.BOOL))
+			return false;
+		if(!this.getThenStatement().typeCheck() || !this.getOtherwiseStatement().typeCheck())
+			return false;
+		return true;
+	}
+
+	@Override
+	public boolean containsActionStatement() {
+		return (this.getThenStatement().containsActionStatement()) || (this.getOtherwiseStatement().containsActionStatement());
+	}
+	
+	@Override
+	public void reset() {
+		super.reset();
+		this.getOtherwiseStatement().reset();
+		this.getThenStatement().reset();
 	}
 
 }

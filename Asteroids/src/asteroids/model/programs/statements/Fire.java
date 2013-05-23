@@ -13,4 +13,9 @@ public class Fire extends ActionStatement {
 		this.getController().getProgram().getShipRunningProgram().fireBullet();
 		this.setFinished(true);
 	}
+
+	@Override
+	public boolean typeCheck() {
+		return true;
+	}
 }

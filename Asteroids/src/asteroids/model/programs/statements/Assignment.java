@@ -29,11 +29,27 @@ public class Assignment extends StandardStatement {
 	
 	@Override
 	public void execute() {
-		Variable global = this.controller.getProgram().getGlobal(variable);
-		if(global != null){
-			global.setValue(exp);
-		}
+		Variable global = this.controller.getProgram().getGlobal(this.getVariable());
+		global.setValue(exp);
+		
 		setFinished(true);
+	}
+
+	@Override
+	public boolean typeCheck() {
+		if(!this.getExpression().typeCheck())
+			return false;
+		Variable global = this.controller.getProgram().getGlobal(this.getVariable());
+		if(global == null)
+			return false;
+		if(!global.getType().equals(this.getExpression().getType()))
+			return false;
+		return true; 
+	}
+	
+	@Override
+	public boolean containsActionStatement() {
+		return false;
 	}
 
 }

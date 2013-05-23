@@ -17,7 +17,7 @@ public class Sequence extends ComplexStatement {
 	
 	@Basic
 	public List<Statement> getStatements(){
-		return this.statements;
+		return new ArrayList<Statement>(this.statements);
 	}
 	
 	@Override
@@ -39,6 +39,35 @@ public class Sequence extends ComplexStatement {
 			}
 			else
 				setFinished(true);
+		}
+		if(this.nmbOfDoneExecutions >= this.getStatements().size())
+			setFinished(true);
+	}
+
+	@Override
+	public boolean typeCheck() {
+		for(Statement statement: this.getStatements()) {
+			if(!statement.typeCheck())
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean containsActionStatement() {
+		for(Statement statement: this.getStatements()) {
+			if(statement.containsActionStatement())
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void reset() {
+		super.reset();
+		this.nmbOfDoneExecutions = 0;
+		for(Statement statement: this.getStatements()) {
+			statement.reset();
 		}
 	}
 

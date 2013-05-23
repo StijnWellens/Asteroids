@@ -2,7 +2,6 @@ package asteroids.model;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.*;
 
@@ -398,14 +397,15 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 
 	@Override
 	public boolean isTypeCheckingSupported() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public asteroids.IFacade.TypeCheckOutcome typeCheckProgram(Program program) {
-		// TODO Auto-generated method stub
-		return null;
+		if(program.typeCheck())
+			return new asteroids.IFacade.TypeCheckOutcome(true, "Type! Check! :)");
+		else 
+			return new asteroids.IFacade.TypeCheckOutcome(false, "TypeCheckError.. :(");
 	}
 
 	@Override
