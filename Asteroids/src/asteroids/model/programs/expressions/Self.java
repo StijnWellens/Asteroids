@@ -29,4 +29,10 @@ public class Self extends StandardExpression {
 	public String toString(){
 		return "self";
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.getValue().hashCode();
+	}
+	
 }

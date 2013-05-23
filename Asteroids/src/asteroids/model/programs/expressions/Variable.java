@@ -1,7 +1,6 @@
 package asteroids.model.programs.expressions;
 
 import be.kuleuven.cs.som.annotate.Basic;
-import asteroids.model.SpaceObject;
 import asteroids.model.programs.*;
 import asteroids.model.programs.exceptions.IllegalProgramException;
 
@@ -101,4 +100,15 @@ public class Variable extends StandardExpression {
 		}
 		return super.typeCheck(); 
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return (super.equals(other) && this.getName().equals(((Variable)other).getName()));
+	}
+	
+	@Override
+	public int hashCode() {
+		return ("" + this.getName().hashCode() + this.getValue().hashCode()).hashCode();
+	}
+	
 }

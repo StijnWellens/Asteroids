@@ -43,12 +43,13 @@ public abstract class ComplexExpression extends Expression {
 	public boolean equals(Object other){
 		if ((other == null) || (this.getClass() != other.getClass()))
 			return false;
-		ComplexExpression otherEx = (ComplexExpression) other;
-		if (this.getNmbOfParts() != otherEx.getNmbOfParts())
+		ComplexExpression otherExpression = (ComplexExpression) other;
+		if (this.getNmbOfParts() != otherExpression.getNmbOfParts())
 			return false;
-		for (int pos = 1; pos <= this.getNmbOfParts(); pos++)
-			if (!getPartAt(pos).equals(otherEx.getPartAt(pos)))
+		for (int i = 1; i <= this.getNmbOfParts(); i++)
+			if (!getPartAt(i).equals(otherExpression.getPartAt(i)))
 				return false;
 		return true;
 	}
+	
 }

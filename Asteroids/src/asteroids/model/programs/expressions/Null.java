@@ -6,5 +6,8 @@ public class Null extends EntityLiteral {
 		super(line, column, null);
 	}
 
-	
+	@Override
+	public int hashCode() {
+		return this.getValue().hashCode();
+	}	
 }

@@ -33,14 +33,7 @@ public abstract class Expression {
 	@Override
 	public abstract boolean equals(Object other);
 	
-//	@Override
-//	public int hashCode(){
-//		//TO-DO
-//		return 0;
-//	}
-	
 	@Override
 	public abstract String toString();	
-	
 	
 }

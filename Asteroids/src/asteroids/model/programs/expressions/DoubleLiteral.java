@@ -23,8 +23,7 @@ public class DoubleLiteral extends StandardExpression {
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.getValue().hashCode();
 	}
 	
 }

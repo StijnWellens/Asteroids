@@ -22,4 +22,9 @@ public class EntityLiteral extends StandardExpression {
 		return this.value;
 	}
 
+	@Override
+	public int hashCode() {
+		return this.getValue().hashCode();
+	}
+	
 }
