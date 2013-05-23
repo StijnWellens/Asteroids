@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.programs.Type;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -21,9 +22,7 @@ public abstract class BinaryExpression extends ComplexExpression {
 			throw new IllegalArgumentException();
 		if(!canHaveAsPartAt(2,right))
 			throw new IllegalArgumentException();
-		if(left.getType() != right.getType())
-			throw new IllegalArgumentException();
-		
+				
 		setPartAt(1,left);
 		setPartAt(2,right);
 		
@@ -43,10 +42,9 @@ public abstract class BinaryExpression extends ComplexExpression {
 	@Override
 	public boolean canHaveAsPartAt(int i, Expression expression)
 	{
-		super.canHaveAsPartAt(i,expression);
-		if(i!=1 || i!=2)
+		if(i!=1 && i!=2)
 			return false;
-		return false;
+		return super.canHaveAsPartAt(i,expression);
 		
 	}
 		
@@ -65,7 +63,7 @@ public abstract class BinaryExpression extends ComplexExpression {
 	
 	@Override
 	public Expression getPartAt(int i) throws IndexOutOfBoundsException {
-		if(i != 1 || i!= 2)
+		if(i != 1 && i!= 2)
 			throw new IndexOutOfBoundsException();
 		if(i == 1)
 			return this.getLeftPart();
@@ -79,7 +77,7 @@ public abstract class BinaryExpression extends ComplexExpression {
 			return false;
 		if(!canHaveAsPartAt(2,this.getRightPart()))
 			return false;
-		return (this.getLeftPart().getType() == this.getRightPart().getType());
+		return (this.typeCheck());
 	}
 	
 	@Override
@@ -104,5 +102,10 @@ public abstract class BinaryExpression extends ComplexExpression {
 		else
 			throw new Error("Unknown expression type!");
 		return result;
+	}
+	
+	@Override
+	public boolean typeCheck() {
+		return (super.typeCheck() && this.getLeftPart().typeCheck() && this.getRightPart().typeCheck() && (this.getLeftPart().getType().equals(this.getRightPart().getType())));
 	}
 }

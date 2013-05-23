@@ -1,6 +1,7 @@
 package asteroids.model.programs.expressions;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import asteroids.model.SpaceObject;
 import asteroids.model.programs.*;
 
 public class Variable extends StandardExpression {
@@ -19,6 +20,7 @@ public class Variable extends StandardExpression {
 		this.type = type;
 		this.value = null;
 		this.controller = controller;
+		this.isTypeSet = true;
 	}
 	
 	private ProgramController controller;
@@ -34,7 +36,15 @@ public class Variable extends StandardExpression {
 	
 	@Override @Basic
 	public Type getType() {
-		return this.type;
+		if(!this.controller.isInitialized() || this.isTypeSet())
+			return this.type;
+		else {
+			Variable global = controller.getProgram().getGlobal(this.getName());
+			if(global != null && global.isTypeSet())
+				return global.getType();
+			else
+				return null;
+		}
 	}
 	
 	public void setType(Type type){
@@ -46,15 +56,20 @@ public class Variable extends StandardExpression {
 	
 	@Override @Basic
 	public Object getValue() {
-		if(this.isValueSet())
+		if(!this.controller.isInitialized() || this.isValueSet())
 			return this.value;
-		else
-			return 
+		else {
+			Variable global = this.controller.getProgram().getGlobal(this.getName());
+			if(global != null && global.isValueSet())
+				return global.getValue();
+			else
+				return null;
+		}
 	}
 
 	public void setValue(Expression value) {
 		if(isTypeSet() && value.getType() == this.getType()) {
-			this.value = value;
+			this.value = value.getValue();
 			this.isValueSet = true;
 		}
 	}
@@ -74,5 +89,18 @@ public class Variable extends StandardExpression {
 	@Override
 	public String toString(){
 		return "" + this.getName();
+	}
+	
+	@Override
+	public boolean typeCheck(){
+		if(!super.typeCheck())
+			return false;
+		if(this.getValue() instanceof Boolean)
+			return (this.getType().equals(Type.BOOL));
+		if(this.getValue() instanceof Double)
+			return (this.getType().equals(Type.DOUBLE));
+		if(this.getValue() instanceof SpaceObject)
+			return (this.getType().equals(Type.ENTITY));
+		return false;
 	}
 }

@@ -2,8 +2,7 @@ package asteroids.model.programs.expressions;
 
 public class Multiplication extends MathBinaryExpression {
 
-	public Multiplication(int line, int column, Expression left, Expression right)
-			throws IllegalArgumentException {
+	public Multiplication(int line, int column, Expression left, Expression right) {
 		super(line, column, left, right);
 	}
 

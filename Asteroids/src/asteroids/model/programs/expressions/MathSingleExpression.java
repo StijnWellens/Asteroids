@@ -7,8 +7,6 @@ public abstract class MathSingleExpression extends SingleExpression {
 	protected MathSingleExpression(int line, int column, Expression e)
 			throws IllegalArgumentException {
 		super(line, column, e);
-		if(e.getType() != Type.DOUBLE)
-			throw new IllegalArgumentException();
 	}
 
 	@Override
@@ -20,6 +18,11 @@ public abstract class MathSingleExpression extends SingleExpression {
 	public String toString(){
 		String result = getSymbol() + "(" + this.getPart().toString() + ")";
 		return result;
+	}
+	
+	@Override
+	public boolean typeCheck() {
+		return(super.typeCheck() && (this.getPart().getType().equals(Type.DOUBLE)));
 	}
 
 }

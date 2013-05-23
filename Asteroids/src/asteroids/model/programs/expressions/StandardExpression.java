@@ -8,8 +8,11 @@ public abstract class StandardExpression extends Expression {
 
 	@Override
 	public boolean equals(Object other){
-		return (this.getClass() == other.getClass())
-				&& (getValue().equals(((StandardExpression) other).getValue()));
+		if(this.getClass() != other.getClass())
+			return false;
+		if(this.getValue() == null && other != null)
+			return false;
+		return (getValue().equals(((StandardExpression) other).getValue()));
 	}
 
 	
@@ -21,6 +24,5 @@ public abstract class StandardExpression extends Expression {
 	@Override
 	public String toString() {
 		return "" + this.getValue();
-	}
-	
+	}	
 }

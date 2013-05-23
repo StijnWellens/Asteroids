@@ -30,6 +30,12 @@ public class Sequence extends ComplexStatement {
 				if(statement instanceof ActionStatement){
 					actionEncountered = true;
 				}
+				if(statement.isFinished()) {
+					nmbOfDoneExecutions++;
+				}
+				else {
+					actionEncountered = true;
+				}
 			}
 			else
 				setFinished(true);

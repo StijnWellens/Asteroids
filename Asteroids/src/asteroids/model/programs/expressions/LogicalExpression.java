@@ -6,8 +6,6 @@ public abstract class LogicalExpression extends BinaryExpression {
 
 	protected LogicalExpression(int line, int column, Expression left, Expression right) throws IllegalArgumentException {
 		super(line, column, left,right);
-		if(left.getType() == Type.BOOL && right.getType() == Type.BOOL)
-			throw new IllegalArgumentException();
 	}
 	
 	@Override
@@ -15,5 +13,9 @@ public abstract class LogicalExpression extends BinaryExpression {
 		return Type.BOOL;
 	}
 
+	@Override
+	public boolean typeCheck() {
+		return(super.typeCheck() && this.getLeftPart().getType().equals(Type.BOOL));
+	}
 	
 }

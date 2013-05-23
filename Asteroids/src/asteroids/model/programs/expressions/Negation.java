@@ -24,4 +24,9 @@ public class Negation extends SingleExpression {
 	public String getSymbol() {
 		return "!";
 	}
+	
+	@Override
+	public boolean typeCheck() {
+		return (super.typeCheck() && (this.getPart().getType().equals(Type.BOOL)));
+	}
 }

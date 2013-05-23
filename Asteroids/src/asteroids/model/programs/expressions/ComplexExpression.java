@@ -32,7 +32,7 @@ public abstract class ComplexExpression extends Expression {
 			return true;
 		if(expression == null)
 			return false;
-		for(int i=0; i<= this.getNmbOfParts(); i++)
+		for(int i=1; i<= this.getNmbOfParts(); i++)
 			if(this.getPartAt(i).containsExpression(expression) )
 				return true;
 		return false;

@@ -62,4 +62,9 @@ public abstract class SingleExpression extends ComplexExpression {
 			throw new Error("Unknown expression type!");
 		return result;
 	}
+	
+	@Override
+	public boolean typeCheck() {
+		return (super.typeCheck() && this.getPart().typeCheck());
+	}
 }

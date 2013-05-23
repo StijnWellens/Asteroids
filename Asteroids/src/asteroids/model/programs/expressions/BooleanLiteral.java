@@ -26,5 +26,4 @@ public class BooleanLiteral extends StandardExpression {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

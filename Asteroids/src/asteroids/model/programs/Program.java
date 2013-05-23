@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import be.kuleuven.cs.som.annotate.*;
 
+import asteroids.Util;
 import asteroids.model.Ship;
 import asteroids.model.programs.expressions.*;
 import asteroids.model.programs.statements.*;
@@ -49,7 +50,8 @@ public class Program {
 	
 	@Basic
 	public Variable getGlobal(String name){
-		for(Variable global: this.getGlobals()) {
+		Set<Variable> setGlobals = this.getGlobals();
+		for(Variable global: setGlobals) {
 			if(global.getName().equals(name)) {
 				return global;
 			}
@@ -90,12 +92,24 @@ public class Program {
 	
 	private Ship shipRunningProgram;
 	
-	public void execute(int nmbOfExecutions) {
-		System.out.println("execute "+nmbOfExecutions);
-		int i = 0;
-		while(i<nmbOfExecutions && !this.getStatement().isFinished()){
+	private double nmbOfExecutionsNotYetExecuted;
+	
+	@Basic
+	public boolean isFinished() {
+		return this.isFinished;
+	}
+	private boolean isFinished;
+	
+	public void execute(double nmbOfExecutions) {
+		double executions = nmbOfExecutions + this.nmbOfExecutionsNotYetExecuted;
+		while((!Util.fuzzyLessThanOrEqualTo(executions, 1) || Util.fuzzyEquals(executions, 1))
+					 && !isFinished()){
 			this.getStatement().execute();
+			executions--;
+			if(this.getStatement().isFinished())
+				this.isFinished = true;
 		}
+		this.nmbOfExecutionsNotYetExecuted = executions;
 	}
 	
 }

@@ -172,26 +172,22 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 
 	@Override
 	public Statement createEnableThruster(int line, int column) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ThrusterEnabler(line,column,this.getProgramController());
 	}
 
 	@Override
 	public Statement createDisableThruster(int line, int column) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ThrusterDisabler(line,column,this.getProgramController());
 	}
 
 	@Override
 	public Statement createFire(int line, int column) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Fire(line,column,this.getProgramController());
 	}
 
 	@Override
 	public Statement createTurn(int line, int column, Expression angle) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Turn(line,column,this.getProgramController(),angle);
 	}
 
 	@Override
@@ -203,28 +199,25 @@ public class ProgramFactoryImpl implements ProgramFactory<Expression, Statement,
 	@Override
 	public Statement createIf(int line, int column, Expression condition,
 			Statement then, Statement otherwise) {
-		// TODO Auto-generated method stub
-		return null;
+		return new IfThenElse(line, column, condition, then, otherwise);
 	}
 
 	@Override
 	public Statement createWhile(int line, int column, Expression condition,
 			Statement body) {
-		// TODO Auto-generated method stub
-		return null;
+		return new WhileLoop(line, column, condition, body);
 	}
 
 	@Override
 	public Statement createForeach(int line, int column,
 			asteroids.model.programs.parsing.ProgramFactory.ForeachType type,
 			String variableName, Statement body) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ForEachLoop(line, column, type, variableName, body, this.getProgramController());
 	}
 
 	@Override
 	public Statement createSkip(int line, int column) {
-		return new Skip(line, column);
+		return new Skip(line, column, null);
 	}
 
 	@Override

@@ -1,17 +1,18 @@
 package asteroids.model.programs.expressions;
 
 import asteroids.Util;
+import asteroids.model.programs.exceptions.IllegalProgramException;
 
 public class SquareRoot extends MathSingleExpression {
 
-	public SquareRoot(int line, int column, Expression e) throws IllegalArgumentException {
+	public SquareRoot(int line, int column, Expression e) {
 		super(line, column, e);
-		if(Util.fuzzyLessThanOrEqualTo((Double)e.getValue(),0) && !Util.fuzzyEquals((Double)e.getValue(),0) )
-			throw new IllegalArgumentException();
 	}
 
 	@Override
 	public Double getValue() {
+		if(Util.fuzzyLessThanOrEqualTo((Double)this.getPart().getValue(),0) && !Util.fuzzyEquals((Double)this.getPart().getValue(),0) )
+			throw new IllegalProgramException("Square root of negative value");
 		return Math.sqrt((Double)this.getPart().getValue());
 	}
 	

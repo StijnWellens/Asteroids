@@ -1,6 +1,7 @@
 package asteroids.model.programs.statements;
 
 import be.kuleuven.cs.som.annotate.*;
+import asteroids.model.programs.ProgramController;
 import asteroids.model.programs.Type;
 import asteroids.model.programs.expressions.*;
 
@@ -8,10 +9,8 @@ public class Turn extends ActionStatement {
 
 	private Expression angle;
 	
-	public Turn(int line, int column, Expression angle)throws IllegalArgumentException{
-		super(line,column);
-		if(angle.getType() != Type.DOUBLE)
-			throw new IllegalArgumentException();
+	public Turn(int line, int column, ProgramController controller, Expression angle)throws IllegalArgumentException{
+		super(line,column, controller);
 		this.angle = angle;
 	}
 	
@@ -22,7 +21,10 @@ public class Turn extends ActionStatement {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
+		if(getAngle().getValue() != null && getAngle().getType() != null && this.getAngle().getType().equals(Type.DOUBLE)) {
+			Double turn = (Double)(angle.getValue());
+			this.getController().getProgram().getShipRunningProgram().turn(turn);
+		}
+		this.setFinished(true);
 	}
 }

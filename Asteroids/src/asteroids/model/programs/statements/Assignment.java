@@ -30,7 +30,7 @@ public class Assignment extends StandardStatement {
 	@Override
 	public void execute() {
 		Variable global = this.controller.getProgram().getGlobal(variable);
-		if(global != null && exp.getType().equals(global.getType())){
+		if(global != null){
 			global.setValue(exp);
 		}
 		setFinished(true);

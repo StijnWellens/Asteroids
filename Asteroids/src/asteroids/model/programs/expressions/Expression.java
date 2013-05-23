@@ -26,14 +26,18 @@ public abstract class Expression {
 		return this.column;
 	}
 	
+	public boolean typeCheck() {
+		return this.getType() != null;
+	}
+	
 	@Override
 	public abstract boolean equals(Object other);
 	
-	@Override
-	public int hashCode(){
-		//TO-DO
-		return 0;
-	}
+//	@Override
+//	public int hashCode(){
+//		//TO-DO
+//		return 0;
+//	}
 	
 	@Override
 	public abstract String toString();	

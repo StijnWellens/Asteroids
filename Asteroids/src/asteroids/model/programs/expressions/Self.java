@@ -19,7 +19,10 @@ public class Self extends StandardExpression {
 
 	@Override
 	public SpaceObject getValue() {
-		return controller.getProgram().getShipRunningProgram();
+		if(controller.isInitialized())
+			return controller.getProgram().getShipRunningProgram();
+		else
+			return null;
 	}
 	
 	@Override
