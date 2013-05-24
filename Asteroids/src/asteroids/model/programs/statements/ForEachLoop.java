@@ -41,7 +41,7 @@ public class ForEachLoop extends ComplexStatement {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void execute() { //TODO actionstatement check
+	public void execute() { 
 		Variable global = this.controller.getProgram().getGlobal(getVariableName());
 		if(body != null) {
 			World world = controller.getProgram().getShipRunningProgram().getWorld();

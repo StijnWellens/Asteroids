@@ -91,13 +91,22 @@ public class Variable extends StandardExpression {
 		return "" + this.getName();
 	}
 	
+	private boolean willBeAssigned;
+	
+	@Basic
+	public boolean willBeAssigned() {
+		return this.willBeAssigned;
+	}
+	
+	public void setWillBeAssigned(boolean assigned) {
+		this.willBeAssigned = assigned;
+	}
+	
 	@Override
 	public boolean typeCheck() {
-		if(!isValueSet()) {
-			Variable global = this.controller.getProgram().getGlobal(this.getName());
-			if(global == null)
-				return false;
-		}
+		Variable global = this.controller.getProgram().getGlobal(this.getName());
+		if(global == null || !global.willBeAssigned())
+			return false;
 		return super.typeCheck(); 
 	}
 	
@@ -108,7 +117,16 @@ public class Variable extends StandardExpression {
 	
 	@Override
 	public int hashCode() {
-		return ("" + this.getName().hashCode() + this.getValue().hashCode()).hashCode();
+		if(!isValueSet() && !isTypeSet() || (this.value == null && this.type == null)) {
+			return ("" + this.getName().hashCode() + "null" + "null").hashCode();
+		}
+		if(!isValueSet() || this.value == null) {
+			return ("" + this.getName().hashCode() + "null" + this.type.hashCode()).hashCode();
+		}
+		if(!isTypeSet() || this.type == null) {
+			return ("" + this.getName().hashCode() + this.value.hashCode() + "null").hashCode();
+		}
+		return ("" + this.getName().hashCode() + this.value.hashCode() + this.type.hashCode()).hashCode();
 	}
 	
 }

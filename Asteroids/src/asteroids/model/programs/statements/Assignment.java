@@ -44,6 +44,7 @@ public class Assignment extends StandardStatement {
 			return false;
 		if(!global.getType().equals(this.getExpression().getType()))
 			return false;
+		global.setWillBeAssigned(true);
 		return true; 
 	}
 	

@@ -26,15 +26,17 @@ public class WhileLoop extends ComplexStatement {
 	
 	@Override
 	public void execute() {
-		boolean actionEncountered = false;
-		while((Boolean)(this.getCondition().getValue()) && !actionEncountered){
+		boolean suddenStop = false;
+		while((Boolean)(this.getCondition().getValue()) && !suddenStop){
 			this.getBody().execute();
 			if(this.getBody() instanceof ActionStatement || !this.getBody().isFinished())
-				actionEncountered = true;
+				suddenStop = true;
 			if(this.getBody().isFinished())
 				this.getBody().reset();
+			if(this.containsActionStatement() == false)
+				suddenStop = true;
 		}
-		if(actionEncountered == false)
+		if(suddenStop == false)
 			this.setFinished(true);
 	}
 
