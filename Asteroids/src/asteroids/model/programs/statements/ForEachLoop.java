@@ -71,6 +71,7 @@ public class ForEachLoop extends ComplexStatement {
 		Variable global = this.controller.getProgram().getGlobal(getVariableName());
 		if(global == null || !global.getType().equals(Type.ENTITY))
 			return false;
+		global.setWillBeAssigned(true);
 		if(!this.getBody().typeCheck())
 			return false;
 		return true;

@@ -43,6 +43,8 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class Ship extends SpaceObject{
 
+	private final static int AMOUNT_ALLOWED_BULLETS_IN_WORLD = 3;
+	
 	/**
 	 * Initializes this new default ship.
 	 * 
@@ -316,7 +318,7 @@ public class Ship extends SpaceObject{
 		if(this.getState() != State.ACTIVE || this.getWorld() == null)
 			throw new IllegalStateException();
 		
-		if(this.getActiveBulletsInWorld(this.getWorld()).size() < 3)
+		if(this.getActiveBulletsInWorld(this.getWorld()).size() < AMOUNT_ALLOWED_BULLETS_IN_WORLD)
 		{
 			SpaceObject bullet = new Bullet(this);
 			bullet.flyIntoWorld(this.getWorld());			
