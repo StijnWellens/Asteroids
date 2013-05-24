@@ -290,11 +290,6 @@ public class Collision {
 	 * @throws	IllegalArgumentException
 	 * 			Throws exception when one of the given spaceObjects is null.
 	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
-	 *
-	 // infinity, time could not be negative
-	 * if(result == Double.POSITIVE_INFINITY) then
-	 * 	(this == other) 
-	 * 
 	 */
 	public double getTimeToCollisionWithObject()
 	{
@@ -324,10 +319,7 @@ public class Collision {
 	/**
 	 * 
 	 * @return	...
-	 * 			| if(getObject2() == null)
-	 * 			|	then result == getTimeToCollisionWithBorder()
-	 * 			| else
-	 * 			|	then result == getTimeToCollisionWithObject()
+	 * 			| result == this.timeToCollision
 	 */
 	public double getTimeToCollision() 
 	{
@@ -335,11 +327,24 @@ public class Collision {
 		return this.timeToCollision;		
 	}
 	
+	/**
+	 * 
+	 * @param time
+	 * @return	...
+	 * 			| result = (!Double.isNaN(time))
+	 */
 	public boolean isValidTimeToCollision(double time)
 	{
 		return (!Double.isNaN(time));
 	}
 	
+	/**
+	 * 
+	 * @param 	time
+	 * @post	...
+	 * 			|	this.getTimeToCollision() = time
+	 * @throws IllegalArgumentException
+	 */
 	public void setTimeToCollision(double time) throws IllegalArgumentException
 	{
 		if(!isValidTimeToCollision(time))
