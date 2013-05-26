@@ -410,7 +410,12 @@ public class Facade implements IFacade<World,Ship,Asteroid,Bullet,Program> {
 
 	@Override
 	public void setShipProgram(Ship ship, Program program) {
-		ship.setProgram(program);		
+		try{
+			ship.setProgram(program);		
+		}
+		catch(Exception e){
+			throw new ModelException(e);
+		}
 	}
 
 }
