@@ -24,7 +24,7 @@ public class WorldTest {
 	
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorWorld_IllegalCase(){
-		World world = new World(Double.NaN, Double.NaN);
+		new World(Double.NaN, Double.NaN);
 	}
 	
 	@Test
