@@ -326,6 +326,12 @@ public class WorldTest {
 		 world.evolve(-50,null);
 	 }
 	 
+	 @Test 
+	 public void testEvolveBeforeCollision(){
+		 World world = new World();
+		 assertEquals(Double.POSITIVE_INFINITY,world.evolveBeforeCollision(20, null),Util.EPSILON);
+	 }
+	 
 	 @Test (expected = IllegalArgumentException.class)
 	 public void testAddCollisions_ObjectIsNull(){
 		 World world = new World();

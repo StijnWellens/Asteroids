@@ -495,6 +495,11 @@ public class World {
 	 * 			|	 then ( spaceObject.move(time)
 	 * 			|				if(Ship.class.isInstance(spaceObject))
 	 * 			|					then ( ((Ship)spaceObject).thrust(time)))
+	 * @effect	...
+	 * 			| for each spaceObject in this.getSpaceObjects():
+	 * 			|	if(spaceObject != null && Ship.class.isInstance(spaceObject) &&
+	 * 			|		((Ship)spaceObject).getProgram() != null && !((Ship)spaceObject).getProgram().isFinished() )
+	 * 			|			then ((Ship)spaceObject).getProgram().execute(time/0.2)
 	 */
 	public void advanceObjects(double time) throws IllegalArgumentException
 	{
@@ -537,9 +542,8 @@ public class World {
 	 * 			|	then ( Collision firstCollision = this.getFirstCollision()
 	 * 			|			double tc = firstCollision.getTimeToCollision()
 	 * 			|	 if (tc < dt)
-	 * 			|		then (if(!Util.fuzzyLessThanOrEqualTo(tc,0) || Util.fuzzyEquals(tc,0))
+	 * 			|		then (if(!Util.fuzzyLessThanOrEqualTo(tc,0))
 	 * 			|		      then ( this.advanceObjects(tc) )
-	 * 			|				firstCollision.execute()
 	 * 			|				if(collisionListener != null)
 	 *	    	| 				  then(if(firstCollision.getObject2()==null)
 	 *	    	|	 				   then( collisionListener.boundaryCollision(firstCollision.getObject1(), 
@@ -550,6 +554,7 @@ public class World {
 	 *	    	|			 				firstCollision.getObject2(), 
 	 *	    	|			 				firstCollision.getCollisionPosition()[0],
 	 *	    	|			 				firstCollision.getCollisionPosition()[1]))))
+	 *			|		firstCollision.execute()			
 	 */
 	public double evolveBeforeCollision(double dt, CollisionListener collisionListener) throws IllegalArgumentException
 	{
