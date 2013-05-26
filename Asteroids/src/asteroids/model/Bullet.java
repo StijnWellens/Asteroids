@@ -23,6 +23,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidMass(getMass())
  * @invar	This bullet must always have a proper world.
  * 			| hasProperWorld()
+ * @invar	This bullet must always have a proper state.
+ * 			| hasProperState()
  * @invar	This bullet must always hava a proper source.
  * 			| hasProperSource()
  * @author 	Julie Wouters & Stijn Wellens
@@ -211,18 +213,59 @@ public class Bullet extends SpaceObject {
 		return other.killsOther(this);
 	}
 	
+	/**
+	 * Let this bullet die.
+	 * 
+	 * @effect  Removes this Bullet from his world.
+	 * 			| this.getWorld().removeSpaceObject(this)
+	 * @effect	Sets the world of this Bullet to null.
+	 * 			| setWorld(null)
+	 * @effect	Sets the state of this Bullet to TERMINATED.
+	 * 			| setState(State.TERMINATED)
+	 * @effect	Removes this Bullet from the active bullets list of its source (if the bullet has a source).
+	 * 			| if(this.getSouce() != null)
+	 * 			| 	then this.getSource().removeActiveBullet(this)
+	 * @throws 	IllegalStateException
+	 * 			Throws illegal state exception when this SpaceObject is not ACTIVE or when its world is null.
+	 * 			| this.getState() != State.ACTIVE || this.getWorld() == null
+	 */
 	@Override
 	public void die()
 	{
 		super.die();
-		this.getSource().removeActiveBullet(this);		
+		if(this.getSource() != null)
+			this.getSource().removeActiveBullet(this);		
 	}
 	
+	/**
+	 * Puts this Bullet into the given world.
+	 *  
+	 * @param 	world
+	 * 			The world where this Bullet has to get in.
+	 * @effect	The given world will be set as the world of this SpaceObject.
+	 * 			| setWorld(world)
+	 * @effect	This Bullet will be added to the SpaceObjects of the given world.
+	 * 			| world.addSpaceObject(this)
+	 * @effect	The state of this Bullet will be set to ACTIVE.
+	 * 			| setState(State.ACTIVE)	
+	 * @effect	This bullet will be added to the active bullets of its source (if the bullet has a source).
+	 * 			| if(this.getSouce() != null)
+	 * 			|	then this.getSource().addActiveBullet(this)
+	 * @throws 	IllegalStateException
+	 * 			Throws illegal state exception when this bullet is already in a world 
+	 * 			or when its state is not CREATED.
+	 * 			| (this.getState() != State.CREATED) || (this.getWorld()!= null)
+	 * @throws 	IllegalArgumentException
+	 * 			Throws illegal argument exception when the given world is null 
+	 * 			or this bullet can't have the given world as world.
+	 * 			| world == null || !this.canHaveAsWorld(world)
+	 */
 	@Override
 	public void flyIntoWorld(World world)
 	{
 		super.flyIntoWorld(world);
-		this.getSource().addActiveBullet(this);				
+		if(this.getSource() != null)
+			this.getSource().addActiveBullet(this);				
 	}
 	
 }

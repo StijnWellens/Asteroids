@@ -25,6 +25,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidMass(getMass())
  * @invar	This spaceObject must always have a proper world.
  * 			| hasProperWorld()
+ * @invar	This spaceObject must always have a proper state.
+ * 			| hasProperState()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)
@@ -610,6 +612,7 @@ public abstract class SpaceObject {
 	 * @return	True if and only if the given state is not null.
 	 * 			| result == (state != null)
 	 */
+	@Raw
 	public boolean isValidState(State state) {
 		if(state == null)
 			return false;
@@ -628,10 +631,32 @@ public abstract class SpaceObject {
 	 * 			Throws an exception when the given state is not valid.
 	 * 			| !isValidState(state)
 	 */
+	@Raw
 	public void setState(State state) throws IllegalArgumentException {
 		if(!isValidState(state))
 			throw new IllegalArgumentException();
 		this.state = state;
+	}
+	
+	/**
+	 * Check whether the state of this SpaceObject is a proper state.
+	 * 
+	 * @return	False if the state of this SpaceObject isn't a valid state.
+	 * 			| if(!isValidState(this.getState()))
+	 *			|	then result == false
+	 * @return	True when the state is CREATED or TERMINATED and the world of this object is null.
+	 * 			| if(this.getState().equals(State.CREATED) || this.getState().equals(State.TERMINATED))
+	 *			| 	then result == (this.getWorld() == null)
+	 * @return	True when the state is ACTIVE and the world of this object isn't null.
+	 * 			| if(this.getState().equals(State.ACTIVE))
+	 *			| 	then result == (this.getWorld() != null)
+	 */
+	public boolean hasProperState() {
+		if(!isValidState(this.getState()))
+			return false;
+		if(this.getState().equals(State.CREATED) || this.getState().equals(State.TERMINATED))
+			return (this.getWorld() == null);
+		return (this.getWorld() != null);
 	}
 
 	// World
@@ -743,7 +768,7 @@ public abstract class SpaceObject {
 	}
 	
 	/**
-	 * Removes this SpaceObject from the given world.
+	 * Let this SpaceObject die.
 	 * 
 	 * @effect  Removes this SpaceObject from his world.
 	 * 			| this.getWorld().removeSpaceObject(this)

@@ -30,6 +30,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidThruster(getThruster())
  * @invar	This ship must always have a proper world.
  * 			| hasProperWorld()
+ * @invar	This ship must always have a proper state.
+ * 			| hasProperState()
  * @invar	This ship must always have proper active bullets.
  * 			| hasProperActiveBullets()
  * @invar	This ship must always have a proper program.
@@ -100,6 +102,17 @@ public class Ship extends SpaceObject{
 		setDirection(makeAngleValid(angle));
 		setMass(mass);
 		setThruster(false, 1.1E18);
+	}
+	
+	/**
+	 * Return the maximum amount of allowed bullets of a ship in a world.
+	 * 
+	 * @return	The amount of allowed bullets.
+	 * 			| Ship.AMOUNT_ALLOWED_BULLETS_IN_WORLD
+	 */
+	@Basic @Immutable
+	public final static int getAmountAllowedBulletsInWorld() {
+		return Ship.AMOUNT_ALLOWED_BULLETS_IN_WORLD;
 	}
 	
 	// direction: nominal programming
@@ -327,39 +340,6 @@ public class Ship extends SpaceObject{
 	}
 	
 	/**
-	 * Check if this ship has the given bullet as active bullet.
-	 * 
-	 * @param 	bullet
-	 * 			The bullet to check.
-	 * @return	True if and only if the bullet isn't null 
-	 * 			and the activeBullets of this ship contains the given bullet.
-	 * 			| result == ( (bullet != null) && activeBullets.contains(bullet) )
-	 */
-	@Basic
-	public boolean containsActiveBullet(Bullet bullet) {
-		return ( (bullet != null) && activeBullets.contains(bullet) );
-	}
-	
-	/**
-	 * Check whether this ship can have a given bullet as active bullet.
-	 * 
-	 * @param 	bullet
-	 * 			The bullet to check.
-	 * @return	True if and only if the given bullet and its source are not null 
-	 * 			and the given bullet his state is not TERMINATED and the bullet its source is this ship.
-	 * 			| result == (bullet !=  null && bullet.getSource() != null) 
-	 * 			|	&& (bullet.getState() != State.TERMINATED) 
-	 * 			|	&& (bullet.getSource().equals(this))
-	 */
-	public boolean canHaveAsActiveBullet(@Raw Bullet bullet) {
-		if(bullet == null || bullet.getSource() == null)
-			return false;
-		if(bullet.getState() == State.TERMINATED)
-			return false;
-		return bullet.getSource().equals(this);
-	}	
-	
-	/**
 	 * Add a given bullet to the activeBullet list of this ship.
 	 * 
 	 * @param 	bullet
@@ -385,10 +365,43 @@ public class Ship extends SpaceObject{
 	 * @post	The activeBullets list of this ship will not contain the given bullet.
 	 * 			| (new this).activeBullets.contains(bullet) == false
 	 */
-	public void removeActiveBullet(Bullet bullet) {
+	public void removeActiveBullet(@Raw Bullet bullet) {
 		activeBullets.remove(bullet);
 	}
 	
+	/**
+	 * Check if this ship has the given bullet as active bullet.
+	 * 
+	 * @param 	bullet
+	 * 			The bullet to check.
+	 * @return	True if and only if the bullet isn't null 
+	 * 			and the activeBullets of this ship contains the given bullet.
+	 * 			| result == ( (bullet != null) && activeBullets.contains(bullet) )
+	 */
+	@Basic @Raw
+	public boolean containsActiveBullet(@Raw Bullet bullet) {
+		return ( (bullet != null) && activeBullets.contains(bullet) );
+	}
+	
+	/**
+	 * Check whether this ship can have a given bullet as active bullet.
+	 * 
+	 * @param 	bullet
+	 * 			The bullet to check.
+	 * @return	True if and only if the given bullet and its source are not null 
+	 * 			and the given bullet his state is not TERMINATED and the bullet its source is this ship.
+	 * 			| result == (bullet !=  null && bullet.getSource() != null) 
+	 * 			|	&& (bullet.getState() != State.TERMINATED) 
+	 * 			|	&& (bullet.getSource().equals(this))
+	 */
+	public boolean canHaveAsActiveBullet(@Raw Bullet bullet) {
+		if(bullet == null || bullet.getSource() == null)
+			return false;
+		if(bullet.getState() == State.TERMINATED)
+			return false;
+		return bullet.getSource().equals(this);
+	}	
+		
 	/**
 	 * Checks if the set of active bullets of this ship is valid.
 	 * 

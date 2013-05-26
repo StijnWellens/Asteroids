@@ -27,6 +27,8 @@ import asteroids.Util;
  * 			| isValidRandom(getRandom())
  * @invar	This asteroid must always have a proper world.
  * 			| hasProperWorld()
+ * @invar	This asteroid must always have a proper state.
+ * 			| hasProperState()
  * @author 	Julie Wouters & Stijn Wellens
  * 			Students Bachelor of Science in Engineering 
  * 			(Computer Science and electrical engineering)

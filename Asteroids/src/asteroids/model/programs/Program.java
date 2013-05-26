@@ -19,6 +19,12 @@ import asteroids.model.programs.statements.*;
  */
 public class Program {
 
+	public Program() {
+		this.globals = null;
+		this.statement = null;
+		this.controller = null;
+	}
+	
 	public Program(Map<String, Type> globals, Statement statement, ProgramController controller) throws IllegalArgumentException 
 	{
 		if(globals == null || statement == null || controller == null)

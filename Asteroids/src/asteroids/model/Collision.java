@@ -352,6 +352,15 @@ public class Collision {
 		this.timeToCollision = time;
 	}
 	
+	/**
+	 * Calculates the time to collision.
+	 * 
+	 * @effect	...
+	 * 			| if ( this.getObject2() == null )
+	 * 			|	then setTimeToCollision(getTimeToCollisionWithBorder())
+	 * 			| else
+	 * 			|	then setTimeToCollision(getTimeToCollisionWithObject())
+	 */
 	public void calculateTimeToCollision()
 	{
 		if(getObject2() == null)
@@ -390,14 +399,16 @@ public class Collision {
 	/**
 	 * Return where two spaceObjects will collide.
 	 * 
-	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spaceObjects when they collide.
-	 * 			| alpha == Math.acos(
-	 * 			| collision[0] = getObject1().getXPosition() + getObject1().getXVelocity() * getTimeToCollisiion() + cos(alpha)* getObject1().getRadius();
-	 *			| collision[1] = getObject1().getYPosition() + getObject1().getYVelocity() * getTimeToCollisiion() + sin(alpha)* getObject1().getRadius();
-	 *			| result == collision
+	 * @return	...
+	 * 			| if (result != null) then
+	 * 			|	(for each position in this.getObject1().getPosition() .. result:
+	 * 			|		if(position < result) then
+	 * 			|			!SpaceObject.overlap(this.getObject1(),this.getObject2())
+	 * 			|		if(Util.fuzzyEquals(position,result)) then
+	 * 			|			SpaceObject.overlap(this.getObject1(),this.getObject2()) == true
 	 * @return	Null if the two spaceObjects never collide.
 	 * 			| if(getTimeToCollision() == Double.POSITIVE_INFINITY)
-	 * 			|	then collision == null
+	 * 			|	then result == null
 	 */
 	public double[] getCollisionPositionWithObject()
 	{
@@ -445,20 +456,22 @@ public class Collision {
 		return collision;
 	}
 	
-	//TODO
-	/**
+	/** 
 	 * Return where a SpaceObject will collide with the border.
 	 * 
-	 * @return	An array with the position of the future collision. With alpha the given angle between the two centers of the spacespaceObjects when they collide.
-	 * 			| collision[0] = spaceObject1.getXPosition() + spaceObject1.getXVelocity() * getTimeToCollisiion() + cos(alpha)* spaceObject1.getRadius();
-	 *			| collision[1] = spaceObject1.getYPosition() + spaceObject1.getYVelocity() * getTimeToCollisiion() + sin(alpha)* spaceObject1.getRadius();
-	 *			| result == collision
-	 * @return	Null if the two spaceObjects never collide.
-	 * 			| if(getTimeToCollision(spaceObject1,spaceObject2) == Double.POSITIVE_INFINITY)
-	 * 			|	then collision == null
-	 * @throws	IllegalArgumentException
-	 * 			Throws exception when one of the given spaceObjects is null.
-	 * 			| (spaceObject1 == null) || (spaceObject2 == null)
+	 * @return	...
+	 * 			| object1 = this.getObject1()
+	 * 			| if (result != null) then
+	 * 			|	(for each position in object1.getPosition() .. result:
+	 * 			|		if(position <= result) then
+	 * 			|			(for each point(x,y) in ( (object1.getXPosition())²+(object1.getYPosition())² = (object1.getRadius)² ):
+	 * 			|				object1.getWorld().pointInWorld(point) )
+	 * 			|		if(position > result) then
+	 * 			|			!(for each point(x,y) in ( (object1.getXPosition())²+(object1.getYPosition())² = (object1.getRadius)² ):
+	 * 			|				object1.getWorld().pointInWorld(point) )
+	 * @return	Null if the spaceObject never collides with the border.
+	 * 			| if(getTimeToCollision() == Double.POSITIVE_INFINITY)
+	 * 			|	then result == null
 	 */
 	public double[] getCollisionPositionWithBorder()
 	{
@@ -526,6 +539,12 @@ public class Collision {
 		}
 	}
 	
+	/**
+	 * 
+	 * @effect	...
+	 * 			| getObject1().setVelocity(getObject1().getVelocity().getXComp() + (Jx/mi), getObject1().getVelocity().getYComp() + (Jy/mi))
+	 *			| getObject2().setVelocity(getObject2().getVelocity().getXComp() - (Jx/mj), getObject2().getVelocity().getYComp() - (Jy/mj))
+	 */
 	public void bounceOff() 
 	{
 		Vector dv = Vector.subtraction(getObject2().getVelocity(), getObject1().getVelocity());
@@ -538,7 +557,7 @@ public class Collision {
 		
 		double J = (2*mi*mj*dvdr)/(sigma*(mi+mj));
 		double Jx = (J*dr.getXComp())/sigma;
-		double Jy = (J*dr.getYComp())/sigma;
+		double Jy = (J*dr.getYComp())/sigma; 
 		
 		Vector newVelocityThis = new Vector(getObject1().getVelocity().getXComp() + (Jx/mi), getObject1().getVelocity().getYComp() + (Jy/mi));
 		Vector newVelocityOther = new Vector(getObject2().getVelocity().getXComp() - (Jx/mj), getObject2().getVelocity().getYComp() - (Jy/mj));
@@ -547,6 +566,22 @@ public class Collision {
 		getObject2().setVelocity(newVelocityOther);
 	}
 	
+	/**
+	 * 
+	 * @effect	...
+	 * 			| if ( spaceObject1 instanceof Bullet && nmbOfCollisions >= 2)
+	 * 			|	then spaceObject1.die()
+	 * 			| else then
+	 * 			|	if( Util.fuzzyEquals(getTimeToCollisionWithAxis(getCollisionPosition(), this.spaceObject1.getVelocity(), 
+	 * 			|				this.spaceObject1.getWorld().getLeftSubCorner().getXComp(), 
+	 * 			|				this.spaceObject1.getWorld().getLeftSubCorner().getXComp() + this.spaceObject1.getWorld().getWidth()), 0) )
+	 *			|		then this.spaceObject1.setVelocity(-spaceObject1.getVelocity().getXComp(), spaceObject1.getVelocity().getYComp());
+	 *			|
+	 *			|	else if( Util.fuzzyEquals(getTimeToCollisionWithAxis(getCollisionPosition(), this.spaceObject1.getVelocity(), 
+	 * 			|				this.spaceObject1.getWorld().getLeftSubCorner().getYComp(), 
+	 * 			|				this.spaceObject1.getWorld().getLeftSubCorner().getYComp() + this.spaceObject1.getWorld().getHeigth()), 0) )
+	 *			|		then this.spaceObject1.setVelocity(spaceObject1.getVelocity().getXComp(), -spaceObject1.getVelocity().getYComp());
+	 */
 	public void executeWithBorder()
 	{
 		if(Bullet.class.isInstance(getObject1()) && this.nmbOfCollisions >= 2)
@@ -555,20 +590,33 @@ public class Collision {
 		}
 		else {
 			Vector velocity = getObject1().getVelocity();
+			World world = getObject1().getWorld();
 			
 			double[] collision = getCollisionPosition();
 			
-			if(Util.fuzzyEquals(collision[1], 0) || Util.fuzzyEquals(collision[1], getObject1().getWorld().getHeight()))
+			if(Util.fuzzyEquals(collision[1], world.getLeftSubCorner().getYComp()) || Util.fuzzyEquals(collision[1], world.getLeftSubCorner().getYComp() + world.getHeight()))
 			{ 
 				getObject1().setVelocity(velocity.getXComp(), -velocity.getYComp());
 			}
-			else if(Util.fuzzyEquals(collision[0], 0) || Util.fuzzyEquals(collision[0], getObject1().getWorld().getWidth()))
+			else if(Util.fuzzyEquals(collision[0], world.getLeftSubCorner().getXComp() ) || Util.fuzzyEquals(collision[0], world.getLeftSubCorner().getXComp() + world.getWidth()))
 			{
 				getObject1().setVelocity(-velocity.getXComp(), velocity.getYComp());
 			} 
 		}
 	}
 	
+	/**
+	 * 
+	 * @effect	...
+	 * 			| if(spaceObject1.killsOther(spaceObject2) && spaceObject2.killsOther(spaceObject1) )
+	 * 			|	then spaceObject1.die() && spaceObject2.die()
+	 * 			| else if ( spaceObject1.killsOther(spaceObject2) )
+	 * 			|	then this.spaceObject2.die()
+	 * 			| else if ( spaceObject2.killsOther(spaceObject1) )
+	 * 			|	then this.spaceObject1.die()
+	 * 			| else
+	 * 			|	then this.bounceOff()
+	 */
 	public void executeWithObject()
 	{
 		SpaceObject object1 = getObject1();
@@ -592,6 +640,17 @@ public class Collision {
 		}
 	}
 	
+	/**
+	 * 
+	 * @post	...
+	 * 			|  (new this).getNmbOfCollisions() = this.getNmbOfCollisions() + 1
+	 * @effect	...
+	 * 			|
+	 * 			| if(getObject2() == null)
+	 * 			|	then this.executeWithBorder()
+	 * 			| else
+	 * 			|	then this.executeWithObject()
+	 */
 	public void execute() 
 	{
 		this.nmbOfCollisions ++;
