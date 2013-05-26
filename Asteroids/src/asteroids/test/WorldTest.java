@@ -139,14 +139,14 @@ public class WorldTest {
 		 assertFalse(world.containsSpaceObject(ship));
 	 }
 	 
-	 @Test (expected = IllegalArgumentException.class)
+	 @Test (expected=AssertionError.class)
 	 public void testAddSpaceObject_IllegalCase(){
 		 World world = new World();
 		 SpaceObject ship = null;
 		 world.addSpaceObject(ship);
 	 }
 	 
-	 @Test 
+	 @Test (expected=AssertionError.class)
 	 public void testAddSpaceObject_NotInWorld(){
 		 World world = new World();
 		 SpaceObject ship = new Ship();
@@ -162,13 +162,13 @@ public class WorldTest {
 		 assertFalse(world.getSpaceObjects().contains(ship));
 	 }
 	 
-	 @Test
+	 @Test (expected=AssertionError.class)
 	 public void testRemoveSpaceObject_ObjectIsNull(){
 		 World world = new World();
 		 world.removeSpaceObject(null);
 	 }
 	 
-	 @Test 
+	 @Test (expected=AssertionError.class)
 	 public void testRemoveSpaceObject_NotThisWorld(){
 		 World world = new World();
 		 SpaceObject ship = new Ship();
@@ -265,6 +265,7 @@ public class WorldTest {
 		 ship.flyIntoWorld(world);
 		 asteroid.flyIntoWorld(world);
 		 ((Ship) ship).getThruster().setEnabled(true);
+		 
 		 world.advanceObjects(1E-14);
 		 assertEquals(1E-14*20+30,asteroid.getY(),Util.EPSILON);
 		 assertEquals(1E-14*10+10,ship.getX(),Util.EPSILON);
@@ -339,5 +340,45 @@ public class WorldTest {
 		 assertTrue(world.getPossibleCollisions().isEmpty());
 	 }
 	 
+	 @Test
+	 public void testIsValidLeftSubCorner(){
+		 World world = new World();
+		 assertFalse(world.isValidLeftSubCorner(null));
+	 }
+	 
+	 @Test
+	 public void testPointInWorld(){
+		 World world = new World(100,100);
+		 Vector vector = new Vector(20,20);
+		 assertTrue(world.pointInWorld(vector));
+	 }
+	 
+	 @Test
+	 public void testPointInWorld_BiggerX(){
+		 World world = new World(100,100);
+		 Vector vector = new Vector(120,20);
+		 assertFalse(world.pointInWorld(vector));
+	 }
+	 
+	 @Test
+	 public void testPointInWorld_NegativeX(){
+		 World world = new World(100,100);
+		 Vector vector = new Vector(-20,20);
+		 assertFalse(world.pointInWorld(vector));
+	 }
+	 
+	 @Test
+	 public void testPointInWorld_BiggerY(){
+		 World world = new World(100,100);
+		 Vector vector = new Vector(20,120);
+		 assertFalse(world.pointInWorld(vector));
+	 }
+	 
+	 @Test
+	 public void testPointInWorld_NegativeY(){
+		 World world = new World(100,100);
+		 Vector vector = new Vector(20,-20);
+		 assertFalse(world.pointInWorld(vector));
+	 }
 	 
 }

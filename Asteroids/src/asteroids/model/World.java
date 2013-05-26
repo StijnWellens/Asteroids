@@ -17,6 +17,8 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar 	The upper bound coordinate of the world must always be a 
  * 			valid upper bound coordinate.
  *        	| isValidUpperBoundCoordinate(getUpperBoundCoordinate())
+ * @invar	The left sub corner must always be a valid left sub corner.
+ * 			| isValidLeftSubCorner(getLeftSubCorner())
  * @invar   The space objects attached to each world must be proper
  * 			space objects for that world.
  * 			| hasProperSpaceObjects()
@@ -27,9 +29,13 @@ public class World {
 	
 	/**
 	 * @post	...
-	 * 			| (new this).getHeight = 100
+	 * 			| (new this).getHeight() = 100
 	 * @post	...
-	 * 			| (new this).getWidth = 100
+	 * 			| (new this).getWidth() = 100
+	 * @post	...
+	 * 			| (new this).getLeftSubCorner().getXComp() =  0
+	 * @post	...
+	 * 			| (new this).getLeftSubCorner().getYComp() = 0
 	 */
 	public World() {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
@@ -47,10 +53,18 @@ public class World {
 	 * 			| !isValidHeight(height)
 	 * @throws	IllegalArgumentException
 	 * 			| !isValidWidth(width)
+	 * @throws	IllegalArgumentException
+	 * 			| isValidLeftSubCorner(leftSubCorner)
 	 * @post	...
-	 * 			| (new this).getHeight = height
+	 * 			| (new this).getHeight() = height
 	 * @post	...
-	 * 			| (new this).getWidth = width
+	 * 			| (new this).getWidth() = width
+	 * @post	...
+	 * 			| (new this).getLeftSubCorner().getXComp() = 0
+	 * @post	...
+	 * 			| (new this).getLeftSubCorner().getYcomp() = 0
+	 * @effect	...
+	 * 			| setUpperBoundCoordinate(Double.MAX_VALUE)
 	 */
 	public World(double width, double height) throws IllegalArgumentException {
 		setUpperBoundCoordinate(Double.MAX_VALUE);
@@ -115,11 +129,23 @@ public class World {
 		return((!Double.isNaN(width)) && (width >= 0) && (width <= upperBoundCoordinate) );
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| this.leftSubCorner
+	 */
 	public Vector getLeftSubCorner()
 	{
 		return this.leftSubCorner;
 	}
 	
+	/**
+	 * 
+	 * @param 	leftSubCorner
+	 * @return	...
+	 * 			| result ==
+	 * 			| 		( leftSubCorner != null)
+	 */
 	public boolean isValidLeftSubCorner(Vector leftSubCorner)
 	{
 		return (leftSubCorner != null);
@@ -205,7 +231,7 @@ public class World {
 	 * @effect	...
 	 * 			| (new this).getSpaceObjects() == this.getSpaceObjects().add(spaceObject)
 	 * @effect	...
-	 * 			| (new this).getPossibleCollisions() == this.getPossibleCollisions()
+	 * 			| this.addCollisions(spaceObject)
 	 */
 	@Raw
 	public void addSpaceObject(SpaceObject spaceObject)
@@ -223,7 +249,7 @@ public class World {
 	 * @param spaceObject
 	 * @return	...
 	 * 			| result ==
-	 * 			| 	(spaceObjects.contains(spaceObject))
+	 * 			| 	(spaceObjects.contains(spaceObject) && spaceObject != null)
 	 */
 	@Basic
 	public boolean containsSpaceObject(SpaceObject spaceObject) {
